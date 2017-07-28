@@ -4,12 +4,15 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class TextClient {
-	public static List<BoardPiece> boardPieces = new ArrayList<>();
+	public static List<BoardPiece> yelList = new ArrayList<>();
+	public static List<BoardPiece> greList = new ArrayList<>();
+
 	static Board board = new Board();
 	static public Set<String> movement = new HashSet<String>();
 	static public Set<Integer> rotations = new HashSet<Integer>();
@@ -89,6 +92,38 @@ public class TextClient {
 	}*/
 
 	public static void moveToken(Player player, String options) {
+		if(player == null || options == null) {
+			throw new NullPointerException();
+		}
+		String[] tokens = options.split(" ");
+		if(tokens.length!=3) {
+			System.out.println("errrrrrorr");
+		}
+		String letter = tokens[1];
+		String direction = tokens[2];
+		if(checkIfAllowedToMove(player, letter) == false) {
+			return;
+		}
+		if(movement.contains(direction)) {
+			System.out.println("correct direction");
+			if(letter.length() == 1) {
+				BoardPiece tokenToMove = board.findMoveToken(player, letter);
+				if(tokenToMove!=null) {
+					System.out.println("Found Token to move");
+					if(player.moveToken(player, tokenToMove, direction, board)==true) {
+						board.redraw();
+					}
+					else {
+						return;
+					}
+				}
+			}
+		}
+	}
+
+
+
+	/*public static void moveToken(Player player, String options) {
 		if (player == null || options == null) {
 			throw new NullPointerException();
 		}
@@ -122,7 +157,7 @@ public class TextClient {
 			System.out.println("Error");
 		}
 
-	}
+	}*/
 
 	public static void rotateToken(Player player, String options) {
 
@@ -193,12 +228,13 @@ public class TextClient {
 		Player yellow = new Player("yellow");
 		int turn = 0;
 		initialiseStructures();
-		generatePieces();
+		gerneratePieces(yelList);
+		gerneratePieces(greList);
 		board.initialise();
 		board.addPlayers(green, yellow);
 		board.redraw();
-		yellow.populateYellowTokens(boardPieces);
-		green.populateGreenTokens(boardPieces);
+		yellow.populateYellowTokens(yelList);
+		green.populateGreenTokens(greList);
 
 		System.out.println("~*~*~ Sword & Shield ~*~*~");
 		while (1 == 1) {// loop forever
@@ -221,43 +257,38 @@ public class TextClient {
 
 	}
 
-	public static void drawPieces() {
-		for (BoardPiece bp : boardPieces) {
-			System.out.println(bp.toString());
-		}
-	}
 
-	public static void generatePieces() {
-		boardPieces.add(new BoardPiece("a", 1, 2, 1, 1,""));
-		boardPieces.add(new BoardPiece("b", 1, 0, 1, 1,""));
-		boardPieces.add(new BoardPiece("c", 2, 2, 2, 2,"yellow"));
-		boardPieces.add(new BoardPiece("d", 1, 0, 0, 0,"green"));
+
+	public static void gerneratePieces(List<BoardPiece> list) {
+		list.add(new BoardPiece("a", 1, 2, 1, 1,""));
+		list.add(new BoardPiece("b", 1, 0, 1, 1,""));
+		list.add(new BoardPiece("c", 2, 2, 2, 2,""));
+		list.add(new BoardPiece("d", 1, 0, 0, 0,""));
 		// empty tile??
 		//
-		boardPieces.add(new BoardPiece("e", 0, 0, 0, 0,""));
-		boardPieces.add(new BoardPiece("f", 1, 0, 0, 1,""));
-		boardPieces.add(new BoardPiece("g", 1, 1, 1, 1,""));
-		boardPieces.add(new BoardPiece("h", 1, 0, 2, 2,""));
-		boardPieces.add(new BoardPiece("i", 0, 2, 0, 0,""));
+		list.add(new BoardPiece("e", 0, 0, 0, 0,""));
+		list.add(new BoardPiece("f", 1, 0, 0, 1,""));
+		list.add(new BoardPiece("g", 1, 1, 1, 1,""));
+		list.add(new BoardPiece("h", 1, 0, 2, 2,""));
+		list.add(new BoardPiece("i", 0, 2, 0, 0,""));
 		//
-		boardPieces.add(new BoardPiece("j", 1, 2, 1, 2,""));
-		boardPieces.add(new BoardPiece("k", 1, 2, 0, 1,""));
-		boardPieces.add(new BoardPiece("l", 1, 0, 0, 0,""));
-		boardPieces.add(new BoardPiece("m", 1, 2, 2, 0,""));
-		boardPieces.add(new BoardPiece("n", 0, 2, 2, 0,""));
+		list.add(new BoardPiece("j", 1, 2, 1, 2,""));
+		list.add(new BoardPiece("k", 1, 2, 0, 1,""));
+		list.add(new BoardPiece("l", 1, 0, 0, 0,""));
+		list.add(new BoardPiece("m", 1, 2, 2, 0,""));
+		list.add(new BoardPiece("n", 0, 2, 2, 0,""));
 		//
-		boardPieces.add(new BoardPiece("o", 1, 0, 1, 2,""));
-		boardPieces.add(new BoardPiece("p", 1, 0, 2, 1,""));
-		boardPieces.add(new BoardPiece("q", 1, 0, 0, 2,""));
-		boardPieces.add(new BoardPiece("r", 1, 2, 0, 2,""));
-		boardPieces.add(new BoardPiece("s", 0, 2, 0, 2,""));
-		//e modeler, ram usage is down from several GB to 400MB or so when spamming it with compilation r
-		boardPieces.add(new BoardPiece("t", 1, 0, 1, 0,""));
-		boardPieces.add(new BoardPiece("u", 1, 0, 0, 1,""));
-		boardPieces.add(new BoardPiece("v", 1, 2, 0, 0,""));
-		boardPieces.add(new BoardPiece("w", 1, 2, 2, 2,""));
-		boardPieces.add(new BoardPiece("x", 0, 2, 2, 2,""));
-
+		list.add(new BoardPiece("o", 1, 0, 1, 2,""));
+		list.add(new BoardPiece("p", 1, 0, 2, 1,""));
+		list.add(new BoardPiece("q", 1, 0, 0, 2,""));
+		list.add(new BoardPiece("r", 1, 2, 0, 2,""));
+		list.add(new BoardPiece("s", 0, 2, 0, 2,""));
+		//e
+		list.add(new BoardPiece("t", 1, 0, 1, 0,""));
+		list.add(new BoardPiece("u", 1, 0, 0, 1,""));
+		list.add(new BoardPiece("v", 1, 2, 0, 0,""));
+		list.add(new BoardPiece("w", 1, 2, 2, 2,""));
+		list.add(new BoardPiece("x", 0, 2, 2, 2,""));
 	}
 
 	public static void initialiseStructures() {

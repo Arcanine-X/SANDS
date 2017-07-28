@@ -1,6 +1,7 @@
 
 public class Board {
 	Token[][] board = new Token[10][10];
+	
 
 	public Board() {
 
@@ -87,6 +88,32 @@ public class Board {
 			System.out.println("|");
 			System.out.println("-------------------------------------------------------------");
 		}
+	}
+
+	public BoardPiece findMoveToken(Player player, String letter) {
+		System.out.println("in findmoveToken");
+		BoardPiece returnToken = null;
+		for(int r = 0; r < board.length; r++) {
+			for(int c = 0; c < board[0].length; c++) {
+				if(board[r][c] instanceof BoardPiece) {
+					BoardPiece temp = (BoardPiece) board[r][c];
+					System.out.println("temp col" + temp.col);
+					System.out.println("player name " + player.name);
+					System.out.println("temp name " + temp.name);
+					System.out.println("letter " + letter);
+					if(temp.col.equals(player.name))System.out.println("############all gud here#############");
+					if(temp.name.equals(letter))System.out.println("~~~~~~~~~~~~pls ~~~~~~~~~~~~~~");
+					if(temp.col.equals(player.name) && temp.name.equals(letter)) {
+						System.out.println("returning found token");
+						returnToken = temp;
+						System.out.println(returnToken.toString());
+						return returnToken;
+					}
+				}
+			}
+		}
+		System.out.println("awh returning null.....");
+		return null;
 	}
 
 	public void addPlayers(Player green, Player yellow) {

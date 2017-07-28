@@ -33,9 +33,19 @@ public class Player extends Token {
 
 				if(tokenToAdd!=null) {
 					board.board[7][7] = tokenToAdd;
+					System.out.println("token added");
+					System.out.println("Token color is " + tokenToAdd.col);
 					return true;
 				}
-			//}
+		}
+		if(player.name.equals("green")) {
+			tokenToAdd = find(player, letter);
+			if(tokenToAdd!=null) {
+				board.board[2][2] = tokenToAdd;
+				System.out.println("token added");
+				System.out.println("Token color is " + tokenToAdd.col);
+				return true;
+			}
 		}
 
 
@@ -64,6 +74,8 @@ public class Player extends Token {
 		if(player.name.equals("yellow")) {
 			for(int r = 0; r < yellowTokens.length; r++) {
 				for(int c = 0; c < yellowTokens[0].length; c++) {
+					BoardPiece temp = yellowTokens[r][c];
+					System.out.println("are we populating correctly? " + temp.col);
 					if(yellowTokens[r][c].name.equals(letter)) {
 						returnToken = yellowTokens[r][c];
 						yellowTokens[r][c] = null;
@@ -73,6 +85,24 @@ public class Player extends Token {
 				}
 			}
 		}
+
+
+		if(player.name.equals("green")) {
+			for(int r = 0; r < greenTokens.length; r++) {
+				for(int c = 0; c < greenTokens[0].length; c++) {
+					BoardPiece temp = yellowTokens[r][c];
+					if(greenTokens[r][c].name.equals(letter)) {
+						returnToken = greenTokens[r][c];
+						greenTokens[r][c] = null;
+						System.out.println("all gud return green token");
+						return returnToken;
+					}
+				}
+			}
+		}
+
+
+
 		return null;
 	}
 
@@ -123,11 +153,13 @@ public class Player extends Token {
 	 * @param tokens
 	 */
 	public void populateYellowTokens(List<BoardPiece> tokens) {
+
 		int i = 0;
 		for (int r = 0; r < yellowTokens.length; r++) {
 			for (int c = 0; c < yellowTokens[0].length; c++) {
 				yellowTokens[r][c] = tokens.get(i++);
 				yellowTokens[r][c].col = "yellow";
+				System.out.println("is it yellow hhere ? " + yellowTokens[r][c].col);
 				// System.out.println(yellowTokens[r][c].toString());
 			}
 		}
@@ -144,6 +176,7 @@ public class Player extends Token {
 	 */
 
 	public boolean moveToken(Player player, BoardPiece token, String direction, Board board) {
+		System.out.println("in move token");
 		// Find the piece
 		int row = 0, col = 0;
 		boolean found = false;
@@ -155,12 +188,15 @@ public class Player extends Token {
 					System.out.println("player is " + player.name);
 					System.out.println("token is " + token.col);
 					if (player.name.equals(token.col)) {
+						System.out.println("Found token to move");
+
 						found = true;
 					}
 				}
 			}
 		}
 		if (found) {
+			System.out.println(direction);
 			board.board[row][col] = null;
 			if (direction.equals("up")) {
 				row--;
@@ -171,7 +207,7 @@ public class Player extends Token {
 			} else if (direction.equals("left")) {
 				col--;
 			} else {
-				System.out.println("error in movetoken");
+				System.out.println("error in movetokenc");
 			}
 			board.board[row][col] = token;
 			return true;
