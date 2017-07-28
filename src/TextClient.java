@@ -174,7 +174,8 @@ public class TextClient {
 		board.initialise();
 		board.addPlayers(green, yellow);
 		board.redraw();
-		yellow.populateYellowTokens(boardPieces);
+		//yellow.populateYellowTokens(boardPieces);
+		green.populateGreenTokens(boardPieces);
 
 		System.out.println("~*~*~ Sword & Shield ~*~*~");
 		while (1 == 1) {// loop forever

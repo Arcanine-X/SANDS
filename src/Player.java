@@ -2,9 +2,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player extends Token {
-	BoardPiece piecesPlayed[] = new BoardPiece[24];
-	BoardPiece piecesGreenAvaliable[][] = new BoardPiece[6][4];
-	BoardPiece piecesYellowAvaliable[][] = new BoardPiece[6][4];
+	BoardPiece greenTokens[][] = new BoardPiece[6][4];
+	BoardPiece yellowTokens[][] = new BoardPiece[6][4];
 	int index = 0;
 	String name = "";
 
@@ -62,23 +61,46 @@ public class Player extends Token {
 		return true;
 	}
 
-	public void populateGreenTokens() {
-
-	}
-
-	public void populateYellowTokens(List tokens) {
+	/**
+	 * Puts all the types of tokens into greens array of tokens
+	 *
+	 * @param tokens
+	 */
+	public void populateGreenTokens(List<BoardPiece> tokens) {
 		int i = 0;
-		for (int r = 0; r < piecesYellowAvaliable.length; r++) {
-			for (int c = 0; c < piecesYellowAvaliable[0].length; c++) {
-				piecesYellowAvaliable[r][c] = (BoardPiece) tokens.get(r*c);
-				System.out.println(piecesYellowAvaliable[r][c].toString());
-				i++;
+		for (int r = 0; r < greenTokens.length; r++) {
+			for (int c = 0; c < greenTokens[0].length; c++) {
+				greenTokens[r][c] = tokens.get(i++);
+				greenTokens[r][c].col = "green";
+				//System.out.println(greenTokens[r][c].toString());
 			}
-			i++;
 		}
-
-
 	}
+
+	/**
+	 * Puts all the types of tokens into yellows array of tokens
+	 *
+	 * @param tokens
+	 */
+	public void populateYellowTokens(List<BoardPiece> tokens) {
+		int i = 0;
+		for (int r = 0; r < yellowTokens.length; r++) {
+			for (int c = 0; c < yellowTokens[0].length; c++) {
+				yellowTokens[r][c] = tokens.get(i++);
+				yellowTokens[r][c].col = "yellow";
+				//System.out.println(yellowTokens[r][c].toString());
+			}
+		}
+	}
+
+	/**
+	 * First finds the token, and if its found moves it in the appropriate direction
+	 * @param player
+	 * @param token
+	 * @param direction
+	 * @param board
+	 * @return
+	 */
 
 	public boolean moveToken(Player player, BoardPiece token, String direction, Board board) {
 		// Find the piece
@@ -112,10 +134,6 @@ public class Player extends Token {
 		return false;
 	}
 
-	public void placeBoardPiece(BoardPiece piece) {
-		piecesPlayed[index] = piece;
-		index++;
-	}
 
 	public String toString() {
 		return "" + name;
