@@ -13,6 +13,11 @@ public class TextClient {
 	static Board board = new Board();
 	static public Set<String> movement = new HashSet<String>();
 	static public Set<Integer> rotations = new HashSet<Integer>();
+	// Two maps to keep track of what tokens have been moved to ensure the same
+	// token isnt moved
+	// multiple times in one line
+	static public List<String> greenMoves = new ArrayList<String>();
+	static public List<String> yellowMoves = new ArrayList<String>();
 
 	/**
 	 * Get string from System.in
@@ -37,7 +42,6 @@ public class TextClient {
 		if (tokens.length != 3) {
 			System.out.println("The format is incorrect. It should be create <letter> <0/90/180/270>");
 		}
-		String createMessage = tokens[0];
 		String letter = tokens[1];
 		int rotation = Integer.parseInt(tokens[2]);
 		if (rotations.contains(rotation)) {
@@ -51,8 +55,7 @@ public class TextClient {
 				System.out.println("Attempting to place : " + bp.toString());
 				if (player.addToken(bp, player.name, board) == false) {
 					return;
-				}
-				else {
+				} else {
 					board.redraw();
 				}
 			}
@@ -73,6 +76,9 @@ public class TextClient {
 		String moveMessage = tokens[0];
 		String letter = tokens[1];
 		String direction = tokens[2];
+		if (checkIfAllowedToMove(player, letter) == false) {
+			return;
+		}
 		if (movement.contains(direction)) {
 			if (letter.length() == 1) {
 				BoardPiece bp = null;
@@ -82,16 +88,14 @@ public class TextClient {
 					}
 				}
 				System.out.println("Attempting to move : " + bp.toString());
-				if(player.moveToken(player, bp, direction, board)) {
+				if (player.moveToken(player, bp, direction, board)) {
 					board.redraw();
-				}
-				else {
+				} else {
 					System.out.println("error");
 				}
 
 			}
-		}
-		else {
+		} else {
 			System.out.println("Error");
 		}
 
@@ -114,6 +118,7 @@ public class TextClient {
 					moveToken(player, options);
 				} else if (options.startsWith("pass")) {
 					System.out.println("Next persons turn");
+					reset();
 					return;
 				} else {
 					System.out.println("Invalid option....");
@@ -124,34 +129,70 @@ public class TextClient {
 		}
 	}
 
+	public static void reset() {
+		yellowMoves.clear();
+		greenMoves.clear();
+		// after passing need to reset stuff
+	}
+
+	/**
+	 * Checks if the move is valid in terms of how many times its been moved in a
+	 * turn
+	 *
+	 * @param player
+	 * @param letter
+	 * @return
+	 */
+	public static boolean checkIfAllowedToMove(Player player, String letter) {
+		if (player.name.equals("yellow")) {
+			if (!yellowMoves.contains(letter)) {
+				yellowMoves.add(letter);
+				return true;
+			}
+		}
+		else {
+			if(player.name.equals("green")) {
+				if(!greenMoves.contains(letter)) {
+					greenMoves.add(letter);
+					return true;
+				}
+			}
+		}
+		// in this case its already been moved once this turn
+		System.out.println("You have already moved this piece this turn");
+		System.out.println("You can move another existing piece or move it next turn");
+		return false;
+	}
+
 	public static void main(String[] args) {
 		// Create players
 		Player green = new Player("green");
 		Player yellow = new Player("yellow");
-
 		int turn = 0;
+		initialiseStructures();
 		generatePieces();
-
 		board.initialise();
 		board.addPlayers(green, yellow);
 		board.redraw();
-		initialiseStructures();
 
 		System.out.println("~*~*~ Sword & Shield ~*~*~");
-		// while(1==1) {//loop forever
-		System.out.println("\n********************");
-		System.out.println("***** TURN " + turn + " *******");
-		System.out.println("********************\n");
-		if (turn % 2 == 0) {
-			System.out.println("It is yellows turn");
-			playerOptions(yellow);
-			board.redraw();
-			// drawPieces();
-		} else {
-			// greens turn
+		while (1 == 1) {// loop forever
+			System.out.println("\n********************");
+			System.out.println("***** TURN " + turn + " *******");
+			System.out.println("********************\n");
 
+			if (turn % 2 == 0) {
+				System.out.println("It is yellows turn!");
+				playerOptions(yellow);
+				board.redraw();
+
+			} else {
+				System.out.println("It is greens turn!");
+				playerOptions(green);
+				board.redraw();
+			}
+			turn++;
 		}
-		// }
 
 	}
 

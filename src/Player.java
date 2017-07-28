@@ -9,6 +9,14 @@ public class Player extends Token {
 		this.name = name;
 	}
 
+
+	/**
+	 * Adds the a token on the board
+	 * @param token
+	 * @param color
+	 * @param board
+	 * @return
+	 */
 	public boolean addToken(BoardPiece token, String color, Board board) {
 		if(checkValidCreationSpot(board, color)==false){
 			System.out.println("Invalid Move\nCreation Spot is already taken");
@@ -30,6 +38,13 @@ public class Player extends Token {
 		return false;
 	}
 
+	/**
+	 * Method that checks that the creation spot is avaliable or not to create
+	 * more tokens for the given player
+	 * @param board
+	 * @param color
+	 * @return
+	 */
 	public boolean checkValidCreationSpot(Board board, String color) {
 		if (color.equals("green")) {
 			if (board.board[2][2] instanceof BoardPiece) {
@@ -79,13 +94,10 @@ public class Player extends Token {
 			board.board[row][col] = token;
 			return true;
 		}
-
 		return false;
 	}
 
-	public void populatePieces() {
 
-	}
 
 	public void placeBoardPiece(BoardPiece piece) {
 		piecesPlayed[index] = piece;
