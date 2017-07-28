@@ -69,8 +69,9 @@ public class Player extends Token {
 	public void populateYellowTokens(List tokens) {
 		int i = 0;
 		for (int r = 0; r < piecesYellowAvaliable.length; r++) {
-			for (int c = 0; c < piecesYellowAvaliable[0].length-1; c++) {
-				piecesYellowAvaliable[r][c] = (BoardPiece) tokens.get(i);
+			for (int c = 0; c < piecesYellowAvaliable[0].length; c++) {
+				piecesYellowAvaliable[r][c] = (BoardPiece) tokens.get(r*c);
+				System.out.println(piecesYellowAvaliable[r][c].toString());
 				i++;
 			}
 			i++;
