@@ -25,10 +25,8 @@ public class Player extends Token {
 			System.out.println("Invalid Move\nCreation Spot is already taken");
 			return false;
 		}
-		System.out.println("#################################################");
 		BoardPiece tokenToAdd = null;
 		if (player.name.equals("yellow")) {
-			System.out.println("!asssssssssssssss");
 			tokenToAdd = find(player, letter);
 			if (tokenToAdd != null) {
 				board.board[7][7] = tokenToAdd;
@@ -54,27 +52,14 @@ public class Player extends Token {
 		BoardPiece returnToken = null;
 
 		if (player.name.equals("yellow")) {
-			System.out.println("!aaaaaaaaaaaaaaaaaaaaa");
 			for (int r = 0; r < yellowTokens.length; r++) {
 				for (int c = 0; c < yellowTokens[0].length; c++) {
-					BoardPiece temp = yellowTokens[r][c];
-					System.out.println("----------");
-					if(yellowTokens[r][c] == null) {
+					if (yellowTokens[r][c] == null) {
 						continue;
 					}
 					if (yellowTokens[r][c].name.equals(letter)) {
-						System.out.println("lelo");
 						returnToken = yellowTokens[r][c];
 						yellowTokens[r][c] = null;
-						System.out.println("and stictch");
-						System.out.println("!!!!!!!!!!!!");
-						for (int x = 0; x < yellowTokens.length; x++) {
-							for (int y = 0; y < yellowTokens[0].length; y++) {
-								if (yellowTokens[x][y] != null) {
-									System.out.println(yellowTokens[x][y].toString());
-								}
-							}
-						}
 						System.out.println("All good in find returned token to add");
 						return returnToken;
 					}
@@ -85,6 +70,9 @@ public class Player extends Token {
 		if (player.name.equals("green")) {
 			for (int r = 0; r < greenTokens.length; r++) {
 				for (int c = 0; c < greenTokens[0].length; c++) {
+					if (greenTokens[r][c] == null) {
+						continue;
+					}
 					if (greenTokens[r][c].name.equals(letter)) {
 						returnToken = greenTokens[r][c];
 						greenTokens[r][c] = null;
