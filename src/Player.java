@@ -1,7 +1,10 @@
+import java.util.ArrayList;
+import java.util.List;
 
 public class Player extends Token {
 	BoardPiece piecesPlayed[] = new BoardPiece[24];
-	BoardPiece piecesAvaliable[][] = new BoardPiece[6][4];
+	BoardPiece piecesGreenAvaliable[][] = new BoardPiece[6][4];
+	BoardPiece piecesYellowAvaliable[][] = new BoardPiece[6][4];
 	int index = 0;
 	String name = "";
 
@@ -57,6 +60,18 @@ public class Player extends Token {
 			}
 		}
 		return true;
+	}
+
+	public void populateGreenTokens() {
+
+	}
+
+	public void populateYellowTokens(List tokens) {
+		for(int r = 0; r < piecesYellowAvaliable[0].length; r++) {
+			for(int c = 0; c < piecesYellowAvaliable.length; c++) {
+				piecesYellowAvaliable[r][c] = (BoardPiece) tokens.get(r + (tokens.size() * r));
+			}
+		}
 	}
 
 

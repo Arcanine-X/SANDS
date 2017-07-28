@@ -2,15 +2,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BoardPiece extends Token{
-	String name = "";
+	String name = "", col = "";
 	int north, east, south, west;
 	//0 for nothing, 1 for sword, 2 for shield
-	public BoardPiece(String name,int north, int east, int south, int west) {
+	public BoardPiece(String name,int north, int east, int south, int west, String col) {
 		this.name = name;
 		this.north = north;
 		this.east = east;
 		this.west = west;
 		this.south = south;
+		this.col = col;
 	}
 
 	@Override

@@ -129,10 +129,10 @@ public class TextClient {
 		}
 	}
 
-	public static void reset() {
+	public static void reset() {// after passing need to reset stuff
 		yellowMoves.clear();
 		greenMoves.clear();
-		// after passing need to reset stuff
+
 	}
 
 	/**
@@ -174,6 +174,7 @@ public class TextClient {
 		board.initialise();
 		board.addPlayers(green, yellow);
 		board.redraw();
+		yellow.populateYellowTokens(boardPieces);
 
 		System.out.println("~*~*~ Sword & Shield ~*~*~");
 		while (1 == 1) {// loop forever
@@ -203,35 +204,36 @@ public class TextClient {
 	}
 
 	public static void generatePieces() {
-		boardPieces.add(new BoardPiece("a", 1, 2, 1, 1));
-		boardPieces.add(new BoardPiece("b", 1, 0, 1, 1));
-		boardPieces.add(new BoardPiece("c", 2, 2, 2, 2));
-		boardPieces.add(new BoardPiece("d", 1, 0, 0, 0));
+		boardPieces.add(new BoardPiece("a", 1, 2, 1, 1,""));
+		boardPieces.add(new BoardPiece("b", 1, 0, 1, 1,""));
+		boardPieces.add(new BoardPiece("c", 2, 2, 2, 2,""));
+		boardPieces.add(new BoardPiece("d", 1, 0, 0, 0,""));
 		// empty tile??
 		//
-		boardPieces.add(new BoardPiece("e", 0, 0, 0, 0));
-		boardPieces.add(new BoardPiece("f", 1, 0, 0, 1));
-		boardPieces.add(new BoardPiece("g", 1, 1, 1, 1));
-		boardPieces.add(new BoardPiece("h", 1, 0, 2, 2));
-		boardPieces.add(new BoardPiece("i", 0, 2, 0, 0));
+		boardPieces.add(new BoardPiece("e", 0, 0, 0, 0,""));
+		boardPieces.add(new BoardPiece("f", 1, 0, 0, 1,""));
+		boardPieces.add(new BoardPiece("g", 1, 1, 1, 1,""));
+		boardPieces.add(new BoardPiece("h", 1, 0, 2, 2,""));
+		boardPieces.add(new BoardPiece("i", 0, 2, 0, 0,""));
 		//
-		boardPieces.add(new BoardPiece("j", 1, 2, 1, 2));
-		boardPieces.add(new BoardPiece("k", 1, 2, 0, 1));
-		boardPieces.add(new BoardPiece("l", 1, 0, 0, 0));
-		boardPieces.add(new BoardPiece("m", 1, 2, 2, 0));
-		boardPieces.add(new BoardPiece("n", 0, 2, 2, 0));
+		boardPieces.add(new BoardPiece("j", 1, 2, 1, 2,""));
+		boardPieces.add(new BoardPiece("k", 1, 2, 0, 1,""));
+		boardPieces.add(new BoardPiece("l", 1, 0, 0, 0,""));
+		boardPieces.add(new BoardPiece("m", 1, 2, 2, 0,""));
+		boardPieces.add(new BoardPiece("n", 0, 2, 2, 0,""));
 		//
-		boardPieces.add(new BoardPiece("o", 1, 0, 1, 2));
-		boardPieces.add(new BoardPiece("p", 1, 0, 2, 1));
-		boardPieces.add(new BoardPiece("q", 1, 0, 0, 2));
-		boardPieces.add(new BoardPiece("r", 1, 2, 0, 2));
-		boardPieces.add(new BoardPiece("s", 0, 2, 0, 2));
+		boardPieces.add(new BoardPiece("o", 1, 0, 1, 2,""));
+		boardPieces.add(new BoardPiece("p", 1, 0, 2, 1,""));
+		boardPieces.add(new BoardPiece("q", 1, 0, 0, 2,""));
+		boardPieces.add(new BoardPiece("r", 1, 2, 0, 2,""));
+		boardPieces.add(new BoardPiece("s", 0, 2, 0, 2,""));
 		//
-		boardPieces.add(new BoardPiece("t", 1, 0, 1, 0));
-		boardPieces.add(new BoardPiece("u", 1, 0, 0, 1));
-		boardPieces.add(new BoardPiece("v", 1, 2, 0, 0));
-		boardPieces.add(new BoardPiece("w", 1, 2, 2, 2));
-		boardPieces.add(new BoardPiece("x", 0, 2, 2, 2));
+		boardPieces.add(new BoardPiece("t", 1, 0, 1, 0,""));
+		boardPieces.add(new BoardPiece("u", 1, 0, 0, 1,""));
+		boardPieces.add(new BoardPiece("v", 1, 2, 0, 0,""));
+		boardPieces.add(new BoardPiece("w", 1, 2, 2, 2,""));
+		boardPieces.add(new BoardPiece("x", 0, 2, 2, 2,""));
+
 	}
 
 	public static void initialiseStructures() {
@@ -249,3 +251,8 @@ public class TextClient {
 		return board;
 	}
 }
+
+/*
+ * What I need to do:
+ * 	Give tokens a name ie green and yellow so we know what token to move
+ */
