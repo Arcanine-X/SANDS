@@ -61,35 +61,6 @@ public class TextClient {
 		}
 	}
 
-	/*public static void createToken(Player player, String options) {
-		if (player == null || options == null) {
-			throw new NullPointerException();
-		}
-		String[] tokens = options.split(" ");
-		if (tokens.length != 3) {
-			System.out.println("The format is incorrect. It should be create <letter> <0/90/180/270>");
-		}
-		String letter = tokens[1];
-		int rotation = Integer.parseInt(tokens[2]);
-		if (rotations.contains(rotation)) {
-			if (letter.length() == 1) {
-				BoardPiece bp = null;
-				for (BoardPiece b : boardPieces) {
-					if (b.name.equals(letter)) {
-						bp = b;
-					}
-				}
-				System.out.println("Attempting to place : " + bp.toString());
-				if (player.addToken(bp, player.name, board) == false) {
-					return;
-				} else {
-					board.redraw();
-				}
-			}
-		} else {
-			System.out.println("error");
-		}
-	}*/
 
 	public static void moveToken(Player player, String options) {
 		if(player == null || options == null) {
@@ -121,43 +92,6 @@ public class TextClient {
 		}
 	}
 
-
-
-	/*public static void moveToken(Player player, String options) {
-		if (player == null || options == null) {
-			throw new NullPointerException();
-		}
-		String s = options;
-		String[] tokens = s.split(" ");
-		if (tokens.length != 3) {
-			// throw an error.....
-		}
-		String letter = tokens[1];
-		String direction = tokens[2];
-		if (checkIfAllowedToMove(player, letter) == false) {
-			return;
-		}
-		if (movement.contains(direction)) {
-			if (letter.length() == 1) {
-				BoardPiece bp = null;
-				for (BoardPiece b : boardPieces) {
-					if (b.name.equals(letter)) {
-						bp = b;
-					}
-				}
-				System.out.println("Attempting to move : " + bp.toString());
-				if (player.moveToken(player, bp, direction, board)) {
-					board.redraw();
-				} else {
-					System.out.println("error");
-				}
-
-			}
-		} else {
-			System.out.println("Error");
-		}
-
-	}*/
 
 	public static void rotateToken(Player player, String options) {
 
@@ -307,7 +241,3 @@ public class TextClient {
 	}
 }
 
-/*
- * What I need to do:
- * 	Give tokens a name ie green and yellow so we know what token to move
- */
