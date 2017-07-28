@@ -21,6 +21,7 @@ public class TextClient {
 	// multiple times in one line
 	static public List<String> greenMoves = new ArrayList<String>();
 	static public List<String> yellowMoves = new ArrayList<String>();
+	static boolean firstCreation = true;
 
 	/**
 	 * Get string from System.in
@@ -38,9 +39,14 @@ public class TextClient {
 	}
 
 	public static void createToken(Player player, String options) {
+		if(!firstCreation) {
+			System.out.println("You have already created a token this turn. You cannot create another one");
+			return;
+		}
 		if(player == null || options == null) {
 			throw new NullPointerException();
 		}
+
 		String[] tokens = options.split(" ");
 		if (tokens.length != 3) {
 			System.out.println("The format is incorrect. It should be create <letter> <0/90/180/270>");
@@ -50,9 +56,11 @@ public class TextClient {
 		if(rotations.contains(rotation)) {
 			if(letter.length() == 1) {
 				System.out.println("Attempting to place : " + letter);
+
 				if(player.addToken(letter, player, board) == false) {
 					return;
 				}
+				firstCreation = false;
 				board.redraw();
 			}
 		}
@@ -124,6 +132,7 @@ public class TextClient {
 	public static void reset() {// after passing need to reset stuff
 		yellowMoves.clear();
 		greenMoves.clear();
+		firstCreation = true;
 
 	}
 
