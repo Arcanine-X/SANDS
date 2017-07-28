@@ -12,20 +12,19 @@ public class Player extends Token {
 		this.name = name;
 	}
 
-
 	/**
 	 * Adds the a token on the board
+	 *
 	 * @param token
 	 * @param color
 	 * @param board
 	 * @return
 	 */
 	public boolean addToken(BoardPiece token, String color, Board board) {
-		if(checkValidCreationSpot(board, color)==false){
+		if (checkValidCreationSpot(board, color) == false) {
 			System.out.println("Invalid Move\nCreation Spot is already taken");
 			return false;
-		}
-		else {
+		} else {
 			if (color.equals("green")) {
 				if (checkValidCreationSpot(board, color)) {
 					board.board[2][2] = token;
@@ -42,8 +41,9 @@ public class Player extends Token {
 	}
 
 	/**
-	 * Method that checks that the creation spot is avaliable or not to create
-	 * more tokens for the given player
+	 * Method that checks that the creation spot is avaliable or not to create more
+	 * tokens for the given player
+	 *
 	 * @param board
 	 * @param color
 	 * @return
@@ -67,43 +67,42 @@ public class Player extends Token {
 	}
 
 	public void populateYellowTokens(List tokens) {
-		for(int r = 0; r < piecesYellowAvaliable[0].length; r++) {
-			for(int c = 0; c < piecesYellowAvaliable.length; c++) {
-				piecesYellowAvaliable[r][c] = (BoardPiece) tokens.get(r + (tokens.size() * r));
+		int i = 0;
+		for (int r = 0; r < piecesYellowAvaliable.length; r++) {
+			for (int c = 0; c < piecesYellowAvaliable[0].length-1; c++) {
+				piecesYellowAvaliable[r][c] = (BoardPiece) tokens.get(i);
+				i++;
 			}
+			i++;
 		}
+
+
 	}
 
-
-
 	public boolean moveToken(Player player, BoardPiece token, String direction, Board board) {
-		//Find the piece
-		int row =0, col = 0;
+		// Find the piece
+		int row = 0, col = 0;
 		boolean found = false;
-		for(int r = 0; r < board.board.length; r++) {
-			for(int c = 0; c < board.board.length; c++) {
-				if(board.board[r][c] == token){
+		for (int r = 0; r < board.board.length; r++) {
+			for (int c = 0; c < board.board.length; c++) {
+				if (board.board[r][c] == token) {
 					row = r;
 					col = c;
 					found = true;
 				}
 			}
 		}
-		if(found) {
+		if (found) {
 			board.board[row][col] = null;
-			if(direction.equals("up")) {
+			if (direction.equals("up")) {
 				row--;
-			}
-			else if(direction.equals("right")) {
+			} else if (direction.equals("right")) {
 				col++;
-			}
-			else if(direction.equals("down")) {
+			} else if (direction.equals("down")) {
 				row++;
-			}
-			else if(direction.equals("left")) {
+			} else if (direction.equals("left")) {
 				col--;
-			}
-			else {
+			} else {
 				System.out.println("error");
 			}
 			board.board[row][col] = token;
@@ -111,8 +110,6 @@ public class Player extends Token {
 		}
 		return false;
 	}
-
-
 
 	public void placeBoardPiece(BoardPiece piece) {
 		piecesPlayed[index] = piece;
