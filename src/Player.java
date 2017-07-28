@@ -44,6 +44,45 @@ public class Player extends Token {
 		return true;
 	}
 
+
+
+	public boolean moveToken(Player player, BoardPiece token, String direction, Board board) {
+		//Find the piece
+		int row =0, col = 0;
+		boolean found = false;
+		for(int r = 0; r < board.board.length; r++) {
+			for(int c = 0; c < board.board.length; c++) {
+				if(board.board[r][c] == token){
+					row = r;
+					col = c;
+					found = true;
+				}
+			}
+		}
+		if(found) {
+			board.board[row][col] = null;
+			if(direction.equals("up")) {
+				row--;
+			}
+			else if(direction.equals("right")) {
+				col++;
+			}
+			else if(direction.equals("down")) {
+				row++;
+			}
+			else if(direction.equals("left")) {
+				col--;
+			}
+			else {
+				System.out.println("error");
+			}
+			board.board[row][col] = token;
+			return true;
+		}
+
+		return false;
+	}
+
 	public void populatePieces() {
 
 	}
