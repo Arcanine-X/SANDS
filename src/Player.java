@@ -19,8 +19,28 @@ public class Player extends Token {
 	 * @param board
 	 * @return
 	 */
-	public boolean addToken(BoardPiece token, String color, Board board) {
-		if (checkValidCreationSpot(board, color) == false) {
+	//public boolean addToken(BoardPiece token, Player player, Board board) {
+	public boolean addToken(String letter, Player player, Board board) {
+		//preCondition
+		if(checkValidCreationSpot(board, player.name)==false) {
+			System.out.println("Invalid Move\nCreation Spot is already taken");
+			return false;
+		}
+		BoardPiece tokenToAdd = null;
+		if(player.name.equals("yellow")) {
+			//if(checkValidCreationSpot(board, player.name)) {
+				tokenToAdd = find(player, letter);
+
+				if(tokenToAdd!=null) {
+					board.board[7][7] = tokenToAdd;
+					return true;
+				}
+			//}
+		}
+
+
+
+		/*if (checkValidCreationSpot(board, color) == false) {
 			System.out.println("Invalid Move\nCreation Spot is already taken");
 			return false;
 		} else {
@@ -35,9 +55,28 @@ public class Player extends Token {
 					return true;
 				}
 			}
-		}
+		}*/
 		return false;
 	}
+
+	public BoardPiece find(Player player, String letter) {
+		BoardPiece returnToken = null;
+		if(player.name.equals("yellow")) {
+			for(int r = 0; r < yellowTokens.length; r++) {
+				for(int c = 0; c < yellowTokens[0].length; c++) {
+					if(yellowTokens[r][c].name.equals(letter)) {
+						returnToken = yellowTokens[r][c];
+						yellowTokens[r][c] = null;
+						System.out.println("All good in find returned token to add");
+						return returnToken;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+
 
 	/**
 	 * Method that checks that the creation spot is avaliable or not to create more
@@ -58,6 +97,7 @@ public class Player extends Token {
 				return false;
 			}
 		}
+		System.out.println("all good in creation spot");
 		return true;
 	}
 
@@ -72,7 +112,7 @@ public class Player extends Token {
 			for (int c = 0; c < greenTokens[0].length; c++) {
 				greenTokens[r][c] = tokens.get(i++);
 				greenTokens[r][c].col = "green";
-				//System.out.println(greenTokens[r][c].toString());
+				// System.out.println(greenTokens[r][c].toString());
 			}
 		}
 	}
@@ -88,13 +128,14 @@ public class Player extends Token {
 			for (int c = 0; c < yellowTokens[0].length; c++) {
 				yellowTokens[r][c] = tokens.get(i++);
 				yellowTokens[r][c].col = "yellow";
-				//System.out.println(yellowTokens[r][c].toString());
+				// System.out.println(yellowTokens[r][c].toString());
 			}
 		}
 	}
 
 	/**
 	 * First finds the token, and if its found moves it in the appropriate direction
+	 *
 	 * @param player
 	 * @param token
 	 * @param direction
@@ -111,7 +152,11 @@ public class Player extends Token {
 				if (board.board[r][c] == token) {
 					row = r;
 					col = c;
-					found = true;
+					System.out.println("player is " + player.name);
+					System.out.println("token is " + token.col);
+					if (player.name.equals(token.col)) {
+						found = true;
+					}
 				}
 			}
 		}
@@ -126,14 +171,13 @@ public class Player extends Token {
 			} else if (direction.equals("left")) {
 				col--;
 			} else {
-				System.out.println("error");
+				System.out.println("error in movetoken");
 			}
 			board.board[row][col] = token;
 			return true;
 		}
 		return false;
 	}
-
 
 	public String toString() {
 		return "" + name;

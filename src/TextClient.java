@@ -35,6 +35,30 @@ public class TextClient {
 	}
 
 	public static void createToken(Player player, String options) {
+		if(player == null || options == null) {
+			throw new NullPointerException();
+		}
+		String[] tokens = options.split(" ");
+		if (tokens.length != 3) {
+			System.out.println("The format is incorrect. It should be create <letter> <0/90/180/270>");
+		}
+		String letter = tokens[1];
+		int rotation = Integer.parseInt(tokens[2]);
+		if(rotations.contains(rotation)) {
+			if(letter.length() == 1) {
+				System.out.println("Attempting to place : " + letter);
+				if(player.addToken(letter, player, board) == false) {
+					return;
+				}
+				board.redraw();
+			}
+		}
+		else {
+			System.out.println("error");
+		}
+	}
+
+	/*public static void createToken(Player player, String options) {
 		if (player == null || options == null) {
 			throw new NullPointerException();
 		}
@@ -62,7 +86,7 @@ public class TextClient {
 		} else {
 			System.out.println("error");
 		}
-	}
+	}*/
 
 	public static void moveToken(Player player, String options) {
 		if (player == null || options == null) {
@@ -73,7 +97,6 @@ public class TextClient {
 		if (tokens.length != 3) {
 			// throw an error.....
 		}
-		String moveMessage = tokens[0];
 		String letter = tokens[1];
 		String direction = tokens[2];
 		if (checkIfAllowedToMove(player, letter) == false) {
@@ -174,7 +197,7 @@ public class TextClient {
 		board.initialise();
 		board.addPlayers(green, yellow);
 		board.redraw();
-		//yellow.populateYellowTokens(boardPieces);
+		yellow.populateYellowTokens(boardPieces);
 		green.populateGreenTokens(boardPieces);
 
 		System.out.println("~*~*~ Sword & Shield ~*~*~");
@@ -207,8 +230,8 @@ public class TextClient {
 	public static void generatePieces() {
 		boardPieces.add(new BoardPiece("a", 1, 2, 1, 1,""));
 		boardPieces.add(new BoardPiece("b", 1, 0, 1, 1,""));
-		boardPieces.add(new BoardPiece("c", 2, 2, 2, 2,""));
-		boardPieces.add(new BoardPiece("d", 1, 0, 0, 0,""));
+		boardPieces.add(new BoardPiece("c", 2, 2, 2, 2,"yellow"));
+		boardPieces.add(new BoardPiece("d", 1, 0, 0, 0,"green"));
 		// empty tile??
 		//
 		boardPieces.add(new BoardPiece("e", 0, 0, 0, 0,""));
@@ -228,7 +251,7 @@ public class TextClient {
 		boardPieces.add(new BoardPiece("q", 1, 0, 0, 2,""));
 		boardPieces.add(new BoardPiece("r", 1, 2, 0, 2,""));
 		boardPieces.add(new BoardPiece("s", 0, 2, 0, 2,""));
-		//
+		//e modeler, ram usage is down from several GB to 400MB or so when spamming it with compilation r
 		boardPieces.add(new BoardPiece("t", 1, 0, 1, 0,""));
 		boardPieces.add(new BoardPiece("u", 1, 0, 0, 1,""));
 		boardPieces.add(new BoardPiece("v", 1, 2, 0, 0,""));
