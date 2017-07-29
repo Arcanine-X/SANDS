@@ -111,7 +111,40 @@ public class TextClient {
 	}
 
 	public static void rotateToken(Player player, String options) {
+		if (player == null || options == null) {
+			throw new NullPointerException();
+		}
+		String[] tokens = options.split(" ");
+		if (tokens.length != 3) {
+			System.out.println("Rotation input error");
+		}
+		String letter = tokens[1];
+		int rotation = Integer.parseInt(tokens[2]);
+		if (!rotations.contains(rotation) || letter.length() != 1) {
+			System.out.println("Input error in rotation");
+			return;
+		}
+		BoardPiece itemToRotate = board.findMoveToken(player, letter);
+		if (itemToRotate == null) {
+			System.out.println("Your rotation piece doesn't exist");
+			return;
+		}
+		int num = (rotation == 0) ? 0 : (rotation == 90) ? 1 : (rotation == 180) ? 2 : 3;
+		while (num > 0) {
+			rotator(itemToRotate, rotation);
+		}
+		board.redraw();
+		System.out.println("Successful rotation");
+		return;
 
+	}
+
+	public static void rotator(BoardPiece item, int rotation) {
+		int tn = item.north, te = item.east, ts = item.south, tw = item.west;
+		item.north = tw;
+		item.east = tn;
+		item.south = te;
+		item.west = ts;
 	}
 
 	public static void playerOptions(Player player) {
@@ -144,13 +177,13 @@ public class TextClient {
 					if (!yellowMoves.isEmpty()) {
 						yellowMoves.remove(yellowMoves.size() - 1);
 					}
-					if(player.name.equals("green")) {
-						if(green.getSetterCount() > green.getOriginalCount()) {
+					if (player.name.equals("green")) {
+						if (green.getSetterCount() > green.getOriginalCount()) {
 							firstCreation = true;
 						}
 					}
-					if(player.name.equals("yellow")) {
-						if(yellow.getSetterCount() > yellow.getOriginalCount()) {
+					if (player.name.equals("yellow")) {
+						if (yellow.getSetterCount() > yellow.getOriginalCount()) {
 							firstCreation = true;
 						}
 					}
@@ -207,8 +240,8 @@ public class TextClient {
 	public static void main(String[] args) {
 
 		// Create players
-		 green = new Player("green");
-		 yellow = new Player("yellow");
+		green = new Player("green");
+		yellow = new Player("yellow");
 		int turn = 0;
 		initialiseStructures();
 		gerneratePieces(yelList);
