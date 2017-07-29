@@ -131,7 +131,9 @@ public class TextClient {
 		}
 		int num = (rotation == 0) ? 0 : (rotation == 90) ? 1 : (rotation == 180) ? 2 : 3;
 		while (num > 0) {
+			System.out.println("in while loop");
 			rotator(itemToRotate, rotation);
+			num--;
 		}
 		board.redraw();
 		System.out.println("Successful rotation");
@@ -140,6 +142,7 @@ public class TextClient {
 	}
 
 	public static void rotator(BoardPiece item, int rotation) {
+		System.out.println("in rotator");
 		int tn = item.north, te = item.east, ts = item.south, tw = item.west;
 		item.north = tw;
 		item.east = tn;

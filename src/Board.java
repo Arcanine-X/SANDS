@@ -101,9 +101,11 @@ public class Board {
 		for (int r = 0; r < board.length; r++) {
 			for (int c = 0; c < board[0].length; c++) {
 				if (board[r][c] instanceof BoardPiece) {
+					System.out.println("getting closer");
 					BoardPiece temp = (BoardPiece) board[r][c];
 					if (temp.col.equals(player.name) && temp.name.equals(letter)) {
 						returnToken = temp;
+						System.out.println("Always a good sign");
 						return returnToken;
 					}
 				}
