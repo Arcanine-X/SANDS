@@ -123,7 +123,7 @@ public class TextClient {
 					moveToken(player, options);
 				} else if (options.startsWith("pass")) {
 					System.out.println("Next persons turn");
-					reset();
+					reset(player, board);
 					return;
 				} else if (options.startsWith("undo")) {
 					System.out.println("Undoing");
@@ -156,10 +156,15 @@ public class TextClient {
 		}
 	}
 
-	public static void reset() {// after passing need to reset stuff
+	public static void reset(Player player, Board board) {// after passing need to reset stuff
 		yellowMoves.clear();
 		greenMoves.clear();
 		firstCreation = true;
+		player.undoStackG.clear();
+		player.undoStackY.clear();
+		board.undoStack.clear();
+		player.createRecord();
+		board.createRecord();
 
 	}
 

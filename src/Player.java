@@ -197,32 +197,36 @@ public class Player extends Token {
 
 
 	public void createRecord() {
-
-		System.out.println("## Looping thru populated yelo toks ##");
-		for(int i = 0; i < yellowTokens.length; i++) {
-			for(int j = 0; j < yellowTokens[0].length; j++) {
-				if(yellowTokens[i][j]!=null) {
-					System.out.println(yellowTokens[i][j].toString());
-				}
-			}
-		}
-
-
 		BoardPiece[][] recordY = new BoardPiece[6][4];
+		BoardPiece[][] recordG = new BoardPiece[6][4];
 		for (int r = 0; r < recordY.length; r++) {
 			for (int c = 0; c < recordY[0].length; c++) {
 				recordY[r][c] = yellowTokens[r][c];
 			}
 		}
+
+		for(int r = 0; r < recordG.length; r++) {
+			for(int c = 0; c < recordG[0].length; c++) {
+				recordG[r][c] = greenTokens[r][c];
+			}
+		}
+		undoStackG.push(recordG);
 		undoStackY.push(recordY);
 	}
 
 	public void setBoard() {
 		undoStackY.pop(); // get rid of original
+		undoStackG.pop();
 		BoardPiece[][] setterY = undoStackY.pop();
+		BoardPiece[][] setterG = undoStackG.pop();
 		for (int r = 0; r < setterY.length; r++) {
 			for (int c = 0; c < setterY[0].length; c++) {
 				yellowTokens[r][c] = setterY[r][c];
+			}
+		}
+		for(int r = 0; r < setterG.length; r++) {
+			for(int c = 0; c < setterG[0].length; c++) {
+				greenTokens[r][c] = setterG[r][c];
 			}
 		}
 	}
