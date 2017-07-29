@@ -22,6 +22,8 @@ public class TextClient {
 	static public List<String> greenMoves = new ArrayList<String>();
 	static public List<String> yellowMoves = new ArrayList<String>();
 	static boolean firstCreation = true;
+	static Player yellow;
+	static Player green;
 
 	/**
 	 * Get string from System.in
@@ -65,7 +67,9 @@ public class TextClient {
 
 				// create record of this for undo
 				board.createRecord();
-				player.createRecord();
+				//player.createRecord();
+				green.createRecordG();
+				yellow.createRecordY();
 				board.redraw();
 			}
 		} else {
@@ -96,7 +100,9 @@ public class TextClient {
 						// create record of this for undo
 						System.out.println("Create record for moving");
 						board.createRecord();
-						player.createRecord();
+						//player.createRecord();
+						yellow.createRecordY();
+						green.createRecordG();
 						board.redraw();
 					} else {
 						return;
@@ -128,9 +134,13 @@ public class TextClient {
 				} else if (options.startsWith("undo")) {
 					System.out.println("Undoing");
 					board.setBoard(); // undo board
-					player.setBoard(); // undo player tokens
+					//player.setBoard(); // undo player tokens
+					yellow.setBoardY();
+					green.setBoardG();
 					System.out.println("Successfully undoed");
-					player.createRecord();// create new record
+					//player.createRecord();// create new record
+					yellow.createRecordY();
+					green.createRecordG();
 					board.createRecord(); // create new record
 					// undo lists which ensure a player can only move something once per turn
 					if (!greenMoves.isEmpty()) {
@@ -163,8 +173,10 @@ public class TextClient {
 		player.undoStackG.clear();
 		player.undoStackY.clear();
 		board.undoStack.clear();
-		player.createRecord();
+		green.createRecordG();
+		yellow.createRecordY();
 		board.createRecord();
+		//player.createRecord();
 
 	}
 
@@ -199,8 +211,8 @@ public class TextClient {
 	public static void main(String[] args) {
 
 		// Create players
-		Player green = new Player("green");
-		Player yellow = new Player("yellow");
+		 green = new Player("green");
+		 yellow = new Player("yellow");
 		int turn = 0;
 		initialiseStructures();
 		gerneratePieces(yelList);
@@ -214,7 +226,9 @@ public class TextClient {
 
 		yellow.populateYellowTokens(yelList);
 		green.populateGreenTokens(greList);
-		yellow.createRecord();
+		//yellow.createRecord();
+		yellow.createRecordY();
+		green.createRecordG();
 		System.out.println("~*~*~ Sword & Shield ~*~*~");
 		while (1 == 1) {// loop forever
 			System.out.println("\n********************");

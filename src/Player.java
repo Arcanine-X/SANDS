@@ -210,8 +210,49 @@ public class Player extends Token {
 				recordG[r][c] = greenTokens[r][c];
 			}
 		}
+
+		System.out.println("###Yello record####");
+		for(int r = 0; r < recordY.length; r++) {
+			for(int c = 0; c < recordY[0].length; c++) {
+				if(recordY[r][c]!=null) {
+					System.out.println(recordY[r][c].toString());
+				}
+			}
+		}
+
+
+		System.out.println("###Green record####");
+		for(int r = 0; r < recordG.length; r++) {
+			for(int c = 0; c < recordG[0].length; c++) {
+				if(recordG[r][c]!=null) {
+					System.out.println(recordG[r][c].toString());
+				}
+			}
+		}
+
+
 		undoStackG.push(recordG);
 		undoStackY.push(recordY);
+	}
+
+	public void createRecordY() {
+		BoardPiece[][] recordY = new BoardPiece[6][4];
+		for (int r = 0; r < recordY.length; r++) {
+			for (int c = 0; c < recordY[0].length; c++) {
+				recordY[r][c] = yellowTokens[r][c];
+			}
+		}
+		undoStackY.push(recordY);
+	}
+
+	public void createRecordG() {
+		BoardPiece[][] recordG = new BoardPiece[6][4];
+		for(int r = 0; r < recordG.length; r++) {
+			for(int c = 0; c < recordG[0].length; c++) {
+				recordG[r][c] = greenTokens[r][c];
+			}
+		}
+		undoStackG.push(recordG);
 	}
 
 	public void setBoard() {
@@ -230,6 +271,27 @@ public class Player extends Token {
 			}
 		}
 	}
+
+	public void setBoardY() {
+		undoStackY.pop(); // get rid of original
+		BoardPiece[][] setterY = undoStackY.pop();
+		for (int r = 0; r < setterY.length; r++) {
+			for (int c = 0; c < setterY[0].length; c++) {
+				yellowTokens[r][c] = setterY[r][c];
+			}
+		}
+	}
+
+	public void setBoardG() {
+		undoStackG.pop();
+		BoardPiece[][] setterG = undoStackG.pop();
+		for(int r = 0; r < setterG.length; r++) {
+			for(int c = 0; c < setterG[0].length; c++) {
+				greenTokens[r][c] = setterG[r][c];
+			}
+		}
+	}
+
 
 	@Override
 	public String toString() {
