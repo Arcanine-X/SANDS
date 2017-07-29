@@ -23,39 +23,18 @@ public class Board {
 			System.out.println("|");
 			// Middle Row
 			for (int i = 0; i < 10; i++) {
-				// Draw Player
 				if (board[r][i] instanceof Player) {
-					if (r == 1 && i == 1) {
-						System.out.print("|green");
-					} else {
-						System.out.print("|yelow");
-					}
-				} else if (board[r][i] instanceof BoardPiece) { // Logic for drawing the tokens in the array
+					System.out.print(r == 1 && i == 1 ? "|green" : "|yelow");			// Draw Player
+				} else if (board[r][i] instanceof BoardPiece) { 						// Logic for drawing the tokens in the array
 					BoardPiece temp = (BoardPiece) board[r][i];
 					StringBuilder build = new StringBuilder();
-					// Deal with west
-					build.append("| ");
-					if (temp.west == 0) {
-						build.append(" ");
-					} else if (temp.west == 1) {
-						build.append("-");
-					} else {
-						build.append("+");
-					}
-					// Make sure the names in
-					build.append(temp.name);
-					// Deal with East
-					if (temp.east == 0) {
-						build.append("  ");
-					} else if (temp.east == 1) {
-						build.append("- ");
-					} else {
-						build.append("+ ");
-					}
+					build.append(getWest(temp));										// Deal with West
+					build.append(temp.name);											// Deal with Name
+					build.append(getEast(temp));										// Deal with East
 					System.out.print(build.toString());
-				} else if (r == 2 && i == 2 && !(board[2][2] instanceof Token)) {// Draw creation box for green
+				} else if (r == 2 && i == 2 && !(board[2][2] instanceof Token)) {		// Draw creation box for green
 					System.out.print("| [ ] ");
-				} else if (r == 7 && i == 7 && !(board[7][7] instanceof Token)) {// Draw creation box for yellow
+				} else if (r == 7 && i == 7 && !(board[7][7] instanceof Token)) {		// Draw creation box for yellow
 					System.out.print("| [ ] ");
 				} else {
 					System.out.print("|     ");
@@ -77,6 +56,9 @@ public class Board {
 		}
 	}
 
+
+
+
 	public String getNorth(BoardPiece b) {
 		return (b.north == 0) ?  "|     " : (b.north==1) ? "|  |  " : "|  +  ";
 	}
@@ -86,13 +68,14 @@ public class Board {
 	}
 
 	public String getEast(BoardPiece b) {
-		return "";
+		return (b.east == 0) ? "  " : (b.east == 1) ? "- " : "+ ";
 	}
 
 	public String getWest(BoardPiece b) {
-
-		return "";
+		return (b.west == 0) ? "|  " : (b.west == 1) ? "| -" : "| +";
 	}
+
+
 
 
 
