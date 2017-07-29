@@ -20,6 +20,7 @@ public class BoardPiece extends Token{
 	public String toString() {
 		String n ="" , e = "" , s = "" , w = "";
 		//north
+
 		if(north == 0) {
 			n= "";
 		}

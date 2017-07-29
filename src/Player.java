@@ -1,10 +1,11 @@
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class Player extends Token {
+	Stack<Token[][]> undoStackG = new Stack<Token[][]>();
+	Stack<Token[][]> undoStackY = new Stack<Token[][]>();
 	BoardPiece greenTokens[][] = new BoardPiece[6][4];
 	BoardPiece yellowTokens[][] = new BoardPiece[6][4];
-	int index = 0;
 	String name = "";
 
 	public Player(String name) {
@@ -182,7 +183,7 @@ public class Player extends Token {
 			} else if (direction.equals("left")) {
 				col--;
 			} else {
-				System.out.println("error in movetoken");
+				System.out.println("error in movetoken()");
 			}
 			//if they go of the board, they go to the grave yard O_O
 			if(row < 0 || row > 9 || col < 0 || col > 9) {
@@ -193,7 +194,6 @@ public class Player extends Token {
 		}
 		return false;
 	}
-
 
 
 	@Override

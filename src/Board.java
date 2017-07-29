@@ -1,11 +1,14 @@
+import java.util.Stack;
 
 public class Board {
 	Token[][] board = new Token[10][10];
-
+	Stack<Token[][]> undoStack = new Stack<Token[][]>();
 
 	public Board() {
 
 	}
+
+
 
 	public void redraw() {
 		// draw a board
@@ -15,7 +18,7 @@ public class Board {
 			for (int c = 0; c < board.length; c++) {
 				if (board[r][c] instanceof BoardPiece) {
 					BoardPiece temp = (BoardPiece) board[r][c];
-					System.out.print(getNorth(temp));
+					System.out.print(getNorth(temp));									// Deal with North
 				} else {
 					System.out.print("|     ");
 				}
@@ -43,10 +46,9 @@ public class Board {
 			System.out.println("|");
 			// Last Row
 			for (int i = 0; i < 10; i++) {
-				//Deal with South
 				if (board[r][i] instanceof BoardPiece) {
 					BoardPiece temp = (BoardPiece) board[r][i];
-					System.out.print(getSouth(temp));
+					System.out.print(getSouth(temp));									// Deal with South
 				} else {
 					System.out.print("|     ");
 				}
@@ -55,9 +57,6 @@ public class Board {
 			System.out.println("-------------------------------------------------------------");
 		}
 	}
-
-
-
 
 	public String getNorth(BoardPiece b) {
 		return (b.north == 0) ?  "|     " : (b.north==1) ? "|  |  " : "|  +  ";
@@ -75,10 +74,25 @@ public class Board {
 		return (b.west == 0) ? "|  " : (b.west == 1) ? "| -" : "| +";
 	}
 
+	public void createRecord() {
+		Token[][] record = new Token[10][10];
+		//Make a copy of the board
+		for(int r = 0; r < record.length; r++) {
+			for(int c = 0; c < record[0].length; c++) {
+				record[r][c] = board[r][c];
+			}
+		}
+		undoStack.push(record);
+	}
 
-
-
-
+	public void setBoard() {
+		Token[][] setter = undoStack.pop();
+		for(int r = 0; r < board.length; r++) {
+			for(int c = 0; c < board.length; c++) {
+				board[r][c] = setter[r][c];
+			}
+		}
+	}
 
 
 	public BoardPiece findMoveToken(Player player, String letter) {
