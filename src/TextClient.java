@@ -128,7 +128,7 @@ public class TextClient {
 				} else if (options.startsWith("undo")) {
 					System.out.println("Undoing");
 					board.setBoard(); // undo board
-					player.setBoards(); // undo player tokens
+					player.setBoard(); // undo player tokens
 					System.out.println("Successfully undoed");
 					player.createRecord();// create new record
 					board.createRecord(); // create new record
@@ -206,10 +206,10 @@ public class TextClient {
 
 		board.redraw();
 		board.createRecord();
-		yellow.createRecord();
+
 		yellow.populateYellowTokens(yelList);
 		green.populateGreenTokens(greList);
-
+		yellow.createRecord();
 		System.out.println("~*~*~ Sword & Shield ~*~*~");
 		while (1 == 1) {// loop forever
 			System.out.println("\n********************");
