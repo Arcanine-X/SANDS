@@ -67,7 +67,6 @@ public class TextClient {
 
 				// create record of this for undo
 				board.createRecord();
-				//player.createRecord();
 				green.createRecordG();
 				yellow.createRecordY();
 				board.redraw();
@@ -100,7 +99,6 @@ public class TextClient {
 						// create record of this for undo
 						System.out.println("Create record for moving");
 						board.createRecord();
-						//player.createRecord();
 						yellow.createRecordY();
 						green.createRecordG();
 						board.redraw();
@@ -134,11 +132,9 @@ public class TextClient {
 				} else if (options.startsWith("undo")) {
 					System.out.println("Undoing");
 					board.setBoard(); // undo board
-					//player.setBoard(); // undo player tokens
 					yellow.setBoardY();
 					green.setBoardG();
 					System.out.println("Successfully undoed");
-					//player.createRecord();// create new record
 					yellow.createRecordY();
 					green.createRecordG();
 					board.createRecord(); // create new record
@@ -153,9 +149,19 @@ public class TextClient {
 					System.out.println(board.getOriginalCount());
 					System.out.println(board.getSetterCount());
 					System.out.println("####");
-					if(board.getSetterCount()<board.getOriginalCount()) {
-						firstCreation = true;
+					if(player.name.equals("green")) {
+						if(green.getSetterCount() > green.getOriginalCount()) {
+							firstCreation = true;
+						}
 					}
+					if(player.name.equals("yellow")) {
+						if(yellow.getSetterCount() > yellow.getOriginalCount()) {
+							firstCreation = true;
+						}
+					}
+					//if(board.getSetterCount()<board.getOriginalCount()) {
+					//	firstCreation = true;
+					//}
 					board.redraw();
 				} else {
 					System.out.println("Invalid option....");
@@ -176,8 +182,6 @@ public class TextClient {
 		green.createRecordG();
 		yellow.createRecordY();
 		board.createRecord();
-		//player.createRecord();
-
 	}
 
 	/**
@@ -217,16 +221,12 @@ public class TextClient {
 		initialiseStructures();
 		gerneratePieces(yelList);
 		gerneratePieces(greList);
-
 		board.initialise();
 		board.addPlayers(green, yellow);
-
 		board.redraw();
 		board.createRecord();
-
 		yellow.populateYellowTokens(yelList);
 		green.populateGreenTokens(greList);
-		//yellow.createRecord();
 		yellow.createRecordY();
 		green.createRecordG();
 		System.out.println("~*~*~ Sword & Shield ~*~*~");

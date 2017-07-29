@@ -7,6 +7,8 @@ public class Player extends Token {
 	BoardPiece greenTokens[][] = new BoardPiece[6][4];
 	BoardPiece yellowTokens[][] = new BoardPiece[6][4];
 	String name = "";
+	int originalCount = 0;
+	int setterCount = 0;
 
 	public Player(String name) {
 		this.name = name;
@@ -196,44 +198,6 @@ public class Player extends Token {
 	}
 
 
-	public void createRecord() {
-		BoardPiece[][] recordY = new BoardPiece[6][4];
-		BoardPiece[][] recordG = new BoardPiece[6][4];
-		for (int r = 0; r < recordY.length; r++) {
-			for (int c = 0; c < recordY[0].length; c++) {
-				recordY[r][c] = yellowTokens[r][c];
-			}
-		}
-
-		for(int r = 0; r < recordG.length; r++) {
-			for(int c = 0; c < recordG[0].length; c++) {
-				recordG[r][c] = greenTokens[r][c];
-			}
-		}
-
-		System.out.println("###Yello record####");
-		for(int r = 0; r < recordY.length; r++) {
-			for(int c = 0; c < recordY[0].length; c++) {
-				if(recordY[r][c]!=null) {
-					System.out.println(recordY[r][c].toString());
-				}
-			}
-		}
-
-
-		System.out.println("###Green record####");
-		for(int r = 0; r < recordG.length; r++) {
-			for(int c = 0; c < recordG[0].length; c++) {
-				if(recordG[r][c]!=null) {
-					System.out.println(recordG[r][c].toString());
-				}
-			}
-		}
-
-
-		undoStackG.push(recordG);
-		undoStackY.push(recordY);
-	}
 
 	public void createRecordY() {
 		BoardPiece[][] recordY = new BoardPiece[6][4];
@@ -255,36 +219,22 @@ public class Player extends Token {
 		undoStackG.push(recordG);
 	}
 
-	public void setBoard() {
-		undoStackY.pop(); // get rid of original
-		undoStackG.pop();
-		BoardPiece[][] setterY = undoStackY.pop();
-		BoardPiece[][] setterG = undoStackG.pop();
-		for (int r = 0; r < setterY.length; r++) {
-			for (int c = 0; c < setterY[0].length; c++) {
-				yellowTokens[r][c] = setterY[r][c];
-			}
-		}
-		for(int r = 0; r < setterG.length; r++) {
-			for(int c = 0; c < setterG[0].length; c++) {
-				greenTokens[r][c] = setterG[r][c];
-			}
-		}
-	}
-
 	public void setBoardY() {
-		undoStackY.pop(); // get rid of original
+		BoardPiece[][] original = undoStackY.pop(); // get rid of original
 		BoardPiece[][] setterY = undoStackY.pop();
+		counter(original, setterY);
 		for (int r = 0; r < setterY.length; r++) {
 			for (int c = 0; c < setterY[0].length; c++) {
 				yellowTokens[r][c] = setterY[r][c];
 			}
 		}
+
 	}
 
 	public void setBoardG() {
-		undoStackG.pop();
+		BoardPiece[][] original =undoStackG.pop();
 		BoardPiece[][] setterG = undoStackG.pop();
+		counter(original, setterG);
 		for(int r = 0; r < setterG.length; r++) {
 			for(int c = 0; c < setterG[0].length; c++) {
 				greenTokens[r][c] = setterG[r][c];
@@ -292,6 +242,31 @@ public class Player extends Token {
 		}
 	}
 
+	public void counter(Token[][] original, Token[][] setter) {
+		originalCount = 0;
+		setterCount = 0;
+		for(int r = 0; r < setter.length; r++) {
+			for(int c = 0; c < setter[0].length; c++) {
+				if(setter[r][c] instanceof BoardPiece) {
+					setterCount++;
+				}
+				if(original[r][c] instanceof BoardPiece) {
+					originalCount++;
+				}
+			}
+		}
+	}
+
+
+	public int getOriginalCount() {
+		System.out.println("Original Count is : " + originalCount);
+		return originalCount;
+	}
+
+	public int getSetterCount() {
+		System.out.println("Setter Count is : " + setterCount);
+		return setterCount;
+	}
 
 	@Override
 	public String toString() {
