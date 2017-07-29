@@ -3,6 +3,7 @@ import java.util.Stack;
 public class Board {
 	Token[][] board = new Token[10][10];
 	Stack<Token[][]> undoStack = new Stack<Token[][]>();
+	int originalCount = 0, setterCount = 0;
 
 	public Board() {
 
@@ -75,17 +76,31 @@ public class Board {
 	public void createRecord() {
 		Token[][] record = new Token[10][10];
 		// Make a copy of the board
+		
+		
+		
+		
 		for (int r = 0; r < record.length; r++) {
 			for (int c = 0; c < record[0].length; c++) {
 				record[r][c] = board[r][c];
 			}
 		}
 		undoStack.push(record);
+		
+		System.out.println("####%%%#@####");
+		for (int r = 0; r < record.length; r++) {
+			for (int c = 0; c < record[0].length; c++) {
+				if(record[r][c]!=null) {
+					System.out.println(record[r][c].toString());
+				}
+			}
+		}
 	}
 
 	public void setBoard() {
-		undoStack.pop();
+		Token[][] original = undoStack.pop(); // Need to pop out the current identicle version in the stack
 		Token[][] setter = undoStack.pop();
+		counter(original, setter);
 		for (int r = 0; r < board.length; r++) {
 			for (int c = 0; c < board[0].length; c++) {
 				board[r][c] = setter[r][c];
@@ -124,5 +139,32 @@ public class Board {
 				board[r][c] = null;
 			}
 		}
+	}
+
+	/**
+	 * Helper method for undo --- Counts the instances of a token on the board, and
+	 * the number instances on the setter. If there are less instances on the setter
+	 * that means undo took away a creation, and the player should be allowed to
+	 * create another token
+	 */
+	public void counter(Token[][] original, Token[][] setter) {
+		for (int r = 0; r < board.length; r++) {
+			for (int c = 0; c < board[0].length; c++) {
+				if (board[r][c] instanceof BoardPiece) {
+					originalCount++;
+				}
+				if (setter[r][c] instanceof BoardPiece) {
+					setterCount++;
+				}
+			}
+		}
+	}
+
+	public int getOriginalCount() {
+		return originalCount;
+	}
+
+	public int getSetterCount() {
+		return setterCount;
 	}
 }

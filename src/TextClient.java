@@ -63,7 +63,7 @@ public class TextClient {
 				firstCreation = false;
 				System.out.println("Made a copy");
 
-				//create record of this for undo
+				// create record of this for undo
 				board.createRecord();
 				player.createRecord();
 				board.redraw();
@@ -93,7 +93,7 @@ public class TextClient {
 				if (tokenToMove != null) {
 					System.out.println("Found Token to move");
 					if (player.moveToken(player, tokenToMove, direction, board) == true) {
-						//create record of this for undo
+						// create record of this for undo
 						System.out.println("Create record for moving");
 						board.createRecord();
 						player.createRecord();
@@ -105,8 +105,6 @@ public class TextClient {
 			}
 		}
 	}
-
-
 
 	public static void rotateToken(Player player, String options) {
 
@@ -129,12 +127,27 @@ public class TextClient {
 					return;
 				} else if (options.startsWith("undo")) {
 					System.out.println("Undoing");
-					board.setBoard();
-					player.setBoards();
+					board.setBoard(); // undo board
+					player.setBoards(); // undo player tokens
 					System.out.println("Successfully undoed");
-					board.createRecord();
+					player.createRecord();// create new record
+					board.createRecord(); // create new record
+					// undo lists which ensure a player can only move something once per turn
+					if (!greenMoves.isEmpty()) {
+						greenMoves.remove(greenMoves.size() - 1);
+					}
+					if (!yellowMoves.isEmpty()) {
+						yellowMoves.remove(yellowMoves.size() - 1);
+					}
+					System.out.println("####");
+					System.out.println(board.getOriginalCount());
+					System.out.println(board.getSetterCount());
+					System.out.println("####");
+					if(board.getSetterCount()<board.getOriginalCount()) {
+						firstCreation = true;
+					}
 					board.redraw();
-				}else {
+				} else {
 					System.out.println("Invalid option....");
 				}
 			} catch (Exception e) {
@@ -193,6 +206,7 @@ public class TextClient {
 
 		board.redraw();
 		board.createRecord();
+		yellow.createRecord();
 		yellow.populateYellowTokens(yelList);
 		green.populateGreenTokens(greList);
 
