@@ -14,6 +14,8 @@ public class BoardPiece extends Token{
 		this.col = col;
 	}
 
+
+
 	@Override
 	public String toString() {
 		String n ="" , e = "" , s = "" , w = "";

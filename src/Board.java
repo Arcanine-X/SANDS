@@ -15,14 +15,7 @@ public class Board {
 			for (int c = 0; c < board.length; c++) {
 				if (board[r][c] instanceof BoardPiece) {
 					BoardPiece temp = (BoardPiece) board[r][c];
-					// Dealing with North
-					if (temp.north == 0) {
-						System.out.print("|     ");
-					} else if (temp.north == 1) {
-						System.out.print("|  |  ");
-					} else {
-						System.out.print("|  +  ");
-					}
+					System.out.print(getNorth(temp));
 				} else {
 					System.out.print("|     ");
 				}
@@ -74,13 +67,7 @@ public class Board {
 				//Deal with South
 				if (board[r][i] instanceof BoardPiece) {
 					BoardPiece temp = (BoardPiece) board[r][i];
-					if (temp.south == 0) {
-						System.out.print("|     ");
-					} else if (temp.south == 1) {
-						System.out.print("|  |  ");
-					} else {
-						System.out.print("|  +  ");
-					}
+					System.out.print(getSouth(temp));
 				} else {
 					System.out.print("|     ");
 				}
@@ -89,6 +76,27 @@ public class Board {
 			System.out.println("-------------------------------------------------------------");
 		}
 	}
+
+	public String getNorth(BoardPiece b) {
+		return (b.north == 0) ?  "|     " : (b.north==1) ? "|  |  " : "|  +  ";
+	}
+
+	public String getSouth(BoardPiece b) {
+		return (b.south == 0) ?  "|     " : (b.south==1) ? "|  |  " : "|  +  ";
+	}
+
+	public String getEast(BoardPiece b) {
+		return "";
+	}
+
+	public String getWest(BoardPiece b) {
+
+		return "";
+	}
+
+
+
+
 
 	public BoardPiece findMoveToken(Player player, String letter) {
 		System.out.println("in findmoveToken");

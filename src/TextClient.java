@@ -39,11 +39,11 @@ public class TextClient {
 	}
 
 	public static void createToken(Player player, String options) {
-		if(!firstCreation) {
+		if (!firstCreation) {
 			System.out.println("You have already created a token this turn. You cannot create another one");
 			return;
 		}
-		if(player == null || options == null) {
+		if (player == null || options == null) {
 			throw new NullPointerException();
 		}
 
@@ -53,53 +53,49 @@ public class TextClient {
 		}
 		String letter = tokens[1];
 		int rotation = Integer.parseInt(tokens[2]);
-		if(rotations.contains(rotation)) {
-			if(letter.length() == 1) {
+		if (rotations.contains(rotation)) {
+			if (letter.length() == 1) {
 				System.out.println("Attempting to place : " + letter);
 
-				if(player.addToken(letter, player, board) == false) {
+				if (player.addToken(letter, player, board) == false) {
 					return;
 				}
 				firstCreation = false;
 				board.redraw();
 			}
-		}
-		else {
+		} else {
 			System.out.println("error");
 		}
 	}
 
-
 	public static void moveToken(Player player, String options) {
-		if(player == null || options == null) {
+		if (player == null || options == null) {
 			throw new NullPointerException();
 		}
 		String[] tokens = options.split(" ");
-		if(tokens.length!=3) {
+		if (tokens.length != 3) {
 			System.out.println("errrrrrorr");
 		}
 		String letter = tokens[1];
 		String direction = tokens[2];
-		if(checkIfAllowedToMove(player, letter) == false) {
+		if (checkIfAllowedToMove(player, letter) == false) {
 			return;
 		}
-		if(movement.contains(direction)) {
+		if (movement.contains(direction)) {
 			System.out.println("correct direction");
-			if(letter.length() == 1) {
+			if (letter.length() == 1) {
 				BoardPiece tokenToMove = board.findMoveToken(player, letter);
-				if(tokenToMove!=null) {
+				if (tokenToMove != null) {
 					System.out.println("Found Token to move");
-					if(player.moveToken(player, tokenToMove, direction, board)==true) {
+					if (player.moveToken(player, tokenToMove, direction, board) == true) {
 						board.redraw();
-					}
-					else {
+					} else {
 						return;
 					}
 				}
 			}
 		}
 	}
-
 
 	public static void rotateToken(Player player, String options) {
 
@@ -150,10 +146,9 @@ public class TextClient {
 				yellowMoves.add(letter);
 				return true;
 			}
-		}
-		else {
-			if(player.name.equals("green")) {
-				if(!greenMoves.contains(letter)) {
+		} else {
+			if (player.name.equals("green")) {
+				if (!greenMoves.contains(letter)) {
 					greenMoves.add(letter);
 					return true;
 				}
@@ -200,38 +195,36 @@ public class TextClient {
 
 	}
 
-
-
 	public static void gerneratePieces(List<BoardPiece> list) {
-		list.add(new BoardPiece("a", 1, 2, 1, 1,""));
-		list.add(new BoardPiece("b", 1, 0, 1, 1,""));
-		list.add(new BoardPiece("c", 2, 2, 2, 2,""));
-		list.add(new BoardPiece("d", 1, 0, 0, 0,""));
+		list.add(new BoardPiece("a", 1, 2, 1, 1, ""));
+		list.add(new BoardPiece("b", 1, 0, 1, 1, ""));
+		list.add(new BoardPiece("c", 2, 2, 2, 2, ""));
+		list.add(new BoardPiece("d", 1, 0, 0, 0, ""));
 		// empty tile??
 		//
-		list.add(new BoardPiece("e", 0, 0, 0, 0,""));
-		list.add(new BoardPiece("f", 1, 0, 0, 1,""));
-		list.add(new BoardPiece("g", 1, 1, 1, 1,""));
-		list.add(new BoardPiece("h", 1, 0, 2, 2,""));
-		list.add(new BoardPiece("i", 0, 2, 0, 0,""));
+		list.add(new BoardPiece("e", 0, 0, 0, 0, ""));
+		list.add(new BoardPiece("f", 1, 0, 0, 1, ""));
+		list.add(new BoardPiece("g", 1, 1, 1, 1, ""));
+		list.add(new BoardPiece("h", 1, 0, 2, 2, ""));
+		list.add(new BoardPiece("i", 0, 2, 0, 0, ""));
 		//
-		list.add(new BoardPiece("j", 1, 2, 1, 2,""));
-		list.add(new BoardPiece("k", 1, 2, 0, 1,""));
-		list.add(new BoardPiece("l", 1, 0, 0, 0,""));
-		list.add(new BoardPiece("m", 1, 2, 2, 0,""));
-		list.add(new BoardPiece("n", 0, 2, 2, 0,""));
+		list.add(new BoardPiece("j", 1, 2, 1, 2, ""));
+		list.add(new BoardPiece("k", 1, 2, 0, 1, ""));
+		list.add(new BoardPiece("l", 1, 0, 0, 0, ""));
+		list.add(new BoardPiece("m", 1, 2, 2, 0, ""));
+		list.add(new BoardPiece("n", 0, 2, 2, 0, ""));
 		//
-		list.add(new BoardPiece("o", 1, 0, 1, 2,""));
-		list.add(new BoardPiece("p", 1, 0, 2, 1,""));
-		list.add(new BoardPiece("q", 1, 0, 0, 2,""));
-		list.add(new BoardPiece("r", 1, 2, 0, 2,""));
-		list.add(new BoardPiece("s", 0, 2, 0, 2,""));
-		//e
-		list.add(new BoardPiece("t", 1, 0, 1, 0,""));
-		list.add(new BoardPiece("u", 1, 0, 0, 1,""));
-		list.add(new BoardPiece("v", 1, 2, 0, 0,""));
-		list.add(new BoardPiece("w", 1, 2, 2, 2,""));
-		list.add(new BoardPiece("x", 0, 2, 2, 2,""));
+		list.add(new BoardPiece("o", 1, 0, 1, 2, ""));
+		list.add(new BoardPiece("p", 1, 0, 2, 1, ""));
+		list.add(new BoardPiece("q", 1, 0, 0, 2, ""));
+		list.add(new BoardPiece("r", 1, 2, 0, 2, ""));
+		list.add(new BoardPiece("s", 0, 2, 0, 2, ""));
+		// e
+		list.add(new BoardPiece("t", 1, 0, 1, 0, ""));
+		list.add(new BoardPiece("u", 1, 0, 0, 1, ""));
+		list.add(new BoardPiece("v", 1, 2, 0, 0, ""));
+		list.add(new BoardPiece("w", 1, 2, 2, 2, ""));
+		list.add(new BoardPiece("x", 0, 2, 2, 2, ""));
 	}
 
 	public static void initialiseStructures() {
@@ -249,4 +242,3 @@ public class TextClient {
 		return board;
 	}
 }
-

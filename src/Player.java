@@ -182,7 +182,11 @@ public class Player extends Token {
 			} else if (direction.equals("left")) {
 				col--;
 			} else {
-				System.out.println("error in movetokenc");
+				System.out.println("error in movetoken");
+			}
+			//if they go of the board, they go to the grave yard O_O
+			if(row < 0 || row > 9 || col < 0 || col > 9) {
+				return true;
 			}
 			board.board[row][col] = token;
 			return true;
@@ -190,6 +194,9 @@ public class Player extends Token {
 		return false;
 	}
 
+
+
+	@Override
 	public String toString() {
 		return "" + name;
 	}
