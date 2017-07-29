@@ -2,8 +2,8 @@ import java.util.List;
 import java.util.Stack;
 
 public class Player extends Token {
-	Stack<Token[][]> undoStackG = new Stack<Token[][]>();
-	Stack<Token[][]> undoStackY = new Stack<Token[][]>();
+	Stack<BoardPiece[][]> undoStackG = new Stack<BoardPiece[][]>();
+	Stack<BoardPiece[][]> undoStackY = new Stack<BoardPiece[][]>();
 	BoardPiece greenTokens[][] = new BoardPiece[6][4];
 	BoardPiece yellowTokens[][] = new BoardPiece[6][4];
 	String name = "";
@@ -193,6 +193,32 @@ public class Player extends Token {
 			return true;
 		}
 		return false;
+	}
+
+
+
+	public void createRecord() {
+		BoardPiece recordG[][] = new BoardPiece[6][4];
+		BoardPiece recordY[][] = new BoardPiece[6][4];
+		for(int r = 0; r < yellowTokens.length; r++) {
+			for(int c = 0; c < yellowTokens[0].length; c++) {
+				recordG[r][c] = greenTokens[r][c];
+				recordY[r][c] = yellowTokens[r][c];
+			}
+		}
+		undoStackG.push(recordG);
+		undoStackY.push(recordY);
+	}
+
+	public void setBoards() {
+		BoardPiece setterG[][] = undoStackG.pop();
+		BoardPiece setterY[][] = undoStackY.pop();
+		for(int r = 0; r < yellowTokens.length; r++) {
+			for(int c = 0; c < yellowTokens[0].length; c++) {
+				greenTokens[r][c] = setterG[r][c];
+				yellowTokens[r][c] = setterY[r][c];
+			}
+		}
 	}
 
 
