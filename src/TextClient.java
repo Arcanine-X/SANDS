@@ -134,7 +134,6 @@ public class TextClient {
 					board.setBoard(); // undo board
 					yellow.setBoardY();
 					green.setBoardG();
-					System.out.println("Successfully undoed");
 					yellow.createRecordY();
 					green.createRecordG();
 					board.createRecord(); // create new record
@@ -145,10 +144,6 @@ public class TextClient {
 					if (!yellowMoves.isEmpty()) {
 						yellowMoves.remove(yellowMoves.size() - 1);
 					}
-					System.out.println("####");
-					System.out.println(board.getOriginalCount());
-					System.out.println(board.getSetterCount());
-					System.out.println("####");
 					if(player.name.equals("green")) {
 						if(green.getSetterCount() > green.getOriginalCount()) {
 							firstCreation = true;
@@ -159,9 +154,6 @@ public class TextClient {
 							firstCreation = true;
 						}
 					}
-					//if(board.getSetterCount()<board.getOriginalCount()) {
-					//	firstCreation = true;
-					//}
 					board.redraw();
 				} else {
 					System.out.println("Invalid option....");

@@ -34,7 +34,6 @@ public class Player extends Token {
 			if (tokenToAdd != null) {
 				board.board[7][7] = tokenToAdd;
 				System.out.println("token added");
-				System.out.println("Token color is " + tokenToAdd.col);
 				return true;
 			}
 		}
@@ -43,7 +42,6 @@ public class Player extends Token {
 			if (tokenToAdd != null) {
 				board.board[2][2] = tokenToAdd;
 				System.out.println("token added");
-				System.out.println("Token color is " + tokenToAdd.col);
 				return true;
 			}
 		}
@@ -163,8 +161,6 @@ public class Player extends Token {
 				if (board.board[r][c] == token) {
 					row = r;
 					col = c;
-					System.out.println("player is " + player.name);
-					System.out.println("token is " + token.col);
 					if (player.name.equals(token.col)) {
 						System.out.println("Found token to move");
 
@@ -241,7 +237,12 @@ public class Player extends Token {
 			}
 		}
 	}
-
+	/**
+	 * Helper method for undo --- Counts the instances of a token on the board, and
+	 * the number instances on the setter. If there are less instances on the setter
+	 * that means undo took away a creation, and the player should be allowed to
+	 * create another token
+	 */
 	public void counter(Token[][] original, Token[][] setter) {
 		originalCount = 0;
 		setterCount = 0;
