@@ -16,7 +16,7 @@ public class TextClient {
 	static Board board = new Board();
 	static public Set<String> movement = new HashSet<String>();
 	static public Set<Integer> rotations = new HashSet<Integer>();
-	// Two maps to keep track of what tokens have been moved to ensure the same
+	// Two sets to keep track of what tokens have been moved to ensure the same
 	// token isnt moved
 	// multiple times in one line
 	static public List<String> greenMoves = new ArrayList<String>();
@@ -61,6 +61,11 @@ public class TextClient {
 					return;
 				}
 				firstCreation = false;
+				System.out.println("Made a copy");
+
+				//create record of this for undo
+				board.createRecord();
+				player.createRecord();
 				board.redraw();
 			}
 		} else {
@@ -88,6 +93,10 @@ public class TextClient {
 				if (tokenToMove != null) {
 					System.out.println("Found Token to move");
 					if (player.moveToken(player, tokenToMove, direction, board) == true) {
+						//create record of this for undo
+						System.out.println("Create record for moving");
+						board.createRecord();
+						player.createRecord();
 						board.redraw();
 					} else {
 						return;
@@ -96,6 +105,8 @@ public class TextClient {
 			}
 		}
 	}
+
+
 
 	public static void rotateToken(Player player, String options) {
 
@@ -116,7 +127,14 @@ public class TextClient {
 					System.out.println("Next persons turn");
 					reset();
 					return;
-				} else {
+				} else if (options.startsWith("undo")) {
+					System.out.println("Undoing");
+					board.setBoard();
+					player.setBoards();
+					System.out.println("Successfully undoed");
+					board.createRecord();
+					board.redraw();
+				}else {
 					System.out.println("Invalid option....");
 				}
 			} catch (Exception e) {
@@ -161,6 +179,7 @@ public class TextClient {
 	}
 
 	public static void main(String[] args) {
+
 		// Create players
 		Player green = new Player("green");
 		Player yellow = new Player("yellow");
@@ -168,9 +187,12 @@ public class TextClient {
 		initialiseStructures();
 		gerneratePieces(yelList);
 		gerneratePieces(greList);
+
 		board.initialise();
 		board.addPlayers(green, yellow);
+
 		board.redraw();
+		board.createRecord();
 		yellow.populateYellowTokens(yelList);
 		green.populateGreenTokens(greList);
 
@@ -192,7 +214,6 @@ public class TextClient {
 			}
 			turn++;
 		}
-
 	}
 
 	public static void gerneratePieces(List<BoardPiece> list) {
