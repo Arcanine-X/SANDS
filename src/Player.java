@@ -23,27 +23,21 @@ public class Player extends Token {
 	 * @return
 	 */
 	public boolean addToken(String letter, Player player, Board board) {
-		// preCondition
 		if (checkValidCreationSpot(board, player.name) == false) {
 			System.out.println("Invalid Move\nCreation Spot is already taken");
 			return false;
 		}
 		BoardPiece tokenToAdd = null;
-		if (player.name.equals("yellow")) {
-			tokenToAdd = find(player, letter);
-			if (tokenToAdd != null) {
-				board.board[7][7] = tokenToAdd;
-				System.out.println("token added");
-				return true;
-			}
-		}
-		if (player.name.equals("green")) {
-			tokenToAdd = find(player, letter);
-			if (tokenToAdd != null) {
+		tokenToAdd = find(player, letter);
+		if(tokenToAdd != null) {
+			if(player.name.equals("green")) {
 				board.board[2][2] = tokenToAdd;
-				System.out.println("token added");
-				return true;
 			}
+			else {
+				board.board[7][7] = tokenToAdd;
+			}
+			System.out.println("token added");
+			return true;
 		}
 		System.out.println("returning falseeeeeeeeeeeeee");
 		return false;
@@ -205,10 +199,4 @@ public class Player extends Token {
 		System.out.println("Setter Count is : " + setterCount);
 		return setterCount;
 	}
-
-	@Override
-	public String toString() {
-		return "" + name;
-	}
-
 }

@@ -13,7 +13,6 @@ public class TextClient {
 
 	public static List<BoardPiece> yelList = new ArrayList<>();
 	public static List<BoardPiece> greList = new ArrayList<>();
-
 	static Board board = new Board();
 	// Two sets that have all the possiable movements and rotations for simplicity
 	// of code
