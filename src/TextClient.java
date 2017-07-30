@@ -129,16 +129,27 @@ public class TextClient {
 			System.out.println("Your rotation piece doesn't exist");
 			return;
 		}
+		BoardPiece original = new BoardPiece(itemToRotate.name, itemToRotate.north, itemToRotate.east, itemToRotate.south, itemToRotate.west, "");
+		//Integer[] original = new Integer[] {itemToRotate.north,itemToRotate.east,itemToRotate.south,itemToRotate.west};
+		player.rotatedPieces.add(original);
 		int num = (rotation == 0) ? 0 : (rotation == 90) ? 1 : (rotation == 180) ? 2 : 3;
 		while (num > 0) {
 			System.out.println("in while loop");
 			rotator(itemToRotate, rotation);
 			num--;
 		}
+		BoardPiece modified = new BoardPiece(itemToRotate.name, itemToRotate.north, itemToRotate.east, itemToRotate.south, itemToRotate.west, "");
+		//Integer[] modified = new Integer[] {itemToRotate.north,itemToRotate.east,itemToRotate.south,itemToRotate.west};
+		player.rotatedPieces.add(modified);
+		for(BoardPiece p : player.rotatedPieces) {
+			System.out.println(p.toString());
+		}
+		yellow.createRecordY();
+		green.createRecordG();
+		board.createRecord();
 		board.redraw();
+		
 		System.out.println("Successful rotation");
-		return;
-
 	}
 
 	public static void rotator(BoardPiece item, int rotation) {
@@ -167,6 +178,22 @@ public class TextClient {
 					return;
 				} else if (options.startsWith("undo")) {
 					System.out.println("Undoing");
+					if(!player.rotatedPieces.isEmpty()) {
+						System.out.println("##################################################################");
+						BoardPiece removal = player.rotatedPieces.remove(player.rotatedPieces.size()-1);
+						BoardPiece toChange = board.findMoveToken(player, removal.name);
+						BoardPiece original = player.rotatedPieces.remove(player.rotatedPieces.size()-1);
+						System.out.println(removal.toString());
+						System.out.println(toChange.toString());
+						System.out.println(original.toString());
+						toChange.north = original.north;
+						toChange.east = original.east;
+						toChange.south = original.south;
+						toChange.west = original.west;
+						System.out.println(toChange.toString());
+						System.out.println("##################################################################");
+						
+					}
 					board.setBoard(); // undo board
 					yellow.setBoardY();
 					green.setBoardG();

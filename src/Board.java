@@ -74,8 +74,6 @@ public class Board {
 	public void createRecord() {
 		Token[][] record = new Token[10][10];
 		// Make a copy of the board
-
-
 		for (int r = 0; r < record.length; r++) {
 			for (int c = 0; c < record[0].length; c++) {
 				record[r][c] = board[r][c];

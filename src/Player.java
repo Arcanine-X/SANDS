@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
@@ -6,6 +7,7 @@ public class Player extends Token {
 	Stack<BoardPiece[][]> undoStackY = new Stack<BoardPiece[][]>();
 	BoardPiece greenTokens[][] = new BoardPiece[6][4];
 	BoardPiece yellowTokens[][] = new BoardPiece[6][4];
+	List<BoardPiece> rotatedPieces = new ArrayList<BoardPiece>();
 	String name = "";
 	int originalCount = 0;
 	int setterCount = 0;
@@ -257,6 +259,8 @@ public class Player extends Token {
 			}
 		}
 	}
+
+
 
 
 	public int getOriginalCount() {
