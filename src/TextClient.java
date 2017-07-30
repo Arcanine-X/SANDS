@@ -40,6 +40,7 @@ public class TextClient {
 		}
 	}
 
+
 	public static void createToken(Player player, String options) {
 		if (!firstCreation) {
 			System.out.println("You have already created a token this turn. You cannot create another one");
@@ -67,8 +68,8 @@ public class TextClient {
 
 				// create record of this for undo
 				board.createRecord();
-				green.createRecordG();
-				yellow.createRecordY();
+				green.createRecord();
+				yellow.createRecord();
 				board.redraw();
 			}
 		} else {
@@ -99,8 +100,8 @@ public class TextClient {
 						// create record of this for undo
 						System.out.println("Create record for moving");
 						board.createRecord();
-						yellow.createRecordY();
-						green.createRecordG();
+						green.createRecord();
+						yellow.createRecord();
 						board.redraw();
 					} else {
 						return;
@@ -129,26 +130,20 @@ public class TextClient {
 			System.out.println("Your rotation piece doesn't exist");
 			return;
 		}
-		BoardPiece original = new BoardPiece(itemToRotate.name, itemToRotate.north, itemToRotate.east, itemToRotate.south, itemToRotate.west, "");
-		//Integer[] original = new Integer[] {itemToRotate.north,itemToRotate.east,itemToRotate.south,itemToRotate.west};
-		player.rotatedPieces.add(original);
 		int num = (rotation == 0) ? 0 : (rotation == 90) ? 1 : (rotation == 180) ? 2 : 3;
 		while (num > 0) {
 			System.out.println("in while loop");
 			rotator(itemToRotate, rotation);
 			num--;
 		}
-		BoardPiece modified = new BoardPiece(itemToRotate.name, itemToRotate.north, itemToRotate.east, itemToRotate.south, itemToRotate.west, "");
-		//Integer[] modified = new Integer[] {itemToRotate.north,itemToRotate.east,itemToRotate.south,itemToRotate.west};
-		player.rotatedPieces.add(modified);
 		for(BoardPiece p : player.rotatedPieces) {
 			System.out.println(p.toString());
 		}
-		yellow.createRecordY();
-		green.createRecordG();
+		green.createRecord();
+		yellow.createRecord();
 		board.createRecord();
 		board.redraw();
-		
+
 		System.out.println("Successful rotation");
 	}
 
@@ -178,27 +173,11 @@ public class TextClient {
 					return;
 				} else if (options.startsWith("undo")) {
 					System.out.println("Undoing");
-					if(!player.rotatedPieces.isEmpty()) {
-						System.out.println("##################################################################");
-						BoardPiece removal = player.rotatedPieces.remove(player.rotatedPieces.size()-1);
-						BoardPiece toChange = board.findMoveToken(player, removal.name);
-						BoardPiece original = player.rotatedPieces.remove(player.rotatedPieces.size()-1);
-						System.out.println(removal.toString());
-						System.out.println(toChange.toString());
-						System.out.println(original.toString());
-						toChange.north = original.north;
-						toChange.east = original.east;
-						toChange.south = original.south;
-						toChange.west = original.west;
-						System.out.println(toChange.toString());
-						System.out.println("##################################################################");
-						
-					}
 					board.setBoard(); // undo board
-					yellow.setBoardY();
-					green.setBoardG();
-					yellow.createRecordY();
-					green.createRecordG();
+					yellow.setBoard();
+					green.setBoard();
+					green.createRecord();
+					yellow.createRecord();
 					board.createRecord(); // create new record
 					// undo lists which ensure a player can only move something once per turn
 					if (!greenMoves.isEmpty()) {
@@ -227,15 +206,19 @@ public class TextClient {
 		}
 	}
 
+	public static void successful(Player player) {
+
+	}
+
 	public static void reset(Player player, Board board) {// after passing need to reset stuff
 		yellowMoves.clear();
 		greenMoves.clear();
 		firstCreation = true;
-		player.undoStackG.clear();
-		player.undoStackY.clear();
+		yellow.undoStack.clear();
+		green.undoStack.clear();
 		board.undoStack.clear();
-		green.createRecordG();
-		yellow.createRecordY();
+		green.createRecord();
+		yellow.createRecord();
 		board.createRecord();
 	}
 
@@ -280,10 +263,10 @@ public class TextClient {
 		board.addPlayers(green, yellow);
 		board.redraw();
 		board.createRecord();
-		yellow.populateYellowTokens(yelList);
-		green.populateGreenTokens(greList);
-		yellow.createRecordY();
-		green.createRecordG();
+		yellow.populateTokens(yelList);
+		green.populateTokens(greList);
+		yellow.createRecord();
+		green.createRecord();
 		System.out.println("~*~*~ Sword & Shield ~*~*~");
 		while (1 == 1) {// loop forever
 			System.out.println("\n********************");

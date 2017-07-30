@@ -3,14 +3,12 @@ import java.util.List;
 import java.util.Stack;
 
 public class Player extends Token {
-	Stack<BoardPiece[][]> undoStackG = new Stack<BoardPiece[][]>();
-	Stack<BoardPiece[][]> undoStackY = new Stack<BoardPiece[][]>();
-	BoardPiece greenTokens[][] = new BoardPiece[6][4];
-	BoardPiece yellowTokens[][] = new BoardPiece[6][4];
 	List<BoardPiece> rotatedPieces = new ArrayList<BoardPiece>();
 	String name = "";
 	int originalCount = 0;
 	int setterCount = 0;
+	BoardPiece[][] tokens = new BoardPiece[6][4];
+	Stack<BoardPiece[][]> undoStack = new Stack<BoardPiece[][]>();
 
 	public Player(String name) {
 		this.name = name;
@@ -53,35 +51,16 @@ public class Player extends Token {
 
 	public BoardPiece find(Player player, String letter) {
 		BoardPiece returnToken = null;
-
-		if (player.name.equals("yellow")) {
-			for (int r = 0; r < yellowTokens.length; r++) {
-				for (int c = 0; c < yellowTokens[0].length; c++) {
-					if (yellowTokens[r][c] == null) {
-						continue;
-					}
-					if (yellowTokens[r][c].name.equals(letter)) {
-						returnToken = yellowTokens[r][c];
-						yellowTokens[r][c] = null;
-						System.out.println("All good in find returned token to add");
-						return returnToken;
-					}
+		for (int r = 0; r < tokens.length; r++) {
+			for (int c = 0; c < tokens[0].length; c++) {
+				if (tokens[r][c] == null) {
+					continue;
 				}
-			}
-		}
-
-		if (player.name.equals("green")) {
-			for (int r = 0; r < greenTokens.length; r++) {
-				for (int c = 0; c < greenTokens[0].length; c++) {
-					if (greenTokens[r][c] == null) {
-						continue;
-					}
-					if (greenTokens[r][c].name.equals(letter)) {
-						returnToken = greenTokens[r][c];
-						greenTokens[r][c] = null;
-						System.out.println("all gud return green token");
-						return returnToken;
-					}
+				if (tokens[r][c].name.equals(letter)) {
+					returnToken = tokens[r][c];
+					tokens[r][c] = null;
+					System.out.println("All good in find returned token to add");
+					return returnToken;
 				}
 			}
 		}
@@ -112,33 +91,12 @@ public class Player extends Token {
 		return true;
 	}
 
-	/**
-	 * Puts all the types of tokens into greens array of tokens
-	 *
-	 * @param tokens
-	 */
-	public void populateGreenTokens(List<BoardPiece> tokens) {
+	public void populateTokens(List<BoardPiece> t) {
 		int i = 0;
-		for (int r = 0; r < greenTokens.length; r++) {
-			for (int c = 0; c < greenTokens[0].length; c++) {
-				greenTokens[r][c] = tokens.get(i++);
-				greenTokens[r][c].col = "green";
-			}
-		}
-	}
-
-	/**
-	 * Puts all the types of tokens into yellows array of tokens
-	 *
-	 * @param tokens
-	 */
-	public void populateYellowTokens(List<BoardPiece> tokens) {
-
-		int i = 0;
-		for (int r = 0; r < yellowTokens.length; r++) {
-			for (int c = 0; c < yellowTokens[0].length; c++) {
-				yellowTokens[r][c] = tokens.get(i++);
-				yellowTokens[r][c].col = "yellow";
+		for (int r = 0; r < tokens.length; r++) {
+			for (int c = 0; c < tokens[0].length; c++) {
+				tokens[r][c] = t.get(i++);
+				tokens[r][c].col = name;
 			}
 		}
 	}
@@ -185,8 +143,8 @@ public class Player extends Token {
 			} else {
 				System.out.println("error in movetoken()");
 			}
-			//if they go of the board, they go to the grave yard O_O
-			if(row < 0 || row > 9 || col < 0 || col > 9) {
+			// if they go of the board, they go to the grave yard O_O
+			if (row < 0 || row > 9 || col < 0 || col > 9) {
 				return true;
 			}
 			board.board[row][col] = token;
@@ -195,50 +153,28 @@ public class Player extends Token {
 		return false;
 	}
 
-
-
-	public void createRecordY() {
-		BoardPiece[][] recordY = new BoardPiece[6][4];
-		for (int r = 0; r < recordY.length; r++) {
-			for (int c = 0; c < recordY[0].length; c++) {
-				recordY[r][c] = yellowTokens[r][c];
+	public void createRecord() {
+		BoardPiece[][] record = new BoardPiece[6][4];
+		for (int r = 0; r < record.length; r++) {
+			for (int c = 0; c < record[0].length; c++) {
+				record[r][c] = tokens[r][c];
 			}
 		}
-		undoStackY.push(recordY);
+		undoStack.push(record);
 	}
 
-	public void createRecordG() {
-		BoardPiece[][] recordG = new BoardPiece[6][4];
-		for(int r = 0; r < recordG.length; r++) {
-			for(int c = 0; c < recordG[0].length; c++) {
-				recordG[r][c] = greenTokens[r][c];
-			}
-		}
-		undoStackG.push(recordG);
-	}
-
-	public void setBoardY() {
-		BoardPiece[][] original = undoStackY.pop(); // get rid of original
-		BoardPiece[][] setterY = undoStackY.pop();
-		counter(original, setterY);
-		for (int r = 0; r < setterY.length; r++) {
-			for (int c = 0; c < setterY[0].length; c++) {
-				yellowTokens[r][c] = setterY[r][c];
+	public void setBoard() {
+		BoardPiece[][] original = undoStack.pop(); // get rid of original
+		BoardPiece[][] setter = undoStack.pop();
+		counter(original, setter);
+		for (int r = 0; r < setter.length; r++) {
+			for (int c = 0; c < setter[0].length; c++) {
+				tokens[r][c] = setter[r][c];
 			}
 		}
 
 	}
 
-	public void setBoardG() {
-		BoardPiece[][] original =undoStackG.pop();
-		BoardPiece[][] setterG = undoStackG.pop();
-		counter(original, setterG);
-		for(int r = 0; r < setterG.length; r++) {
-			for(int c = 0; c < setterG[0].length; c++) {
-				greenTokens[r][c] = setterG[r][c];
-			}
-		}
-	}
 	/**
 	 * Helper method for undo --- Counts the instances of a token on the board, and
 	 * the number instances on the setter. If there are less instances on the setter
@@ -248,20 +184,17 @@ public class Player extends Token {
 	public void counter(Token[][] original, Token[][] setter) {
 		originalCount = 0;
 		setterCount = 0;
-		for(int r = 0; r < setter.length; r++) {
-			for(int c = 0; c < setter[0].length; c++) {
-				if(setter[r][c] instanceof BoardPiece) {
+		for (int r = 0; r < setter.length; r++) {
+			for (int c = 0; c < setter[0].length; c++) {
+				if (setter[r][c] instanceof BoardPiece) {
 					setterCount++;
 				}
-				if(original[r][c] instanceof BoardPiece) {
+				if (original[r][c] instanceof BoardPiece) {
 					originalCount++;
 				}
 			}
 		}
 	}
-
-
-
 
 	public int getOriginalCount() {
 		System.out.println("Original Count is : " + originalCount);

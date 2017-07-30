@@ -76,7 +76,14 @@ public class Board {
 		// Make a copy of the board
 		for (int r = 0; r < record.length; r++) {
 			for (int c = 0; c < record[0].length; c++) {
-				record[r][c] = board[r][c];
+				if(board[r][c] instanceof BoardPiece) {
+					BoardPiece temp = (BoardPiece)board[r][c];
+					BoardPiece newBP = new BoardPiece(temp.name, temp.north, temp.east, temp.south, temp.west, temp.col);
+					record[r][c] = newBP;
+				}
+				else {
+					record[r][c] = board[r][c];
+				}
 			}
 		}
 		undoStack.push(record);
