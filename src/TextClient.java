@@ -127,8 +127,18 @@ public class TextClient {
 			rotator(itemToRotate, rotation);
 			num--;
 		}
+		//Have to have this to for to ensure that you cannot move after undoing a rotation.
+		player.movesSoFar.add("placeHolder");
 		success();
 		System.out.println("Successful rotation");
+	}
+
+	public static void fight(Player player, String options) {
+		//My ideas so far.....
+
+		//When moving a token loop through to see if that direction is going to collide with anything
+		//If so get the appropriate sword or shield collision items
+		//And do read adjust array
 	}
 
 

@@ -4,6 +4,7 @@ public class Board {
 	Token[][] board = new Token[10][10];
 	Stack<Token[][]> undoStack = new Stack<Token[][]>();
 	public Board() {
+	final String ANSI_GREEN = "\u001B[32m";
 
 	}
 
@@ -27,11 +28,7 @@ public class Board {
 					System.out.print(r == 1 && i == 1 ? "|green" : "|yelow"); // Draw Player
 				} else if (board[r][i] instanceof BoardPiece) { // Logic for drawing the tokens in the array
 					BoardPiece temp = (BoardPiece) board[r][i];
-					StringBuilder build = new StringBuilder();
-					build.append(getWest(temp)); // Deal with West
-					build.append(temp.name); // Deal with Name
-					build.append(getEast(temp)); // Deal with East
-					System.out.print(build.toString());
+					System.out.print(getWest(temp) + temp.name + getEast(temp));
 				} else if (r == 2 && i == 2 && !(board[2][2] instanceof Token)) { // Draw creation box for green
 					System.out.print("| [ ] ");
 				} else if (r == 7 && i == 7 && !(board[7][7] instanceof Token)) { // Draw creation box for yellow
@@ -80,6 +77,7 @@ public class Board {
 					BoardPiece temp = (BoardPiece)board[r][c];
 					BoardPiece newBP = new BoardPiece(temp.name, temp.north, temp.east, temp.south, temp.west, temp.col);
 					record[r][c] = newBP;
+
 				}
 				else {
 					record[r][c] = board[r][c];
