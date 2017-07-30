@@ -14,54 +14,14 @@ public class BoardPiece extends Token{
 		this.col = col;
 	}
 
-
-
 	@Override
 	public String toString() {
 		String n ="" , e = "" , s = "" , w = "";
-		//north
-
-		if(north == 0) {
-			n= "";
-		}
-		else if(north == 1) {
-			n = "|";
-		}
-		else {
-			n = "+";
-		}
-		//east
-		if(east == 0) {
-			e= "";
-		}
-		else if(east == 1) {
-			e = "-";
-		}
-		else {
-			e = "+";
-		}
-		//south
-		if(south == 0) {
-			s= "";
-		}
-		else if(south == 1) {
-			s = "|";
-		}
-		else {
-			s = "+";
-		}
-		//west
-		if(west == 0) {
-			w= " ";
-		}
-		else if(west == 1) {
-			w = "-";
-		}
-		else {
-			w = "+";
-		}
+		n = (north == 0) ? "" : (north == 1) ? "|" : "+";
+		e = (east == 0) ? "" : (east == 1) ? "-" : "+";
+		s = (south == 0) ? "" : (south == 0) ? "|" : "+";
+		w = (west == 0) ? " " : (west == 1) ? "-" : "+";
 		return " " + n + " \n" + w + name + e + "\n" + " " + s + " \n";
 	}
-
-
 }
+

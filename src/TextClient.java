@@ -17,10 +17,8 @@ public class TextClient {
 	static Board board = new Board();
 	// Two sets that have all the possiable movements and rotations for simplicity
 	// of code
-	static public Set<String> movement = new HashSet<String>();
-	static public Set<Integer> rotations = new HashSet<Integer>();
-	static public List<String> greenMoves = new ArrayList<String>();
-	static public List<String> yellowMoves = new ArrayList<String>();
+	static public Set<String> movement = new HashSet<String>(Arrays.asList("up","down","left","right"));
+	static public Set<Integer> rotations = new HashSet<Integer>(Arrays.asList(0,90,180,270));
 	static boolean firstCreation = true;
 	static Player yellow;
 	static Player green;
@@ -119,6 +117,8 @@ public class TextClient {
 			return;
 		}
 		BoardPiece itemToRotate = board.findMoveToken(player, letter);
+
+
 		if (itemToRotate == null) {
 			System.out.println("Your rotation piece doesn't exist");
 			return;
@@ -131,6 +131,7 @@ public class TextClient {
 		success();
 		System.out.println("Successful rotation");
 	}
+
 
 	public static void rotator(BoardPiece item, int rotation) {
 		int tn = item.north, te = item.east, ts = item.south, tw = item.west;
@@ -156,31 +157,7 @@ public class TextClient {
 					reset(player, board);
 					return;
 				} else if (options.startsWith("undo")) {
-					System.out.println("Undoing");
-					board.setBoard(); // undo board
-					yellow.setBoard();
-					green.setBoard();
-					green.createRecord();
-					yellow.createRecord();
-					board.createRecord(); // create new record
-					// undo lists which ensure a player can only move something once per turn
-					if (!greenMoves.isEmpty()) {
-						greenMoves.remove(greenMoves.size() - 1);
-					}
-					if (!yellowMoves.isEmpty()) {
-						yellowMoves.remove(yellowMoves.size() - 1);
-					}
-					if (player.name.equals("green")) {
-						if (green.getSetterCount() > green.getOriginalCount()) {
-							firstCreation = true;
-						}
-					}
-					if (player.name.equals("yellow")) {
-						if (yellow.getSetterCount() > yellow.getOriginalCount()) {
-							firstCreation = true;
-						}
-					}
-					board.redraw();
+					undo(player);
 				} else {
 					System.out.println("Invalid option....");
 				}
@@ -188,6 +165,34 @@ public class TextClient {
 				System.out.println(e.getMessage());
 			}
 		}
+	}
+
+	public static void undo(Player player) {
+		System.out.println("Undoing");
+		board.setBoard(); // undo board
+		yellow.setBoard();
+		green.setBoard();
+		green.createRecord();
+		yellow.createRecord();
+		board.createRecord(); // create new record
+		// undo lists which ensure a player can only move something once per turn
+		if (!green.movesSoFar.isEmpty()) {
+			green.movesSoFar.remove(green.movesSoFar.size() - 1);
+		}
+		if (!yellow.movesSoFar.isEmpty()) {
+			yellow.movesSoFar.remove(yellow.movesSoFar.size() - 1);
+		}
+		if (player.name.equals("green")) {
+			if (green.getSetterCount() > green.getOriginalCount()) {
+				firstCreation = true;
+			}
+		}
+		if (player.name.equals("yellow")) {
+			if (yellow.getSetterCount() > yellow.getOriginalCount()) {
+				firstCreation = true;
+			}
+		}
+		board.redraw();
 	}
 
 	public static void success() {
@@ -198,8 +203,8 @@ public class TextClient {
 	}
 
 	public static void reset(Player player, Board board) {// after passing need to reset stuff
-		yellowMoves.clear();
-		greenMoves.clear();
+		yellow.movesSoFar.clear();
+		green.movesSoFar.clear();
 		firstCreation = true;
 		yellow.undoStack.clear();
 		green.undoStack.clear();
@@ -218,32 +223,20 @@ public class TextClient {
 	 * @return
 	 */
 	public static boolean checkIfAllowedToMove(Player player, String letter) {
-		if (player.name.equals("yellow")) {
-			if (!yellowMoves.contains(letter)) {
-				yellowMoves.add(letter);
-				return true;
-			}
-		} else {
-			if (player.name.equals("green")) {
-				if (!greenMoves.contains(letter)) {
-					greenMoves.add(letter);
-					return true;
-				}
-			}
+		if(!player.movesSoFar.contains(letter)) {
+			player.movesSoFar.add(letter);
+			return true;
 		}
-		// in this case its already been moved once this turn
 		System.out.println("You have already moved this piece this turn");
 		System.out.println("You can move another existing piece or move it next turn");
 		return false;
 	}
 
 	public static void main(String[] args) {
-
 		// Create players
 		green = new Player("green");
 		yellow = new Player("yellow");
 		int turn = 0;
-		initialiseStructures();
 		gerneratePieces(yelList);
 		gerneratePieces(greList);
 		board.initialise();
@@ -259,7 +252,6 @@ public class TextClient {
 			System.out.println("\n********************");
 			System.out.println("***** TURN " + turn + " *******");
 			System.out.println("********************\n");
-
 			if (turn % 2 == 0) {
 				System.out.println("It is yellows turn!");
 				playerOptions(yellow);
@@ -304,20 +296,5 @@ public class TextClient {
 		list.add(new BoardPiece("v", 1, 2, 0, 0, ""));
 		list.add(new BoardPiece("w", 1, 2, 2, 2, ""));
 		list.add(new BoardPiece("x", 0, 2, 2, 2, ""));
-	}
-
-	public static void initialiseStructures() {
-		movement.add("up");
-		movement.add("right");
-		movement.add("down");
-		movement.add("left");
-		rotations.add(0);
-		rotations.add(90);
-		rotations.add(180);
-		rotations.add(270);
-	}
-
-	public static Board getBoard() {
-		return board;
 	}
 }

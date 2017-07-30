@@ -8,6 +8,7 @@ public class Player extends Token {
 	int setterCount = 0;
 	BoardPiece[][] tokens = new BoardPiece[6][4];
 	Stack<BoardPiece[][]> undoStack = new Stack<BoardPiece[][]>();
+	List<String> movesSoFar = new ArrayList<String>();
 
 	public Player(String name) {
 		this.name = name;
