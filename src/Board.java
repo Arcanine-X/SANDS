@@ -3,9 +3,8 @@ import java.util.Stack;
 public class Board {
 	Token[][] board = new Token[10][10];
 	Stack<Token[][]> undoStack = new Stack<Token[][]>();
-	public Board() {
-	final String ANSI_GREEN = "\u001B[32m";
 
+	public Board() {
 	}
 
 	public void redraw() {
@@ -73,13 +72,13 @@ public class Board {
 		// Make a copy of the board
 		for (int r = 0; r < record.length; r++) {
 			for (int c = 0; c < record[0].length; c++) {
-				if(board[r][c] instanceof BoardPiece) {
-					BoardPiece temp = (BoardPiece)board[r][c];
-					BoardPiece newBP = new BoardPiece(temp.name, temp.north, temp.east, temp.south, temp.west, temp.col);
+				if (board[r][c] instanceof BoardPiece) {
+					BoardPiece temp = (BoardPiece) board[r][c];
+					BoardPiece newBP = new BoardPiece(temp.name, temp.north, temp.east, temp.south, temp.west,
+							temp.col);
 					record[r][c] = newBP;
 
-				}
-				else {
+				} else {
 					record[r][c] = board[r][c];
 				}
 			}
@@ -116,6 +115,41 @@ public class Board {
 		}
 		System.out.println("error returning null");
 		return null;
+	}
+
+	public void createGreenBoard(Player player) {
+		// draw a board
+		System.out.println("-------------------------");
+		for (int r = 0; r < player.tokens.length; r++) {
+			// First Row
+			for (int c = 0; c < player.tokens[0].length; c++) {
+				if (player.tokens[r][c]!=null) {
+					System.out.print(getNorth(player.tokens[r][c])); // Deal with North
+				} else {
+					System.out.print("|     ");
+				}
+			}
+			System.out.println("|");
+			// Middle Row
+			for (int i = 0; i < player.tokens[0].length; i++) {
+				if (player.tokens[r][i]!=null) { // Logic for drawing the tokens in the array
+					System.out.print(getWest(player.tokens[r][i]) + player.tokens[r][i].name + getEast(player.tokens[r][i]));
+				} else {
+					System.out.print("|     ");
+				}
+			}
+			System.out.println("|");
+			// Last Row
+			for (int i = 0; i < player.tokens[0].length; i++) {
+				if (player.tokens[r][i]!=null) {
+					System.out.print(getSouth(player.tokens[r][i])); // Deal with South
+				} else {
+					System.out.print("|     ");
+				}
+			}
+			System.out.println("|");
+			System.out.println("-------------------------");
+		}
 	}
 
 	public void addPlayers(Player green, Player yellow) {
