@@ -10,15 +10,15 @@ import java.util.List;
 import java.util.Set;
 
 public class TextClient {
+
 	public static List<BoardPiece> yelList = new ArrayList<>();
 	public static List<BoardPiece> greList = new ArrayList<>();
 
 	static Board board = new Board();
+	// Two sets that have all the possiable movements and rotations for simplicity
+	// of code
 	static public Set<String> movement = new HashSet<String>();
 	static public Set<Integer> rotations = new HashSet<Integer>();
-	// Two sets to keep track of what tokens have been moved to ensure the same
-	// token isnt moved
-	// multiple times in one line
 	static public List<String> greenMoves = new ArrayList<String>();
 	static public List<String> yellowMoves = new ArrayList<String>();
 	static boolean firstCreation = true;
@@ -40,7 +40,6 @@ public class TextClient {
 		}
 	}
 
-
 	public static void createToken(Player player, String options) {
 		if (!firstCreation) {
 			System.out.println("You have already created a token this turn. You cannot create another one");
@@ -49,32 +48,24 @@ public class TextClient {
 		if (player == null || options == null) {
 			throw new NullPointerException();
 		}
-
 		String[] tokens = options.split(" ");
 		if (tokens.length != 3) {
 			System.out.println("The format is incorrect. It should be create <letter> <0/90/180/270>");
 		}
 		String letter = tokens[1];
 		int rotation = Integer.parseInt(tokens[2]);
-		if (rotations.contains(rotation)) {
-			if (letter.length() == 1) {
-				System.out.println("Attempting to place : " + letter);
 
-				if (player.addToken(letter, player, board) == false) {
-					return;
-				}
-				firstCreation = false;
-				System.out.println("Made a copy");
-
-				// create record of this for undo
-				board.createRecord();
-				green.createRecord();
-				yellow.createRecord();
-				board.redraw();
-			}
-		} else {
-			System.out.println("error");
+		if (!rotations.contains(rotation) || letter.length() != 1) {
+			System.out.println("Input error in create token");
+			return;
 		}
+		if (player.addToken(letter, player, board) == false) {
+			System.out.println("Something went wrong in create token");
+			return;
+		}
+		firstCreation = false;
+		System.out.println("Made a copy");
+		success();
 	}
 
 	public static void moveToken(Player player, String options) {
@@ -83,31 +74,27 @@ public class TextClient {
 		}
 		String[] tokens = options.split(" ");
 		if (tokens.length != 3) {
-			System.out.println("errrrrrorr");
+			System.out.println("Move input error");
 		}
 		String letter = tokens[1];
 		String direction = tokens[2];
 		if (checkIfAllowedToMove(player, letter) == false) {
 			return;
 		}
-		if (movement.contains(direction)) {
-			System.out.println("correct direction");
-			if (letter.length() == 1) {
-				BoardPiece tokenToMove = board.findMoveToken(player, letter);
-				if (tokenToMove != null) {
-					System.out.println("Found Token to move");
-					if (player.moveToken(player, tokenToMove, direction, board) == true) {
-						// create record of this for undo
-						System.out.println("Create record for moving");
-						board.createRecord();
-						green.createRecord();
-						yellow.createRecord();
-						board.redraw();
-					} else {
-						return;
-					}
-				}
-			}
+		if (!movement.contains(direction) || letter.length() != 1) {
+			System.out.println("Input error in moveToken");
+			return;
+		}
+		BoardPiece tokenToMove = board.findMoveToken(player, letter);
+		if (tokenToMove == null) {
+			System.out.println("Your token to move doesn't exist");
+			return;
+		}
+		if (player.moveToken(player, tokenToMove, direction, board) == true) {
+			success();
+		} else {
+			System.out.println("Something went wrong in moveToken");
+			return;
 		}
 	}
 
@@ -132,23 +119,14 @@ public class TextClient {
 		}
 		int num = (rotation == 0) ? 0 : (rotation == 90) ? 1 : (rotation == 180) ? 2 : 3;
 		while (num > 0) {
-			System.out.println("in while loop");
 			rotator(itemToRotate, rotation);
 			num--;
 		}
-		for(BoardPiece p : player.rotatedPieces) {
-			System.out.println(p.toString());
-		}
-		green.createRecord();
-		yellow.createRecord();
-		board.createRecord();
-		board.redraw();
-
+		success();
 		System.out.println("Successful rotation");
 	}
 
 	public static void rotator(BoardPiece item, int rotation) {
-		System.out.println("in rotator");
 		int tn = item.north, te = item.east, ts = item.south, tw = item.west;
 		item.north = tw;
 		item.east = tn;
@@ -206,8 +184,11 @@ public class TextClient {
 		}
 	}
 
-	public static void successful(Player player) {
-
+	public static void success() {
+		board.createRecord();
+		green.createRecord();
+		yellow.createRecord();
+		board.redraw();
 	}
 
 	public static void reset(Player player, Board board) {// after passing need to reset stuff

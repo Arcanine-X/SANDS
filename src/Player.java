@@ -3,7 +3,6 @@ import java.util.List;
 import java.util.Stack;
 
 public class Player extends Token {
-	List<BoardPiece> rotatedPieces = new ArrayList<BoardPiece>();
 	String name = "";
 	int originalCount = 0;
 	int setterCount = 0;
