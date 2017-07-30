@@ -63,6 +63,12 @@ public class TextClient {
 			System.out.println("Something went wrong in create token");
 			return;
 		}
+		BoardPiece item = board.findMoveToken(player, letter);
+		int num = (rotation == 0) ? 0 : (rotation == 90) ? 1 : (rotation == 180) ? 2 : 3;
+		while (num > 0) {
+			rotator(item, rotation);
+			num--;
+		}
 		firstCreation = false;
 		System.out.println("Made a copy");
 		success();
