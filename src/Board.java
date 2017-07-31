@@ -12,74 +12,6 @@ public class Board {
 	public Board() {
 	}
 
-	public void test(Player player) {
-		System.out.println(SEPARATOR + "~~Green Tokens~~" + EDGESEPARATOR + "  ~~Game Board~~");
-		System.out.println(TLINE + SEPARATOR + BLINE);
-		for (int r = 0; r < board.length; r++) {
-			// tokens top
-			if (r < player.tokens.length) {
-				for (int c = 0; c < player.tokens[0].length; c++) {
-					if (player.tokens[r][c] != null) {
-						System.out.print(getNorth(player.tokens[r][c])); // Deal with North
-						//System.out.print(SEPARATOR);
-					} else {
-						System.out.print("|     ");
-						//System.out.print(SEPARATOR);
-					}
-				}
-				System.out.print(SEPARATOR+ " ");
-			} else {
-				System.out.print(EDGESEPARATOR);
-				if(r>player.tokens.length-1) {
-					//System.out.print(SEPARATOR);
-				}
-			}
-			// board top
-			for (int c = 0; c < board.length; c++) {
-				if (board[r][c] instanceof BoardPiece) {
-					BoardPiece temp = (BoardPiece) board[r][c];
-					System.out.print(getNorth(temp)); // Deal with North
-				} else {
-					System.out.print("|     ");
-				}
-			}
-
-			System.out.println("|");
-
-			// ######################## Mid Row ############################
-
-/*			if (r < player.tokens.length) {
-				for (int i = 0; i < player.tokens[0].length; i++) {
-					if (player.tokens[r][i] != null) { // Logic for drawing the tokens in the array
-						System.out.print(
-								getWest(player.tokens[r][i]) + player.tokens[r][i].name + getEast(player.tokens[r][i]));
-					} else {
-						System.out.print("|     ");
-					}
-				}
-			} else {
-				System.out.print(EDGESEPARATOR);
-			}
-
-			// Middle Row
-			for (int i = 0; i < 10; i++) {
-				if (board[r][i] instanceof Player) {
-					System.out.print(r == 1 && i == 1 ? "|green" : "|yelow"); // Draw Player
-				} else if (board[r][i] instanceof BoardPiece) { // Logic for drawing the tokens in the array
-					BoardPiece temp = (BoardPiece) board[r][i];
-					System.out.print(getWest(temp) + temp.name + getEast(temp));
-				} else if (r == 2 && i == 2 && !(board[2][2] instanceof Token)) { // Draw creation box for green
-					System.out.print("| [ ] ");
-				} else if (r == 7 && i == 7 && !(board[7][7] instanceof Token)) { // Draw creation box for yellow
-					System.out.print("| [ ] ");
-				} else {
-					System.out.print("|     ");
-				}
-			}
-			System.out.println("|");*/
-
-		}
-	}
 
 	public void createGreenBoard(Player player) {
 		// draw a board
@@ -117,7 +49,7 @@ public class Board {
 		}
 	}
 
-	public void redraw() {
+	/*public void redraw() {
 		// draw a board
 		System.out.println("-------------------------------------------------------------");
 		for (int r = 0; r < board.length; r++) {
@@ -159,20 +91,20 @@ public class Board {
 			System.out.println("|");
 			System.out.println("-------------------------------------------------------------");
 		}
-	}
+	}*/
 
-	public void HUGEBOARDTEST(Player player) {
+	public void redraw(Player green, Player yellow) {
 		System.out.println("\n\n");
 		System.out.println(SEPARATOR + "~~Green Tokens~~" + EDGESEPARATOR + "  ~~Game Board~~" + EDGESEPARATOR + "   ~~Yellow Tokens~~");
 		System.out.println(TLINE + SEPARATOR + BLINE + SEPARATOR + TLINE);
 		for (int r = 0; r < board.length; r++) {
 			// Top row of player tokens
-			if (r < player.tokens.length) {
-				for (int c = 0; c < player.tokens[0].length; c++) {
-					if (player.tokens[r][c] != null) {
-						System.out.print(getNorth(player.tokens[r][c])); // Deal with North
+			if (r < green.tokens.length) {
+				for (int c = 0; c < green.tokens[0].length; c++) {
+					if (green.tokens[r][c] != null) {
+						System.out.print(getNorth(green.tokens[r][c])); // Deal with North
 					} else {
-						System.out.print(" |     ");
+						System.out.print("|     ");
 					}
 				}
 				//System.out.print("|" + SEPARATOR);
@@ -193,13 +125,13 @@ public class Board {
 
 
 			//top row for yellow
-			if (r < player.tokens.length) {
+			if (r < yellow.tokens.length) {
 				System.out.print("|"+SEPARATOR);
-				for (int c = 0; c < player.tokens[0].length; c++) {
-					if (player.tokens[r][c] != null) {
-						System.out.print(getNorth(player.tokens[r][c])); // Deal with North
+				for (int c = 0; c < yellow.tokens[0].length; c++) {
+					if (yellow.tokens[r][c] != null) {
+						System.out.print(getNorth(yellow.tokens[r][c])); // Deal with North
 					} else {
-						System.out.print(" |     ");
+						System.out.print("|     ");
 					}
 				}
 			}
@@ -209,11 +141,11 @@ public class Board {
 
 			// ###########################~~~~ Middle Row
 			// ~~~#################################//
-			if (r < player.tokens.length) {
-				for (int i = 0; i < player.tokens[0].length; i++) {
-					if (player.tokens[r][i] != null) { // Logic for drawing the tokens in the array
+			if (r < green.tokens.length) {
+				for (int i = 0; i < green.tokens[0].length; i++) {
+					if (green.tokens[r][i] != null) { // Logic for drawing the tokens in the array
 						System.out.print(
-								getWest(player.tokens[r][i]) + player.tokens[r][i].name + getEast(player.tokens[r][i]));
+								getWest(green.tokens[r][i]) + green.tokens[r][i].name + getEast(green.tokens[r][i]));
 					} else {
 						System.out.print("|     ");
 					}
@@ -244,12 +176,12 @@ public class Board {
 			//System.out.print("|");
 			//Mid row for yellow
 			System.out.print("|"+SEPARATOR);
-			if (r < player.tokens.length) {
+			if (r < yellow.tokens.length) {
 
-				for (int i = 0; i < player.tokens[0].length; i++) {
-					if (player.tokens[r][i] != null) { // Logic for drawing the tokens in the array
+				for (int i = 0; i < yellow.tokens[0].length; i++) {
+					if (yellow.tokens[r][i] != null) { // Logic for drawing the tokens in the array
 						System.out.print(
-								getWest(player.tokens[r][i]) + player.tokens[r][i].name + getEast(player.tokens[r][i]));
+								getWest(yellow.tokens[r][i]) + yellow.tokens[r][i].name + getEast(yellow.tokens[r][i]));
 					} else {
 						System.out.print("|     ");
 					}
@@ -264,10 +196,10 @@ public class Board {
 			// **********************************---Last
 			// Row---**************************************
 
-			if (r < player.tokens.length) {
-				for (int i = 0; i < player.tokens[0].length; i++) {
-					if (player.tokens[r][i] != null) {
-						System.out.print(getSouth(player.tokens[r][i])); // Deal with South
+			if (r < green.tokens.length) {
+				for (int i = 0; i < green.tokens[0].length; i++) {
+					if (green.tokens[r][i] != null) {
+						System.out.print(getSouth(green.tokens[r][i])); // Deal with South
 					} else {
 						System.out.print("|     ");
 					}
@@ -288,11 +220,11 @@ public class Board {
 				}
 			}
 
-			if (r < player.tokens.length) {
+			if (r < yellow.tokens.length) {
 				System.out.print("|"+SEPARATOR);
-				for (int i = 0; i < player.tokens[0].length; i++) {
-					if (player.tokens[r][i] != null) {
-						System.out.print(getSouth(player.tokens[r][i])); // Deal with South
+				for (int i = 0; i < yellow.tokens[0].length; i++) {
+					if (yellow.tokens[r][i] != null) {
+						System.out.print(getSouth(yellow.tokens[r][i])); // Deal with South
 					} else {
 						System.out.print("|     ");
 					}
@@ -303,7 +235,7 @@ public class Board {
 
 			System.out.println("|");
 
-			if (r < player.tokens.length) {
+			if (r < yellow.tokens.length) {
 				System.out.print(TLINE + SEPARATOR + BLINE + SEPARATOR + TLINE);
 				System.out.println();
 			} else {
