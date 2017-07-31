@@ -201,6 +201,8 @@ public class TextClient {
 		board.createRecord();
 		green.createRecord();
 		yellow.createRecord();
+		//board.HUGEBOARDTEST(green);
+		board.createGreenBoard(yellow);
 		board.redraw();
 	}
 
@@ -243,13 +245,15 @@ public class TextClient {
 		gerneratePieces(greList);
 		board.initialise();
 		board.addPlayers(green, yellow);
-		board.redraw();
+		//board.redraw();
 		board.createRecord();
 		yellow.populateTokens(yelList);
 		green.populateTokens(greList);
 		yellow.createRecord();
 		green.createRecord();
-		board.createGreenBoard(green);
+		//board.createGreenBoard(yellow);
+		//board.test(green);
+		board.HUGEBOARDTEST(green);
 		System.out.println("~*~*~ Sword & Shield ~*~*~");
 		while (1 == 1) {// loop forever
 			System.out.println("\n********************");
