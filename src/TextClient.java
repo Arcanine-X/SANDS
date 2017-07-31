@@ -68,7 +68,7 @@ public class TextClient {
 		}
 		firstCreation = false;
 		System.out.println("Made a copy");
-		success(player);
+		success();
 	}
 
 	public static void moveToken(Player player, String options) {
@@ -95,7 +95,7 @@ public class TextClient {
 			return;
 		}
 		if (player.moveToken(player, tokenToMove, direction, board) == true) {
-			success(player);
+			success();
 		} else {
 			System.out.println("Something went wrong in moveToken");
 			return;
@@ -132,7 +132,7 @@ public class TextClient {
 		//player.movesSoFar.add("placeHolder");
 		//this makes more sense
 		player.movesSoFar.add(""+rotation);
-		success(player);
+		success();
 		System.out.println("Successful rotation");
 	}
 
@@ -194,16 +194,14 @@ public class TextClient {
 		if(player.getSetterCount() > player.getOriginalCount()) {
 			firstCreation = true;
 		}
-		board.redraw(green,yellow);
+		board.redraw();
 	}
 
-	public static void success(Player player) {
+	public static void success() {
 		board.createRecord();
 		green.createRecord();
 		yellow.createRecord();
-		//board.HUGEBOARDTEST(green);
-		board.createGreenBoard(green);
-		board.redraw(green,yellow);
+		board.redraw();
 	}
 
 	public static void reset(Player player, Board board) {// after passing need to reset stuff
@@ -245,13 +243,15 @@ public class TextClient {
 		gerneratePieces(greList);
 		board.initialise();
 		board.addPlayers(green, yellow);
-
 		board.createRecord();
 		yellow.populateTokens(yelList);
 		green.populateTokens(greList);
 		yellow.createRecord();
 		green.createRecord();
-		board.redraw(green,yellow);
+		board.setGreen(green);
+		board.setYellow(yellow);
+		board.redraw();
+
 		//board.createGreenBoard(yellow);
 		//board.test(green);
 		//board.HUGEBOARDTEST(green);
@@ -263,12 +263,12 @@ public class TextClient {
 			if (turn % 2 == 0) {
 				System.out.println("It is yellows turn!");
 				playerOptions(yellow);
-				board.redraw(green,yellow);
+				board.redraw();
 
 			} else {
 				System.out.println("It is greens turn!");
 				playerOptions(green);
-				board.redraw(green,yellow);
+				board.redraw();
 			}
 			turn++;
 		}

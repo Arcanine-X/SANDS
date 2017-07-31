@@ -3,11 +3,22 @@ import java.util.Stack;
 public class Board {
 	Token[][] board = new Token[10][10];
 	Stack<Token[][]> undoStack = new Stack<Token[][]>();
-	static final String SEPARATOR = "     ";
-	static final String TLINE = "-------------------------";
-	static final String BLINE = "-------------------------------------------------------------";
-	static final String EDGESEPARATOR = "                              ";
-	public char dm = 'a';
+	private static final String SEPARATOR = "     ";
+	private static final String TLINE = "-------------------------";
+	private static final String BLINE = "-------------------------------------------------------------";
+	private static final String EDGESEPARATOR = "                              ";
+	private Player green;
+	private Player yellow;
+
+
+	public void setGreen(Player green) {
+		this.green = green;
+	}
+
+
+	public void setYellow(Player yellow) {
+		this.yellow = yellow;
+	}
 
 	public Board() {
 	}
@@ -49,192 +60,128 @@ public class Board {
 		}
 	}
 
-	/*public void redraw() {
-		// draw a board
-		System.out.println("-------------------------------------------------------------");
-		for (int r = 0; r < board.length; r++) {
-			// First Row
-			for (int c = 0; c < board.length; c++) {
-				if (board[r][c] instanceof BoardPiece) {
-					BoardPiece temp = (BoardPiece) board[r][c];
-					System.out.print(getNorth(temp)); // Deal with North
-				} else {
-					System.out.print("|     ");
-				}
+	public void drawTopRowBoard(int r) {
+		for (int c = 0; c < board[0].length; c++) {
+			if (board[r][c] instanceof BoardPiece) {
+				BoardPiece temp = (BoardPiece) board[r][c];
+				System.out.print(getNorth(temp)); // Deal with North
+			} else {
+				System.out.print("|     ");
 			}
-			System.out.println("|");
-			// Middle Row
-			for (int i = 0; i < 10; i++) {
-				if (board[r][i] instanceof Player) {
-					System.out.print(r == 1 && i == 1 ? "|green" : "|yelow"); // Draw Player
-				} else if (board[r][i] instanceof BoardPiece) { // Logic for drawing the tokens in the array
-					BoardPiece temp = (BoardPiece) board[r][i];
-					System.out.print(getWest(temp) + temp.name + getEast(temp));
-				} else if (r == 2 && i == 2 && !(board[2][2] instanceof Token)) { // Draw creation box for green
-					System.out.print("| [ ] ");
-				} else if (r == 7 && i == 7 && !(board[7][7] instanceof Token)) { // Draw creation box for yellow
-					System.out.print("| [ ] ");
-				} else {
-					System.out.print("|     ");
-				}
-			}
-			System.out.println("|");
-			// Last Row
-			for (int i = 0; i < 10; i++) {
-				if (board[r][i] instanceof BoardPiece) {
-					BoardPiece temp = (BoardPiece) board[r][i];
-					System.out.print(getSouth(temp)); // Deal with South
-				} else {
-					System.out.print("|     ");
-				}
-			}
-			System.out.println("|");
-			System.out.println("-------------------------------------------------------------");
 		}
-	}*/
+	}
 
-	public void redraw(Player green, Player yellow) {
+	public void drawTopRowTokens(Player player, int r) {
+		for (int c = 0; c < player.tokens[0].length; c++) {
+			if (player.tokens[r][c] != null) {
+				System.out.print(getNorth(player.tokens[r][c])); // Deal with North
+			} else {
+				System.out.print("|     ");
+			}
+		}
+	}
+
+	public void drawMiddleRowBoard(int r) {
+		for (int i = 0; i < 10; i++) {
+			if (board[r][i] instanceof Player) {
+				System.out.print(r == 1 && i == 1 ? "|green" : "|yelow"); // Draw Player
+			} else if (board[r][i] instanceof BoardPiece) { // Logic for drawing the tokens in the array
+				BoardPiece temp = (BoardPiece) board[r][i];
+				System.out.print(getWest(temp) + temp.name + getEast(temp));
+			} else if (r == 2 && i == 2 && !(board[2][2] instanceof Token)) { // Draw creation box for green
+				System.out.print("| [ ] ");
+			} else if (r == 7 && i == 7 && !(board[7][7] instanceof Token)) { // Draw creation box for yellow
+				System.out.print("| [ ] ");
+			} else {
+				System.out.print("|     ");
+			}
+		}
+	}
+
+	public void drawMiddleRowTokens(Player player, int r) {
+		if (r < player.tokens.length) {
+			for (int i = 0; i < player.tokens[0].length; i++) {
+				if (player.tokens[r][i] != null) { // Logic for drawing the tokens in the array
+					System.out.print(
+							getWest(player.tokens[r][i]) + player.tokens[r][i].name + getEast(player.tokens[r][i]));
+				} else {
+					System.out.print("|     ");
+				}
+			}
+			System.out.print("|" + SEPARATOR);
+		} else {
+			System.out.print(EDGESEPARATOR);
+		}
+	}
+
+	public void drawLastRowTokens(Player player, int r) {
+		for (int i = 0; i < player.tokens[0].length; i++) {
+			if (player.tokens[r][i] != null) {
+				System.out.print(getSouth(player.tokens[r][i])); // Deal with South
+			} else {
+				System.out.print("|     ");
+			}
+		}
+	}
+
+	public void drawLastRowBoard(int r) {
+		for (int i = 0; i < 10; i++) {
+			if (board[r][i] instanceof BoardPiece) {
+				BoardPiece temp = (BoardPiece) board[r][i];
+				System.out.print(getSouth(temp)); // Deal with South
+			} else {
+				System.out.print("|     ");
+			}
+		}
+	}
+
+
+	public void redraw() {
 		System.out.println("\n\n");
 		System.out.println(SEPARATOR + "~~Green Tokens~~" + EDGESEPARATOR + "  ~~Game Board~~" + EDGESEPARATOR + "   ~~Yellow Tokens~~");
 		System.out.println(TLINE + SEPARATOR + BLINE + SEPARATOR + TLINE);
 		for (int r = 0; r < board.length; r++) {
+			//~~~~~~~~~ TOP ROW ~~~~~~~~~~~~~~~
 			// Top row of player tokens
 			if (r < green.tokens.length) {
-				for (int c = 0; c < green.tokens[0].length; c++) {
-					if (green.tokens[r][c] != null) {
-						System.out.print(getNorth(green.tokens[r][c])); // Deal with North
-					} else {
-						System.out.print("|     ");
-					}
-				}
-				//System.out.print("|" + SEPARATOR);
+				drawTopRowTokens(green, r);
 				System.out.print("|" + SEPARATOR);
 			} else {
 				System.out.print(EDGESEPARATOR);
 			}
 			// Top row for board
-			for (int c = 0; c < board[0].length; c++) {
-				if (board[r][c] instanceof BoardPiece) {
-					BoardPiece temp = (BoardPiece) board[r][c];
-					System.out.print(getNorth(temp)); // Deal with North
-				} else {
-					System.out.print("|     ");
-				}
-			}
-
-
-
-			//top row for yellow
+			drawTopRowBoard(r);
+			// Top row for yellow
 			if (r < yellow.tokens.length) {
 				System.out.print("|"+SEPARATOR);
-				for (int c = 0; c < yellow.tokens[0].length; c++) {
-					if (yellow.tokens[r][c] != null) {
-						System.out.print(getNorth(yellow.tokens[r][c])); // Deal with North
-					} else {
-						System.out.print("|     ");
-					}
-				}
+				drawTopRowTokens(yellow, r);
 			}
-
-
 			System.out.println("|");
 
-			// ###########################~~~~ Middle Row
-			// ~~~#################################//
-			if (r < green.tokens.length) {
-				for (int i = 0; i < green.tokens[0].length; i++) {
-					if (green.tokens[r][i] != null) { // Logic for drawing the tokens in the array
-						System.out.print(
-								getWest(green.tokens[r][i]) + green.tokens[r][i].name + getEast(green.tokens[r][i]));
-					} else {
-						System.out.print("|     ");
-					}
-				}
-				System.out.print("|" + SEPARATOR);
-			} else {
-				System.out.print(EDGESEPARATOR);
-			}
-
-			// board mid
-
-			for (int i = 0; i < 10; i++) {
-				if (board[r][i] instanceof Player) {
-					System.out.print(r == 1 && i == 1 ? "|green" : "|yelow"); // Draw Player
-				} else if (board[r][i] instanceof BoardPiece) { // Logic for drawing the tokens in the array
-					BoardPiece temp = (BoardPiece) board[r][i];
-					System.out.print(getWest(temp) + temp.name + getEast(temp));
-				} else if (r == 2 && i == 2 && !(board[2][2] instanceof Token)) { // Draw creation box for green
-					System.out.print("| [ ] ");
-				} else if (r == 7 && i == 7 && !(board[7][7] instanceof Token)) { // Draw creation box for yellow
-					System.out.print("| [ ] ");
-				} else {
-					System.out.print("|     ");
-				}
-			}
-
-
-			//System.out.print("|");
-			//Mid row for yellow
+			//~~~~~~~~~~~~ MIDDLE ROW ~~~~~~~~~~
+			// Middle row for green
+			drawMiddleRowTokens(green, r);
+			// Middle row for board
+			drawMiddleRowBoard(r);
 			System.out.print("|"+SEPARATOR);
-			if (r < yellow.tokens.length) {
-
-				for (int i = 0; i < yellow.tokens[0].length; i++) {
-					if (yellow.tokens[r][i] != null) { // Logic for drawing the tokens in the array
-						System.out.print(
-								getWest(yellow.tokens[r][i]) + yellow.tokens[r][i].name + getEast(yellow.tokens[r][i]));
-					} else {
-						System.out.print("|     ");
-					}
-				}
-				System.out.print("|" + SEPARATOR);
-			} else {
-				System.out.print(EDGESEPARATOR);
-			}
-
+			//Middle row for yellow
+			drawMiddleRowTokens(yellow, r);
 			System.out.println("");
 
-			// **********************************---Last
-			// Row---**************************************
+			//~~~~~~~ LAST ROW ~~~~~~~~~~~~~
 
 			if (r < green.tokens.length) {
-				for (int i = 0; i < green.tokens[0].length; i++) {
-					if (green.tokens[r][i] != null) {
-						System.out.print(getSouth(green.tokens[r][i])); // Deal with South
-					} else {
-						System.out.print("|     ");
-					}
-				}
+				drawLastRowTokens(green, r);
 				System.out.print("|" + SEPARATOR);
 			} else {
 				System.out.print(EDGESEPARATOR);
 			}
-
-			// board
-
-			for (int i = 0; i < 10; i++) {
-				if (board[r][i] instanceof BoardPiece) {
-					BoardPiece temp = (BoardPiece) board[r][i];
-					System.out.print(getSouth(temp)); // Deal with South
-				} else {
-					System.out.print("|     ");
-				}
-			}
-
+			drawLastRowBoard(r);
 			if (r < yellow.tokens.length) {
 				System.out.print("|"+SEPARATOR);
-				for (int i = 0; i < yellow.tokens[0].length; i++) {
-					if (yellow.tokens[r][i] != null) {
-						System.out.print(getSouth(yellow.tokens[r][i])); // Deal with South
-					} else {
-						System.out.print("|     ");
-					}
-				}
-
+				drawLastRowTokens(yellow, r);
 			}
-
-
 			System.out.println("|");
-
 			if (r < yellow.tokens.length) {
 				System.out.print(TLINE + SEPARATOR + BLINE + SEPARATOR + TLINE);
 				System.out.println();
@@ -242,12 +189,6 @@ public class Board {
 				System.out.print(EDGESEPARATOR + BLINE);
 				System.out.println();
 			}
-			// System.out.println("");
-
-			//Last row for yellow
-
-
-
 		}
 	}
 
