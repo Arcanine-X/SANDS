@@ -1,8 +1,11 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 public class Board {
 	Token[][] board = new Token[10][10];
 	Stack<Token[][]> undoStack = new Stack<Token[][]>();
+	List<Pair> reactions = new ArrayList<Pair>();
 	private static final String SEPARATOR = "     ";
 	private static final String TLINE = "-------------------------";
 	private static final String BLINE = "-------------------------------------------------------------";
@@ -19,6 +22,72 @@ public class Board {
 	public void setYellow(Player yellow) {
 		this.yellow = yellow;
 	}
+
+	public boolean checkForReaction() {
+		/*
+		 * Need to check for reactions up down left and right... so four sets of double four loops....
+		 */
+		for(int r = 0; r < board.length; r++) {
+			for(int c = 0; c < board[0].length-1; c++) {
+				if(board[r][c] instanceof BoardPiece && board[r][c+1] instanceof BoardPiece) {
+					BoardPiece temp1 = (BoardPiece) board[r][c];
+					BoardPiece temp2 = (BoardPiece) board[r][c+1];
+					if(temp1.east == 1 || temp2.west == 1) {
+						//horizontal reaction will occur
+						reactions.add(new Pair(temp1,temp2,"hori"));
+						System.out.println("horizontal");
+					}
+				}
+			}
+		}
+
+		for(int r = 0; r < board.length-1; r++) {
+			for(int c = 0; c < board[0].length; c++) {
+				if(board[r][c] instanceof BoardPiece && board[r+1][c] instanceof BoardPiece) {
+					BoardPiece temp1 = (BoardPiece) board[r][c];
+					BoardPiece temp2 = (BoardPiece) board[r+1][c];
+					if(temp1.south == 1 || temp2.north == 1) {
+						reactions.add(new Pair(temp1,temp2,"vert"));
+						System.out.println("added vertical");
+					}
+				}
+			}
+		}
+		if(!reactions.isEmpty()) {
+			System.out.println("oka");
+		}
+		return reactions.isEmpty() ? false : true;
+	}
+
+	public int getX(String letter) {
+		for(int r = 0; r < board.length; r++) {
+			for(int c = 0; c < board[0].length; c++) {
+				if(board[r][c] instanceof BoardPiece) {
+					BoardPiece temp = (BoardPiece)board[r][c];
+					if(temp.name.equals(letter)) {
+						return c; //c is x
+					}
+				}
+			}
+		}
+		return -1;
+	}
+
+	public int getY(String letter) {
+		for(int r = 0; r < board.length; r++) {
+			for(int c = 0; c < board[0].length; c++) {
+				if(board[r][c] instanceof BoardPiece) {
+					BoardPiece temp = (BoardPiece)board[r][c];
+					if(temp.name.equals(letter)) {
+						return r; //r is y
+					}
+				}
+			}
+		}
+		return -1;
+	}
+
+
 
 	public Board() {
 	}
@@ -136,6 +205,8 @@ public class Board {
 	}
 
 
+
+
 	public void redraw() {
 		System.out.println("\n\n");
 		System.out.println(SEPARATOR + "~~Green Tokens~~" + EDGESEPARATOR + "  ~~Game Board~~" + EDGESEPARATOR + "   ~~Yellow Tokens~~");
@@ -157,7 +228,6 @@ public class Board {
 				drawTopRowTokens(yellow, r);
 			}
 			System.out.println("|");
-
 			//~~~~~~~~~~~~ MIDDLE ROW ~~~~~~~~~~
 			// Middle row for green
 			drawMiddleRowTokens(green, r);

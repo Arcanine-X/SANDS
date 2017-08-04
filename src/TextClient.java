@@ -16,8 +16,8 @@ public class TextClient {
 	static Board board = new Board();
 	// Two sets that have all the possiable movements and rotations for simplicity
 	// of code
-	static public Set<String> movement = new HashSet<String>(Arrays.asList("up","down","left","right"));
-	static public Set<Integer> rotations = new HashSet<Integer>(Arrays.asList(0,90,180,270));
+	static public Set<String> movement = new HashSet<String>(Arrays.asList("up", "down", "left", "right"));
+	static public Set<Integer> rotations = new HashSet<Integer>(Arrays.asList(0, 90, 180, 270));
 	static boolean firstCreation = true;
 	static Player yellow;
 	static Player green;
@@ -69,6 +69,9 @@ public class TextClient {
 		firstCreation = false;
 		System.out.println("Made a copy");
 		success();
+		if (board.checkForReaction()) {
+			fight(player);
+		}
 	}
 
 	public static void moveToken(Player player, String options) {
@@ -94,8 +97,18 @@ public class TextClient {
 			System.out.println("Input error in moveToken");
 			return;
 		}
+		// Check that they haven't rotated
+		if (player.everyMovement.contains(tokenToMove)) {
+			System.out.println("You have already rotated or moved this piece this turn.\nSo you cannot rotate");
+			return;
+		}
+		// Check that they haven't already moved this piece
 		if (player.moveToken(player, tokenToMove, direction, board) == true) {
+			player.everyMovement.add(tokenToMove);
 			success();
+			if (board.checkForReaction()) {
+				fight(player);
+			}
 		} else {
 			System.out.println("Something went wrong in moveToken");
 			return;
@@ -118,7 +131,6 @@ public class TextClient {
 		}
 		BoardPiece itemToRotate = board.findMoveToken(player, letter);
 
-
 		if (itemToRotate == null) {
 			System.out.println("Your rotation piece doesn't exist");
 			return;
@@ -128,22 +140,71 @@ public class TextClient {
 			rotator(itemToRotate, rotation);
 			num--;
 		}
-		//Have to have this to for to ensure that you cannot move after undoing a rotation.
-		//player.movesSoFar.add("placeHolder");
-		//this makes more sense
-		player.movesSoFar.add(""+rotation);
+		if (player.everyMovement.contains(itemToRotate)) {
+			System.out.println("You have already moved or rotated this token this turn");
+			System.out.println("You cannot rotate it again");
+			return;
+		}
+		player.everyMovement.add(itemToRotate);
+		// Have to add have this to for to ensure that you cannot move after undoing a
+		// rotation.
+		player.movesSoFar.add("" + rotation);
 		success();
+		if (board.checkForReaction()) {
+			fight(player);
+		}
+
 		System.out.println("Successful rotation");
 	}
 
-	public static void fight(Player player, String options) {
-		//My ideas so far.....
+	public static void fight(Player player) {
+		System.out.println("Here are the possiable reactions:");
+		for(Pair p : board.reactions) {
+			System.out.println("There is a reaction between " + p.one.name + "and " + p.two.name);
+		}
+		if(board.reactions.size()>1) {
+			String fightOptions = inputString("There are multiple reactions. Enter the two letters of which the interactions should occur between first : ");
+		}
+		else {
+			System.out.println("Reactionnnnnnnnnn");
+			BoardPiece one = board.reactions.get(0).one;
+			BoardPiece two = board.reactions.get(0).two;
+			if(board.reactions.get(0).dir == "hori") {
+				if(one.east == 1 && two.west == 1) {
+					System.out.println(one.name + "and" + two.name + "just died");
+				}
 
-		//When moving a token loop through to see if that direction is going to collide with anything
-		//If so get the appropriate sword or shield collision items
-		//And do read adjust array
+			}
+
+
+		}
+
+		//My idea:
+		//Have a method that is like check for reaction
+		//Then in that have four method calls check for vert reactions, horzi, left, right
+		// then from there maybe figure out what to react between?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		// My ideas so far.....
+
+		// When moving a token loop through to see if that direction is going to collide
+		// with anything
+		// If so get the appropriate sword or shield collision items
+		// And do read adjust array
 	}
-
 
 	public static void rotator(BoardPiece item, int rotation) {
 		int tn = item.north, te = item.east, ts = item.south, tw = item.west;
@@ -156,8 +217,9 @@ public class TextClient {
 	public static void playerOptions(Player player) {
 		while (1 == 1) {
 			try {
+				System.out.println(player.everyMovement.toString());
 				String options = inputString(
-						"[create <letter> <0/90/180/270> / rotate <letter> <1-4> / move <letter> <up/right/down/left> / pass");
+						"[create <letter> <0/90/180/270> / rotate <letter> <0/90/180/270> / move <letter> <up/right/down/left> / pass");
 				if (options.startsWith("create")) {
 					createToken(player, options);
 				} else if (options.startsWith("rotate")) {
@@ -188,11 +250,14 @@ public class TextClient {
 		yellow.createRecord();
 		board.createRecord(); // create new record
 		// undo lists which ensure a player can only move something once per turn
-		if(!player.movesSoFar.isEmpty()) {
-			player.movesSoFar.remove(player.movesSoFar.size()-1);
+		if (!player.movesSoFar.isEmpty()) {
+			player.movesSoFar.remove(player.movesSoFar.size() - 1);
 		}
-		if(player.getSetterCount() > player.getOriginalCount()) {
+		if (player.getSetterCount() > player.getOriginalCount()) {
 			firstCreation = true;
+		}
+		if (!player.everyMovement.isEmpty()) {
+			player.everyMovement.remove(player.everyMovement.size() - 1);
 		}
 		board.redraw();
 	}
@@ -205,6 +270,8 @@ public class TextClient {
 	}
 
 	public static void reset(Player player, Board board) {// after passing need to reset stuff
+		yellow.everyMovement.clear();
+		green.everyMovement.clear();
 		yellow.movesSoFar.clear();
 		green.movesSoFar.clear();
 		firstCreation = true;
@@ -225,7 +292,7 @@ public class TextClient {
 	 * @return
 	 */
 	public static boolean checkIfAllowedToMove(Player player, String letter) {
-		if(!player.movesSoFar.contains(letter)) {
+		if (!player.movesSoFar.contains(letter)) {
 			player.movesSoFar.add(letter);
 			return true;
 		}
@@ -241,20 +308,19 @@ public class TextClient {
 		int turn = 0;
 		gerneratePieces(yelList);
 		gerneratePieces(greList);
+		for (BoardPiece bp : greList) {
+			bp.name = bp.name.toUpperCase();
+		}
 		board.initialise();
 		board.addPlayers(green, yellow);
 		board.createRecord();
-		yellow.populateTokens(yelList);
-		green.populateTokens(greList);
+		yellow.populateTokens(yellow, yelList);
+		green.populateTokens(green, greList);
 		yellow.createRecord();
 		green.createRecord();
 		board.setGreen(green);
 		board.setYellow(yellow);
 		board.redraw();
-
-		//board.createGreenBoard(yellow);
-		//board.test(green);
-		//board.HUGEBOARDTEST(green);
 		System.out.println("~*~*~ Sword & Shield ~*~*~");
 		while (1 == 1) {// loop forever
 			System.out.println("\n********************");
@@ -279,7 +345,7 @@ public class TextClient {
 		list.add(new BoardPiece("b", 1, 0, 1, 1, ""));
 		list.add(new BoardPiece("c", 2, 2, 2, 2, ""));
 		list.add(new BoardPiece("d", 1, 0, 0, 0, ""));
-		// empty tile??
+		//
 		//
 		list.add(new BoardPiece("e", 0, 0, 0, 0, ""));
 		list.add(new BoardPiece("f", 1, 0, 0, 1, ""));
@@ -298,11 +364,12 @@ public class TextClient {
 		list.add(new BoardPiece("q", 1, 0, 0, 2, ""));
 		list.add(new BoardPiece("r", 1, 2, 0, 2, ""));
 		list.add(new BoardPiece("s", 0, 2, 0, 2, ""));
-		// e
+		//
 		list.add(new BoardPiece("t", 1, 0, 1, 0, ""));
 		list.add(new BoardPiece("u", 1, 0, 0, 1, ""));
 		list.add(new BoardPiece("v", 1, 2, 0, 0, ""));
 		list.add(new BoardPiece("w", 1, 2, 2, 2, ""));
 		list.add(new BoardPiece("x", 0, 2, 2, 2, ""));
+
 	}
 }

@@ -8,8 +8,8 @@ public class Player extends Token {
 	int setterCount = 0;
 	BoardPiece[][] tokens = new BoardPiece[6][4];
 	Stack<BoardPiece[][]> undoStack = new Stack<BoardPiece[][]>();
-	List<String> movesSoFar = new ArrayList<String>();
-	List<BoardPiece> rotatedPieces = new ArrayList<BoardPiece>();
+	List<String> movesSoFar = new ArrayList<String>(); // contains both rotated and moved pieces
+	List<BoardPiece> everyMovement = new ArrayList<BoardPiece>();
 
 	public Player(String name) {
 		this.name = name;
@@ -30,11 +30,10 @@ public class Player extends Token {
 		}
 		BoardPiece tokenToAdd = null;
 		tokenToAdd = find(player, letter);
-		if(tokenToAdd != null) {
-			if(player.name.equals("green")) {
+		if (tokenToAdd != null) {
+			if (player.name.equals("green")) {
 				board.board[2][2] = tokenToAdd;
-			}
-			else {
+			} else {
 				board.board[7][7] = tokenToAdd;
 			}
 			System.out.println("token added");
@@ -86,7 +85,7 @@ public class Player extends Token {
 		return true;
 	}
 
-	public void populateTokens(List<BoardPiece> t) {
+	public void populateTokens(Player player, List<BoardPiece> t) {
 		int i = 0;
 		for (int r = 0; r < tokens.length; r++) {
 			for (int c = 0; c < tokens[0].length; c++) {
