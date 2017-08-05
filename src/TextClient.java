@@ -60,6 +60,7 @@ public class TextClient {
 			System.out.println("Something went wrong in create token");
 			return;
 		}
+		
 		BoardPiece item = board.findMoveToken(player, letter);
 		int num = (rotation == 0) ? 0 : (rotation == 90) ? 1 : (rotation == 180) ? 2 : 3;
 		while (num > 0) {
@@ -68,6 +69,7 @@ public class TextClient {
 		}
 		firstCreation = false;
 		System.out.println("Made a copy");
+		player.Hax("d", "b", "c", player, board);
 		success();
 		if (board.checkForReaction()) {
 			fight(player);
@@ -188,6 +190,10 @@ public class TextClient {
 				System.out.println("in up");
 				verticalReaction(pair, player);
 			}
+			if(pair.dir.equals("hori")) {
+				System.out.println("im hori");
+				horizontalReaction(pair, player);
+			}
 		} else {
 			// There's just one reaction so tell the user the user there's going to be a
 			// reaction and do it.
@@ -207,27 +213,50 @@ public class TextClient {
 		BoardPiece one = p.one;
 		BoardPiece two = p.two;
 		if (board.getX(one.name) < board.getX(two.name)) { // one is on the left and two is on the right
+			System.out.println("hello im in horizontal first if statement");
 			if (one.east == 1 && two.west == 1) { // sword - sword
-
+				System.out.println("Both tokens die");
+				board.killToken(one.name);
+				board.killToken(two.name);
+				board.redraw();
 			} else if (one.east == 1 && two.west == 0) { // sword - nothing
+				board.killToken(two.name);
 
 			} else if (one.east == 1 && two.west == 2) { // sword - shield
+				System.out.println("in one east == 1 && two west == 2");
+				board.tryPushLeft(two.name);
+				board.reactions.remove(p);
+				board.redraw();
+				
 
 			} else if (one.east == 0 && two.west == 1) { // nothing - sword
+				board.killToken(one.name);
+				board.redraw();
+				System.out.println(one.name + " died from " + two.west + "'s sword");
 
 			} else if (one.east == 2 && two.west == 1) { // shield - sword
+				System.out.println("in one east 2, two west 1 horizontal first if");
+				board.tryPushRight(one.name);
+				board.reactions.remove(p);
+				board.redraw();
 
 			}
 
 		} else {// other way round where two is on the left
+			System.out.println("hello im in horizontal else statement");
 			if (two.east == 1 && one.west == 1) { // sword - sword
+				System.out.println("Both tokens die");
+				board.killToken(one.name);
+				board.killToken(two.name);
+				board.redraw();
 
 			} else if (two.east == 1 && one.west == 0) { // sword - nothing
+				board.killToken(one.name);
 
 			} else if (two.east == 1 && one.west == 2) { // sword - shield
 
 			} else if (two.east == 0 && one.west == 1) { // nothing - sword
-
+				board.killToken(two.name);
 			} else if (two.east == 2 && one.west == 1) { // shield - sword
 
 			}
@@ -430,6 +459,7 @@ public class TextClient {
 			if (turn % 2 == 0) {
 				System.out.println("It is yellows turn!");
 				playerOptions(yellow);
+
 				board.redraw();
 
 			} else {
