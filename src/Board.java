@@ -93,44 +93,6 @@ public class Board {
 	}
 
 
-
-
-	public void createGreenBoard(Player player) {
-		// draw a board
-		System.out.println("-------------------------");
-		for (int r = 0; r < player.tokens.length; r++) {
-			// First Row
-			for (int c = 0; c < player.tokens[0].length; c++) {
-				if (player.tokens[r][c] != null) {
-					System.out.print(getNorth(player.tokens[r][c])); // Deal with North
-				} else {
-					System.out.print("|     ");
-				}
-			}
-			System.out.println("|");
-			// Middle Row
-			for (int i = 0; i < player.tokens[0].length; i++) {
-				if (player.tokens[r][i] != null) { // Logic for drawing the tokens in the array
-					System.out.print(
-							getWest(player.tokens[r][i]) + player.tokens[r][i].name + getEast(player.tokens[r][i]));
-				} else {
-					System.out.print("|     ");
-				}
-			}
-			System.out.println("|");
-			// Last Row
-			for (int i = 0; i < player.tokens[0].length; i++) {
-				if (player.tokens[r][i] != null) {
-					System.out.print(getSouth(player.tokens[r][i])); // Deal with South
-				} else {
-					System.out.print("|     ");
-				}
-			}
-			System.out.println("|");
-			System.out.println("-------------------------");
-		}
-	}
-
 	public void drawTopRowBoard(int r) {
 		for (int c = 0; c < board[0].length; c++) {
 			if (board[r][c] instanceof BoardPiece) {
