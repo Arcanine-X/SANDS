@@ -6,10 +6,10 @@ public class Board {
 	Token[][] board = new Token[10][10];
 	Stack<Token[][]> undoStack = new Stack<Token[][]>();
 	List<Pair> reactions = new ArrayList<Pair>();
-	private static final String SEPARATOR = "     ";
-	private static final String TLINE = "-------------------------";
-	private static final String BLINE = "-------------------------------------------------------------";
-	private static final String EDGESEPARATOR = "                              ";
+	private static final String SEPARATOR = "     "; //Separator between token and board, and board and token
+	private static final String TLINE = "-------------------------"; //Token board line
+	private static final String BLINE = "-------------------------------------------------------------"; //Board line
+	private static final String EDGESEPARATOR = "                              "; //Distance between edge and board
 	private Player green;
 	private Player yellow;
 
@@ -91,6 +91,8 @@ public class Board {
 
 	public Board() {
 	}
+
+
 
 
 	public void createGreenBoard(Player player) {
@@ -222,19 +224,19 @@ public class Board {
 			}
 			// Top row for board
 			drawTopRowBoard(r);
-			// Top row for yellow
+			// Top row for yellow tokens
 			if (r < yellow.tokens.length) {
 				System.out.print("|"+SEPARATOR);
 				drawTopRowTokens(yellow, r);
 			}
 			System.out.println("|");
 			//~~~~~~~~~~~~ MIDDLE ROW ~~~~~~~~~~
-			// Middle row for green
+			// Middle row for green tokens
 			drawMiddleRowTokens(green, r);
 			// Middle row for board
 			drawMiddleRowBoard(r);
 			System.out.print("|"+SEPARATOR);
-			//Middle row for yellow
+			//Middle row for yellow tokens
 			drawMiddleRowTokens(yellow, r);
 			System.out.println("");
 
@@ -326,6 +328,99 @@ public class Board {
 		}
 		System.out.println("error returning null");
 		return null;
+	}
+
+	public void killToken(String letter) {
+		System.out.println("in findmoveToken");
+		for (int r = 0; r < board.length; r++) {
+			for (int c = 0; c < board[0].length; c++) {
+				if (board[r][c] instanceof BoardPiece) {
+					BoardPiece temp = (BoardPiece) board[r][c];
+					if (temp.name.equals(letter)) {
+						board[r][c] = null;
+						temp = null;
+						System.out.println("Dead");
+					}
+				}
+			}
+		}
+	}
+
+	public BoardPiece findToken(String letter) {
+		System.out.println("in findmoveToken");
+		BoardPiece returnToken = null;
+		for (int r = 0; r < board.length; r++) {
+			for (int c = 0; c < board[0].length; c++) {
+				if (board[r][c] instanceof BoardPiece) {
+					System.out.println("getting closer");
+					BoardPiece temp = (BoardPiece) board[r][c];
+					if (temp.name.equals(letter)) {
+						returnToken = temp;
+						System.out.println("Always a good sign");
+						return returnToken;
+					}
+				}
+			}
+		}
+		System.out.println("error returning null");
+		return null;
+	}
+
+	public void tryToPushToken(String letter, String dir) {
+		int c = getX(letter);
+		int r = getY(letter);
+		System.out.println(" letter is : "+ letter );
+		//make a method like ifPossiable boolean which checks x and y coords
+		if(dir.equals("up")) {
+			if(board[r-1][c] instanceof BoardPiece) { //requires shifting
+				int count = 0;
+				for(int i = r, j = 0; i >= 0; i --,j++) {
+					if(board[i][c] instanceof BoardPiece && j == count) {
+						count++;
+					}
+				}
+
+				if(count!=0) {
+					for(int i = r - count - 1; i < r; i++) {
+						board[i][c] = board[i+1][c];
+					}
+				}
+				board[r][c] = null;
+				System.out.println("count is " + count);
+			}
+			else { // all good just shift the 1 token
+				board[r-1][c] = findToken(letter);
+				board[r][c] = null;
+			}
+		}
+		if(dir.equals("down")) {
+			System.out.println("In down down down....");
+			if(board[r+1][c] instanceof BoardPiece) {
+				int count = 0;
+				for(int i = r, j = 0; i < board.length; i++, j++) {
+					if(board[i][c] instanceof BoardPiece && count == j) {
+						count++;
+					}
+				}
+				System.out.println("count is " + count);
+
+				if(count!=0) {
+					for(int i = r + count; i >= r; i--) {
+						System.out.println("in here....");
+						board[i][c] = board[i-1][c];
+					}
+				}
+				board[r][c] = null;
+				System.out.println("count is " + count);
+
+			}
+			else {
+				board[r+1][c] = findToken(letter);
+				board[r][c] = null;
+			}
+		}
+		//will need to do it for left and right aswell.
+
 	}
 
 	public void addPlayers(Player green, Player yellow) {
