@@ -23,16 +23,13 @@ public class Board {
 
 	public boolean checkForReaction() {
 		reactions.clear();
-		/*
-		 * Need to check for reactions up down left and right... so two sets of double four loops....
-		 */
 		for(int r = 0; r < board.length; r++) {
 			for(int c = 0; c < board[0].length-1; c++) {
 				if(board[r][c] instanceof BoardPiece && board[r][c+1] instanceof BoardPiece) {
 					BoardPiece temp1 = (BoardPiece) board[r][c];
 					BoardPiece temp2 = (BoardPiece) board[r][c+1];
 					if(temp1.east == 1 || temp2.west == 1) {
-						reactions.add(new Pair(temp1,temp2,"hori", this));
+						reactions.add(new Pair(temp1,temp2,"hori"));
 					}
 				}
 			}
@@ -44,13 +41,10 @@ public class Board {
 					BoardPiece temp1 = (BoardPiece) board[r][c];
 					BoardPiece temp2 = (BoardPiece) board[r+1][c];
 					if(temp1.south == 1 || temp2.north == 1) {
-						reactions.add(new Pair(temp1,temp2,"vert", this));
+						reactions.add(new Pair(temp1,temp2,"vert"));
 					}
 				}
 			}
-		}
-		if(!reactions.isEmpty()) {
-			System.out.println("oka");
 		}
 		return reactions.isEmpty() ? false : true;
 	}
@@ -336,15 +330,12 @@ public class Board {
 				count++;
 			}
 		}
-
 		if(count!=0) {
-			System.out.println("Count is : " + count);
 			for(int i = r - count; i < r; i++) {
 				board[i-1][c] = board[i][c];
 			}
 			board[r-1][c] = null;
 		}
-		System.out.println("all done");
 	}
 
 	public void tryPushDown(String pusher) {
@@ -358,9 +349,7 @@ public class Board {
 		}
 
 		if(count!=0) {
-			System.out.println("count is : " + count);
 			for(int i = r + count; i > r; i --) {
-				System.out.println("in here");
 				board[i+1][c] = board[i][c];
 			}
 			board[r+1][c] = null;
@@ -370,10 +359,7 @@ public class Board {
 	public void tryPushRight(String pusher) {
 		int c = getX(pusher);
 		int r = getY(pusher);
-		System.out.println("Pusher pushing right is : " + pusher);
 		int count = 0;
-		System.out.println("cant get in for loop?");
-		System.out.println("c is " + c);
 		for(int i = c + 1, j = 0; i < board.length; i++, j++) {
 			System.out.println("first four loop");
 			if(board[r][i] instanceof BoardPiece && count == j) {
@@ -381,35 +367,27 @@ public class Board {
 			}
 		}
 		if(count!=0) {
-			System.out.println("count is : " + count);
 			for(int i = c + count; i > c; i--) {
 				board[r][i+1] = board[r][i];
-
 			}
 			board[r][c+1] = null;
-			System.out.println("successful push");
 		}
 	}
 
 	public void tryPushLeft(String pusher) {
 		int c = getX(pusher);
 		int r = getY(pusher);
-		System.out.println("Pusher pushing left is : " + pusher);
 		int count = 0;
-		System.out.println("cant get in for loop?");
-		System.out.println("c is " + c);
 		for(int i = c - 1, j = 0; i >=0; i--, j++) {
 			if(board[r][i] instanceof BoardPiece && count == j) {
 				count++;
 			}
 		}
 		if(count!=0) {
-			System.out.println("count is : " + count);
 			for(int i = c - count; i < c; i++) {
 				board[r][i-1] = board[r][i];
 			}
 			board[r][c-1] = null;
-			System.out.println("successfull");
 		}
 	}
 
