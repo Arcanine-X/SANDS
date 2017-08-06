@@ -162,7 +162,7 @@ public class TextClient {
 
 	public static void fight() {
 		// Print out the reactions
-		while(!board.reactions.isEmpty()) {
+		while (!board.reactions.isEmpty()) {
 			try {
 				System.out.println("Here are the possiable reactions:");
 				for (Pair p : board.reactions) {
@@ -175,15 +175,21 @@ public class TextClient {
 					String tokens[] = fightOptions.split(" ");
 					if (tokens.length != 2) {
 						System.out.println("Incorrect input");
+						continue;
 					}
 					String a = tokens[0], b = tokens[1];
 					Pair pair = null;
 					for (Pair p : board.reactions) {
-						if ((p.one.name.equals(a) && p.two.name.equals(b)) || (p.one.name.equals(b) && p.two.name.equals(a))) {
+						if ((p.one.name.equals(a) && p.two.name.equals(b))
+								|| (p.one.name.equals(b) && p.two.name.equals(a))) {
 							System.out.println("Found pair");
 							pair = p;
 							break;
 						}
+					}
+					if(pair == null) {
+						System.out.println("Invalid input");
+						continue;
 					}
 					if (pair.dir.equals("vert")) {
 						System.out.println("vertical");
@@ -203,7 +209,7 @@ public class TextClient {
 						System.out.println("error");
 					}
 				}
-			}catch (Exception e) {
+			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
 		}
@@ -213,6 +219,9 @@ public class TextClient {
 		board.redraw();
 		System.out.println(p.toString());
 		board.reactions.remove(p);
+		board.createRecord();
+		yellow.createRecord();
+		green.createRecord();
 		if (board.checkForReaction()) {
 			fight();
 		}
@@ -231,8 +240,7 @@ public class TextClient {
 			board.killToken(two.name);
 			System.out.println("2 " + two.name + " died, due to " + one.name + "'s Sword, vs Nothing. ");
 			reactionCompleted(p);
-		} else if (one.east == 1 && two
-				.west == 2) { // sword - shield
+		} else if (one.east == 1 && two.west == 2) { // sword - shield
 			board.tryPushLeft(two.name);
 			System.out.println("3 " + one.name + " got pushed back from " + two.name + "'s shield");
 			reactionCompleted(p);
@@ -292,7 +300,7 @@ public class TextClient {
 	public static void playerOptions(Player player) {
 		while (1 == 1) {
 			try {
-				System.out.println(player.everyMovement.toString());
+				// System.out.println(player.everyMovement.toString());
 				String options = inputString(
 						"[create <letter> <0/90/180/270> / rotate <letter> <0/90/180/270> / move <letter> <up/right/down/left> / pass");
 				if (options.startsWith("create")) {
@@ -333,6 +341,9 @@ public class TextClient {
 		}
 		if (!player.everyMovement.isEmpty()) {
 			player.everyMovement.remove(player.everyMovement.size() - 1);
+		}
+		if (board.checkForReaction()) {
+			fight();
 		}
 		board.redraw();
 	}
