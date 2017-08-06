@@ -105,7 +105,9 @@ public class TextClient {
 			System.out.println("You have already rotated or moved this piece this turn.\nSo you cannot rotate");
 			return;
 		}
-		// Check that they haven't already moved this piece
+		// Find the piece to move
+
+
 		if (player.moveToken(player, tokenToMove, direction, board) == true) {
 			player.everyMovement.add(tokenToMove);
 			success();

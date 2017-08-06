@@ -48,12 +48,12 @@ public class Player extends Token {
 		tokenToAddA = find(player, "l");
 		tokenToAddB = find(player, "t");
 		tokenToAddC = find(player, "c");
-		BoardPiece tokenToAddD  = find(player, "k");
+		BoardPiece tokenToAddD = find(player, "k");
 		System.out.println("letter a is " + lettera);
 		board.board[4][5] = tokenToAddA;
 		board.board[5][5] = tokenToAddB;
 		board.board[6][5] = tokenToAddC;
-		//board.board[7][8] = tokenToAddD;
+		// board.board[7][8] = tokenToAddD;
 		System.out.println("token added");
 		return true;
 
@@ -161,6 +161,43 @@ public class Player extends Token {
 			return true;
 		}
 		return false;
+	}
+
+	public void checkForSpace(Player player, BoardPiece token, String dir, Board board) {
+		int c = board.getX(token.name);
+		int r = board.getY(token.name);
+		if (dir.equals("up")) {
+			if(!(board.board[r-1][c] instanceof BoardPiece)) {
+				//move up
+			}
+			else {
+				//for loop
+			}
+		} else if (dir.equals("down")) {
+			if(!(board.board[r+1][c] instanceof BoardPiece)) {
+				//move down
+			}
+			else {
+				//for loop
+			}
+		} else if (dir.equals("left")) {
+			if(!(board.board[r][c-1] instanceof BoardPiece)) {
+				//move left
+			}
+			else {
+				//for loop
+			}
+
+		} else if (dir.equals("right")) {
+			if(!(board.board[r][c+1] instanceof BoardPiece)) {
+				//move right
+			}
+			else {
+				//for loop
+			}
+		} else {
+			System.out.println("error");
+		}
 	}
 
 	public void createRecord() {
