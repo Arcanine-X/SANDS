@@ -106,8 +106,11 @@ public class TextClient {
 			return;
 		}
 		// Find the piece to move
-
-
+		
+		player.checkForSpace(player, tokenToMove, direction, board);
+		player.everyMovement.add(tokenToMove);
+		success();
+		/*
 		if (player.moveToken(player, tokenToMove, direction, board) == true) {
 			player.everyMovement.add(tokenToMove);
 			success();
@@ -118,6 +121,7 @@ public class TextClient {
 			System.out.println("Something went wrong in moveToken");
 			return;
 		}
+		*/
 	}
 
 	/*

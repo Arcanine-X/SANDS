@@ -45,14 +45,14 @@ public class Player extends Token {
 
 	public boolean Hax(String lettera, String letterb, String letterc, Player player, Board board) {
 		BoardPiece tokenToAddA = null, tokenToAddB = null, tokenToAddC = null;
-		tokenToAddA = find(player, "l");
-		tokenToAddB = find(player, "t");
-		tokenToAddC = find(player, "c");
-		BoardPiece tokenToAddD = find(player, "k");
+		tokenToAddA = find(player, "c");
+		//tokenToAddB = find(player, "t");
+		//tokenToAddC = find(player, "c");
+		//BoardPiece tokenToAddD = find(player, "k");
 		System.out.println("letter a is " + lettera);
-		board.board[4][5] = tokenToAddA;
-		board.board[5][5] = tokenToAddB;
-		board.board[6][5] = tokenToAddC;
+		board.board[7][6] = tokenToAddA;
+		//board.board[5][5] = tokenToAddB;
+		//board.board[6][5] = tokenToAddC;
 		// board.board[7][8] = tokenToAddD;
 		System.out.println("token added");
 		return true;
@@ -163,37 +163,95 @@ public class Player extends Token {
 		return false;
 	}
 
+
 	public void checkForSpace(Player player, BoardPiece token, String dir, Board board) {
+		System.out.println("in check for token");
 		int c = board.getX(token.name);
 		int r = board.getY(token.name);
+		int count = 0;
 		if (dir.equals("up")) {
 			if(!(board.board[r-1][c] instanceof BoardPiece)) {
 				//move up
+				board.board[r][c] = null;
+				r--;
+				board.board[r][c] = token;
 			}
-			else {
-				//for loop
+			else { //requires shifting
+				for(int i = r, j = 0; i >=0; i--, j++) {
+					if(board.board[i][c] instanceof BoardPiece && count == j) {
+						count++;
+					}
+				}
+				System.out.println("count is : " + count);
+				if(count!=0) {
+					for(int i = r - count; i <= r; i++) {
+						board.board[i-1][c] = board.board[i][c];
+					}
+					board.board[r][c] = null;
+				}
 			}
 		} else if (dir.equals("down")) {
 			if(!(board.board[r+1][c] instanceof BoardPiece)) {
 				//move down
+				board.board[r][c] = null;
+				r++;
+				board.board[r][c] = token;
 			}
 			else {
 				//for loop
+				for(int i = r + 1, j = 0; i < board.board.length; i++, j++) {
+					if(board.board[i][c] instanceof BoardPiece && count == j) {
+						count++;
+					}
+				}
+				if(count!=0) {
+					for(int i = r + count; i >= r; i --) {
+						board.board[i+1][c] = board.board[i][c];
+					}
+					board.board[r][c] = null;
+				}
 			}
-		} else if (dir.equals("left")) {
+		}
+		else if (dir.equals("left")) {
 			if(!(board.board[r][c-1] instanceof BoardPiece)) {
 				//move left
+				board.board[r][c] = null;
+				c--;
+				board.board[r][c] = token;
 			}
 			else {
 				//for loop
+				for(int i = c - 1, j = 0; i >=0; i--, j++) {
+					if(board.board[r][i] instanceof BoardPiece && count == j) {
+						count++;
+					}
+				}
+				if(count!=0) {
+					for(int i = c - count; i <= c; i++) {
+						board.board[r][i-1] = board.board[r][i];
+					}
+					board.board[r][c] = null;
+				}
 			}
 
-		} else if (dir.equals("right")) {
+		}
+		else if (dir.equals("right")) {
 			if(!(board.board[r][c+1] instanceof BoardPiece)) {
 				//move right
 			}
 			else {
-				//for loop
+				for(int i = c + 1, j = 0; i < board.board.length; i++, j++) {
+					System.out.println("first four loop");
+					if(board.board[r][i] instanceof BoardPiece && count == j) {
+						count++;
+					}
+				}
+				if(count!=0) {
+					for(int i = c + count; i >= c; i--) {
+						board.board[r][i+1] = board.board[r][i];
+					}
+					board.board[r][c] = null;
+				}
 			}
 		} else {
 			System.out.println("error");
