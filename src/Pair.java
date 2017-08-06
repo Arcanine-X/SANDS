@@ -8,4 +8,16 @@ public class Pair {
 		this.two = two;
 		this.dir = dir;
 	}
+
+	@Override
+	public String toString() {
+		if(dir.equals("vert")) {
+
+
+		}
+		else { //dir is hori
+
+		}
+		return "";
+	}
 }

@@ -190,7 +190,7 @@ public class TextClient {
 				System.out.println("in up");
 				verticalReaction(pair, player);
 			}
-			if(pair.dir.equals("hori")) {
+			if (pair.dir.equals("hori")) {
 				System.out.println("im hori");
 				horizontalReaction(pair, player);
 			}
@@ -213,52 +213,67 @@ public class TextClient {
 		BoardPiece one = p.one;
 		BoardPiece two = p.two;
 		if (board.getX(one.name) < board.getX(two.name)) { // one is on the left and two is on the right
-			System.out.println("hello im in horizontal first if statement");
+			System.out.println("~~ Horizontal if statement");
 			if (one.east == 1 && two.west == 1) { // sword - sword
-				System.out.println("Both tokens die");
 				board.killToken(one.name);
 				board.killToken(two.name);
 				board.redraw();
+				System.out.println("1 " + one.name + " and " + two.name + " died, due to Sword vs Sword. ");
+				board.reactions.remove(p);
 			} else if (one.east == 1 && two.west == 0) { // sword - nothing
 				board.killToken(two.name);
-
-			} else if (one.east == 1 && two.west == 2) { // sword - shield
-				System.out.println("in one east == 1 && two west == 2");
-				board.tryPushLeft(two.name);
-				board.reactions.remove(p);
 				board.redraw();
-
-
+				System.out.println("2 " + two.name + " died, due to " + one.name + "'s Sword, vs Nothing. ");
+				board.reactions.remove(p);
+			} else if (one.east == 1 && two.west == 2) { // sword - shield
+				board.tryPushLeft(two.name);
+				board.redraw();
+				System.out.println("3 " + one.name + " got pushed back from " + two.name + "'s shield");
+				board.reactions.remove(p);
 			} else if (one.east == 0 && two.west == 1) { // nothing - sword
 				board.killToken(one.name);
 				board.redraw();
-				System.out.println(one.name + " died from " + two.west + "'s sword");
-
-			} else if (one.east == 2 && two.west == 1) { // shield - sword
-				System.out.println("in one east 2, two west 1 horizontal first if");
-				board.tryPushRight(one.name);
+				System.out.println("4 " + one.name + " died from " + two.west + "'s sword");
 				board.reactions.remove(p);
+			} else if (one.east == 2 && two.west == 1) { // shield - sword
+				board.tryPushRight(one.name);
 				board.redraw();
-
+				System.out.println("5 " + two.name + " got pushed back from " + one.name + "'s shield");
+				board.reactions.remove(p);
 			}
 
 		} else {// other way round where two is on the left
-			System.out.println("hello im in horizontal else statement");
+			System.out.println("Horizontal else statement ~~");
 			if (two.east == 1 && one.west == 1) { // sword - sword
 				System.out.println("Both tokens die");
 				board.killToken(one.name);
 				board.killToken(two.name);
 				board.redraw();
-
+				System.out.println("6 " + one.name + " and " + two.name + " died, due to Sword vs Sword. ");
+				board.reactions.remove(p);
 			} else if (two.east == 1 && one.west == 0) { // sword - nothing
 				board.killToken(one.name);
+				board.redraw();
+				System.out.println("7 " + one.name + " died, due to " + two.name + "'s Sword, vs Nothing. ");
+				board.reactions.remove(p);
 
 			} else if (two.east == 1 && one.west == 2) { // sword - shield
+				board.tryPushLeft(one.name);
+				board.redraw();
+				System.out.println("8 " + two.name + " got pushed back from " + one.name + "'s shield");
+				board.reactions.remove(p);
 
 			} else if (two.east == 0 && one.west == 1) { // nothing - sword
 				board.killToken(two.name);
-			} else if (two.east == 2 && one.west == 1) { // shield - sword
+				board.redraw();
+				System.out.println("9 " + two.name + " died from " + one.west + "'s sword");
+				board.reactions.remove(p);
 
+			} else if (two.east == 2 && one.west == 1) { // shield - sword
+				board.tryPushRight(two.name);
+				board.redraw();
+				System.out.println("10 " + one.name + " got pushed back from " + two.name + "'s shield");
+				board.reactions.remove(p);
 			}
 		}
 
@@ -271,69 +286,65 @@ public class TextClient {
 		BoardPiece one = p.one;
 		BoardPiece two = p.two;
 		if (board.getY(one.name) < board.getY(two.name)) { // in this case one is on top
+			System.out.println("~~Vertical if statement");
 			if (one.south == 1 && two.north == 1) { // sword - sword
-				System.out.println("Both tokens die");
 				board.killToken(one.name);
 				board.killToken(two.name);
 				board.redraw();
-				System.out.println(one.name + " and " + two.name + " died, due to Sword vs Sword. ");
+				System.out.println("1 " + one.name + " and " + two.name + " died, due to Sword vs Sword. ");
 				board.reactions.remove(p);
 			} else if (one.south == 1 && two.north == 2) { // sword - shield
-				System.out.println("top token gets pushed back one");
-				//board.tryToPushToken(one.name, "up");
 				board.tryPushUp(two.name);
 				board.redraw();
+				System.out.println("2 " + one.name + " got pushed back from " + two.name + "'s shield");
 				board.reactions.remove(p);
-				System.out.println(one.name + " got pushed back from " + two.name + "'s shield");
-				System.out.println("wtf");
 			} else if (one.south == 1 && two.north == 0) { // sword - nothing
-				System.out.println("bottom token dies");
 				board.killToken(two.name);
 				board.redraw();
-				System.out.println(two.name + " died, due to " + one.name + "'s Sword, vs Nothing. ");
+				System.out.println("3 " + two.name + " died, due to " + one.name + "'s Sword, vs Nothing. ");
 				board.reactions.remove(p);
 			} else if (one.south == 0 && two.north == 1) { // nothing - sword
-				System.out.println("top token dies");
 				board.killToken(one.name);
 				board.redraw();
-				System.out.println(one.name + "died, due to Nothing vs Sword. ");
+				System.out.println("4 " + one.name + "died, due to Nothing vs Sword. ");
 				board.reactions.remove(p);
 			} else if (one.south == 2 && two.north == 1) { // shield - sword
-				System.out.println("bottom token gets pushed back one");
-				//board.tryToPushToken(two.name, "down");
 				board.tryPushDown(one.name);
 				board.redraw();
+				System.out.println("5 " + two.name + " got pushed back from " + one.name + "'s shield");
 				board.reactions.remove(p);
-				System.out.println("?????");
-
-				System.out.println(two.name + " got pushed back from " + one.name + "'s shield");
 			} else {
 				System.out.println("Something went wrong in vertical reactions");
 			}
 		} else {// Need to do other way round now..... cause one and two are flipped
+			System.out.println("~~Vertical else statement");
 			if (two.south == 1 && one.north == 1) { // sword - sword
-				System.out.println("Both tokens die");
 				board.killToken(one.name);
 				board.killToken(two.name);
 				board.redraw();
-				System.out.println(one.name + " and " + two.name + " died, due to Sword vs Sword. ");
+				System.out.println("6 " +one.name + " and " + two.name + " died, due to Sword vs Sword. ");
 				board.reactions.remove(p);
 			} else if (two.south == 1 && one.north == 2) { // sword - shield
-				System.out.println("top token gets pushed back one");
+				board.tryPushUp(one.name);
+				board.redraw();
+				System.out.println("7 " + one.name + " got pushed back from " + two.name + "'s shield");
+				board.reactions.remove(p);
 			} else if (two.south == 1 && one.north == 0) { // sword - nothing
-				System.out.println("bottom token dies");
 				board.killToken(one.name);
 				board.redraw();
-				System.out.println(one.name + " died, due to Sword vs Nothing. ");
+				System.out.println("8 " +one.name + " died, due to Sword vs Nothing. ");
 				board.reactions.remove(p);
 			} else if (two.south == 0 && one.north == 1) { // nothing - sword
-				System.out.println("top token dies");
 				board.killToken(two.name);
 				board.redraw();
-				System.out.println(two.name + "died, due to Nothing vs Sword. ");
+				System.out.println("9 " + two.name + " died, due to Sword vs nothing");
 				board.reactions.remove(p);
 			} else if (two.south == 2 && one.north == 1) { // shield - sword
-				System.out.println("bottom token gets pushed back one");
+				board.tryPushDown(two.name);
+				board.redraw();
+				System.out.println("10 " + one.name + " got pushed back from " + two.name + "'s shield");
+				board.reactions.remove(p);
+
 			} else {
 				System.out.println("Something went wrong in vertical reactions");
 			}

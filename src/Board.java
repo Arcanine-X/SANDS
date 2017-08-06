@@ -17,8 +17,6 @@ public class Board {
 	public void setGreen(Player green) {
 		this.green = green;
 	}
-
-
 	public void setYellow(Player yellow) {
 		this.yellow = yellow;
 	}
@@ -34,9 +32,7 @@ public class Board {
 					BoardPiece temp1 = (BoardPiece) board[r][c];
 					BoardPiece temp2 = (BoardPiece) board[r][c+1];
 					if(temp1.east == 1 || temp2.west == 1) {
-						//horizontal reaction will occur
 						reactions.add(new Pair(temp1,temp2,"hori"));
-						System.out.println("horizontal");
 					}
 				}
 			}
@@ -49,7 +45,6 @@ public class Board {
 					BoardPiece temp2 = (BoardPiece) board[r+1][c];
 					if(temp1.south == 1 || temp2.north == 1) {
 						reactions.add(new Pair(temp1,temp2,"vert"));
-						System.out.println("added vertical");
 					}
 				}
 			}
@@ -331,73 +326,6 @@ public class Board {
 		return null;
 	}
 
-	public void tryToPushToken(String letter, String dir) {
-		int c = getX(letter);
-		int r = getY(letter);
-		System.out.println(" letter is : "+ letter );
-		//make a method like ifPossiable boolean which checks x and y coords
-		if(dir.equals("up")) {
-			if(board[r-1][c] instanceof BoardPiece) { //requires shifting
-				int count = 0;
-				for(int i = r, j = 0; i >= 0; i --,j++) {
-					if(board[i][c] instanceof BoardPiece && j == count) {
-						count++;
-					}
-				}
-
-				if(count!=0) {
-					for(int i = r - count - 1; i < r; i++) {
-						board[i][c] = board[i+1][c];
-					}
-				}
-				board[r][c] = null;
-				System.out.println("count is " + count);
-			}
-			else { // all good just shift the 1 token
-				board[r-1][c] = findToken(letter);
-				board[r][c] = null;
-			}
-		}
-		if(dir.equals("down")) {
-			System.out.println("In down down down....");
-			if(board[r+1][c] instanceof BoardPiece) {
-				int count = 0;
-				for(int i = r, j = 0; i < board.length; i++, j++) {
-					if(board[i][c] instanceof BoardPiece && count == j) {
-						count++;
-					}
-				}
-				System.out.println("count is " + count);
-
-				if(count!=0) {
-					for(int i = r + count; i >= r; i--) {
-						System.out.println("in here....");
-						board[i][c] = board[i-1][c];
-					}
-				}
-				board[r][c] = null;
-				System.out.println("count is " + count);
-
-			}
-			else {
-				board[r+1][c] = findToken(letter);
-				board[r][c] = null;
-			}
-		}
-		//will need to do it for left and right aswell.
-
-		if(dir.equals("right")) {
-			System.out.println("right right right");
-			if(board[r][c+1] instanceof BoardPiece) {
-				int count = 0;
-				//for(int )
-			}
-
-		}
-
-		if(dir.equals("left")) {
-		}
-	}
 
 	public void tryPushUp(String pusher) {
 		int c = getX(pusher);
