@@ -160,6 +160,18 @@ public class TextClient {
 		System.out.println("Successful rotation");
 	}
 
+	public static void confirmation() {
+
+		try {
+			String options = inputString("Would you like to continue with the reaction? Yes/Undo");
+			String input[] = options.split(" ");
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+	}
+	/*
 	public static void fight() {
 		// Print out the reactions
 		while (!board.reactions.isEmpty()) {
@@ -171,7 +183,7 @@ public class TextClient {
 				if (board.reactions.size() > 1) {
 					// In this case the user has to choose what reaction should occur first
 					String fightOptions = inputString(
-							"There are multiple reactions. Enter the two letters of which the interactions should occur between first : ");
+							"There are multiple reactions. Enter the two letters of which the interactions should occur between first (or undo) : ");
 					String tokens[] = fightOptions.split(" ");
 					if (tokens.length != 2) {
 						System.out.println("Incorrect input");
@@ -187,7 +199,7 @@ public class TextClient {
 							break;
 						}
 					}
-					if(pair == null) {
+					if (pair == null) {
 						System.out.println("Invalid input");
 						continue;
 					}
@@ -200,7 +212,6 @@ public class TextClient {
 						horizontalReaction(pair);
 					}
 				} else { // Only one reaction
-					System.out.println("Reactionnnnnnnnnn");
 					if (board.reactions.get(0).dir.equals("hori")) {
 						horizontalReaction(board.reactions.get(0));
 					} else if (board.reactions.get(0).dir.equals("vert")) {
@@ -209,6 +220,79 @@ public class TextClient {
 						System.out.println("error");
 					}
 				}
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+		}
+	}
+	*/
+
+	public static void fight() {
+		// Print out the reactions
+		while (!board.reactions.isEmpty()) {
+			board.redraw();
+			try {
+				System.out.println("Here are the possiable reactions:");
+				for (Pair p : board.reactions) {
+					System.out.println("There is a reaction between " + p.one.name + " and " + p.two.name);
+				}
+				String options = "";
+				if (board.reactions.size() > 1) {
+					options = inputString(
+							"There are multiple reactions. Enter the two letters of which the interactions should occur between first (or undo) : ");
+					String[] tokens = options.split(" ");
+					if (options.startsWith("undo")) {
+						undo(green);
+						undo(yellow);
+					} else {
+						if (tokens.length != 2) {
+							System.out.println("Incorrect input");
+							continue;
+						}
+						String a = tokens[0], b = tokens[1];
+						Pair pair = null;
+						for (Pair p : board.reactions) {
+							if ((p.one.name.equals(a) && p.two.name.equals(b))
+									|| (p.one.name.equals(b) && p.two.name.equals(a))) {
+								System.out.println("Found pair");
+								pair = p;
+								break;
+							}
+						}
+						if (pair == null) {
+							System.out.println("Invalid input");
+							continue;
+						}
+						if (pair.dir.equals("vert")) {
+							System.out.println("vertical");
+							verticalReaction(pair);
+						}
+						if (pair.dir.equals("hori")) {
+							System.out.println("horizontal");
+							horizontalReaction(pair);
+						}
+					}
+				} else {
+					options = inputString("Would you like to continue with the reaction? Yes/Undo");
+					String[] tokens = options.split(" ");
+					if (options.startsWith("undo")) {
+						// then undo
+						undo(green);
+						undo(yellow);
+					} else if (options.startsWith("yes") || options.startsWith("y")) {
+						// do the reaction
+						if (board.reactions.get(0).dir.equals("hori")) {
+							horizontalReaction(board.reactions.get(0));
+						} else if (board.reactions.get(0).dir.equals("vert")) {
+							verticalReaction(board.reactions.get(0));
+						} else {
+							System.out.println("error");
+						}
+					} else {
+						System.out.println("Not a valid input, try again");
+					}
+				}
+
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
@@ -223,6 +307,7 @@ public class TextClient {
 		yellow.createRecord();
 		green.createRecord();
 		if (board.checkForReaction()) {
+			board.redraw();
 			fight();
 		}
 	}
