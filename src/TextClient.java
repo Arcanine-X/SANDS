@@ -162,43 +162,49 @@ public class TextClient {
 
 	public static void fight() {
 		// Print out the reactions
-		System.out.println("Here are the possiable reactions:");
-		for (Pair p : board.reactions) {
-			System.out.println("There is a reaction between " + p.one.name + " and " + p.two.name);
-		}
-		if (board.reactions.size() > 1) {
-			// In this case the user has to choose what reaction should occur first
-			String fightOptions = inputString(
-					"There are multiple reactions. Enter the two letters of which the interactions should occur between first : ");
-			String tokens[] = fightOptions.split(" ");
-			if (tokens.length != 2) {
-				System.out.println("errorrrrrorrorrrrrrrororrororor"); /////////////// while true loop needed
-			}
-			String a = tokens[0], b = tokens[1];
-			Pair pair = null;
-			for (Pair p : board.reactions) {
-				if ((p.one.name.equals(a) && p.two.name.equals(b)) || (p.one.name.equals(b) && p.two.name.equals(a))) {
-					System.out.println("Found pair");
-					pair = p;
-					break;
+		while(!board.reactions.isEmpty()) {
+			try {
+				System.out.println("Here are the possiable reactions:");
+				for (Pair p : board.reactions) {
+					System.out.println("There is a reaction between " + p.one.name + " and " + p.two.name);
 				}
-			}
-			if (pair.dir.equals("vert")) {
-				System.out.println("vertical");
-				verticalReaction(pair);
-			}
-			if (pair.dir.equals("hori")) {
-				System.out.println("horizontal");
-				horizontalReaction(pair);
-			}
-		} else { // Only one reaction
-			System.out.println("Reactionnnnnnnnnn");
-			if (board.reactions.get(0).dir.equals("hori")) {
-				horizontalReaction(board.reactions.get(0));
-			} else if (board.reactions.get(0).dir.equals("vert")) {
-				verticalReaction(board.reactions.get(0));
-			} else {
-				System.out.println("Something went wrong in 'fight, else, else'");
+				if (board.reactions.size() > 1) {
+					// In this case the user has to choose what reaction should occur first
+					String fightOptions = inputString(
+							"There are multiple reactions. Enter the two letters of which the interactions should occur between first : ");
+					String tokens[] = fightOptions.split(" ");
+					if (tokens.length != 2) {
+						System.out.println("Incorrect input");
+					}
+					String a = tokens[0], b = tokens[1];
+					Pair pair = null;
+					for (Pair p : board.reactions) {
+						if ((p.one.name.equals(a) && p.two.name.equals(b)) || (p.one.name.equals(b) && p.two.name.equals(a))) {
+							System.out.println("Found pair");
+							pair = p;
+							break;
+						}
+					}
+					if (pair.dir.equals("vert")) {
+						System.out.println("vertical");
+						verticalReaction(pair);
+					}
+					if (pair.dir.equals("hori")) {
+						System.out.println("horizontal");
+						horizontalReaction(pair);
+					}
+				} else { // Only one reaction
+					System.out.println("Reactionnnnnnnnnn");
+					if (board.reactions.get(0).dir.equals("hori")) {
+						horizontalReaction(board.reactions.get(0));
+					} else if (board.reactions.get(0).dir.equals("vert")) {
+						verticalReaction(board.reactions.get(0));
+					} else {
+						System.out.println("error");
+					}
+				}
+			}catch (Exception e) {
+				System.out.println(e.getMessage());
 			}
 		}
 	}
@@ -241,7 +247,6 @@ public class TextClient {
 		} else {
 			System.out.println("Something went wrong in horizontal reactions");
 		}
-
 	}
 
 	public static void verticalReaction(Pair p) {
