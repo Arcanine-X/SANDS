@@ -72,7 +72,7 @@ public class TextClient {
 		player.Hax("d", "b", "c", player, board);
 		success();
 		if (board.checkForReaction()) {
-			fight(player);
+			fight();
 		}
 	}
 
@@ -110,7 +110,7 @@ public class TextClient {
 			player.everyMovement.add(tokenToMove);
 			success();
 			if (board.checkForReaction()) {
-				fight(player);
+				fight();
 			}
 		} else {
 			System.out.println("Something went wrong in moveToken");
@@ -154,61 +154,59 @@ public class TextClient {
 		player.movesSoFar.add("" + rotation);
 		success();
 		if (board.checkForReaction()) {
-			fight(player);
+			fight();
 		}
 
 		System.out.println("Successful rotation");
 	}
 
-	public static void fight(Player player) {
+	public static void fight() {
 		// Print out the reactions
 		System.out.println("Here are the possiable reactions:");
 		for (Pair p : board.reactions) {
 			System.out.println("There is a reaction between " + p.one.name + " and " + p.two.name);
 		}
-
 		if (board.reactions.size() > 1) {
 			// In this case the user has to choose what reaction should occur first
 			String fightOptions = inputString(
 					"There are multiple reactions. Enter the two letters of which the interactions should occur between first : ");
 			String tokens[] = fightOptions.split(" ");
 			if (tokens.length != 2) {
-				System.out.println("errorrrrrorrorrrrrrrororrororor");
+				System.out.println("errorrrrrorrorrrrrrrororrororor"); ///////////////while true loop needed
 			}
 			String a = tokens[0];
 			String b = tokens[1];
 			Pair pair = null;
 			for (Pair p : board.reactions) {
 				if ((p.one.name.equals(a) && p.two.name.equals(b)) || (p.one.name.equals(b) && p.two.name.equals(a))) {
-					// got the pair of reactions to occur
 					System.out.println("Found pair");
 					pair = p;
 					break;
 				}
 			}
 			if (pair.dir.equals("vert")) {
-				System.out.println("in up");
-				verticalReaction(pair, player);
+				System.out.println("vertical");
+				verticalReaction(pair);
 			}
 			if (pair.dir.equals("hori")) {
-				System.out.println("im hori");
-				horizontalReaction(pair, player);
+				System.out.println("horizontal");
+				horizontalReaction(pair);
 			}
 		} else {
 			// There's just one reaction so tell the user the user there's going to be a
 			// reaction and do it.
 			System.out.println("Reactionnnnnnnnnn");
 			if (board.reactions.get(0).dir.equals("hori")) {
-				horizontalReaction(board.reactions.get(0), player);
+				horizontalReaction(board.reactions.get(0));
 			} else if (board.reactions.get(0).dir.equals("vert")) {
-				verticalReaction(board.reactions.get(0), player);
+				verticalReaction(board.reactions.get(0));
 			} else {
 				System.out.println("Something went wrong in 'fight, else, else'");
 			}
 		}
 	}
 
-	public static void horizontalReaction(Pair p, Player player) {
+	public static void horizontalReaction(Pair p) {
 		System.out.println("Horizontal Reaction");
 		BoardPiece one = p.one;
 		BoardPiece two = p.two;
@@ -220,21 +218,33 @@ public class TextClient {
 				board.redraw();
 				System.out.println("1 " + one.name + " and " + two.name + " died, due to Sword vs Sword. ");
 				board.reactions.remove(p);
+				if (board.checkForReaction()) {
+					fight();
+				}
 			} else if (one.east == 1 && two.west == 0) { // sword - nothing
 				board.killToken(two.name);
 				board.redraw();
 				System.out.println("2 " + two.name + " died, due to " + one.name + "'s Sword, vs Nothing. ");
 				board.reactions.remove(p);
+				if (board.checkForReaction()) {
+					fight();
+				}
 			} else if (one.east == 1 && two.west == 2) { // sword - shield
 				board.tryPushLeft(two.name);
 				board.redraw();
 				System.out.println("3 " + one.name + " got pushed back from " + two.name + "'s shield");
 				board.reactions.remove(p);
+				if (board.checkForReaction()) {
+					fight();
+				}
 			} else if (one.east == 0 && two.west == 1) { // nothing - sword
 				board.killToken(one.name);
 				board.redraw();
 				System.out.println("4 " + one.name + " died from " + two.west + "'s sword");
 				board.reactions.remove(p);
+				if (board.checkForReaction()) {
+					fight();
+				}
 			} else if (one.east == 2 && two.west == 1) { // shield - sword
 				board.tryPushRight(one.name);
 				board.redraw();
@@ -251,35 +261,47 @@ public class TextClient {
 				board.redraw();
 				System.out.println("6 " + one.name + " and " + two.name + " died, due to Sword vs Sword. ");
 				board.reactions.remove(p);
+				if (board.checkForReaction()) {
+					fight();
+				}
 			} else if (two.east == 1 && one.west == 0) { // sword - nothing
 				board.killToken(one.name);
 				board.redraw();
 				System.out.println("7 " + one.name + " died, due to " + two.name + "'s Sword, vs Nothing. ");
 				board.reactions.remove(p);
-
+				if (board.checkForReaction()) {
+					fight();
+				}
 			} else if (two.east == 1 && one.west == 2) { // sword - shield
 				board.tryPushLeft(one.name);
 				board.redraw();
 				System.out.println("8 " + two.name + " got pushed back from " + one.name + "'s shield");
 				board.reactions.remove(p);
-
+				if (board.checkForReaction()) {
+					fight();
+				}
 			} else if (two.east == 0 && one.west == 1) { // nothing - sword
 				board.killToken(two.name);
 				board.redraw();
 				System.out.println("9 " + two.name + " died from " + one.west + "'s sword");
 				board.reactions.remove(p);
-
+				if (board.checkForReaction()) {
+					fight();
+				}
 			} else if (two.east == 2 && one.west == 1) { // shield - sword
 				board.tryPushRight(two.name);
 				board.redraw();
 				System.out.println("10 " + one.name + " got pushed back from " + two.name + "'s shield");
 				board.reactions.remove(p);
+				if (board.checkForReaction()) {
+					fight();
+				}
 			}
 		}
 
 	}
 
-	public static void verticalReaction(Pair p, Player player) {
+	public static void verticalReaction(Pair p) {
 		// Five possibale reactions, sword - sword, sword - nothing, nothing - sword,
 		// shield - sword, sword - shield
 		System.out.println("Vertical Reaction");
@@ -293,26 +315,41 @@ public class TextClient {
 				board.redraw();
 				System.out.println("1 " + one.name + " and " + two.name + " died, due to Sword vs Sword. ");
 				board.reactions.remove(p);
+				if (board.checkForReaction()) {
+					fight();
+				}
 			} else if (one.south == 1 && two.north == 2) { // sword - shield
 				board.tryPushUp(two.name);
 				board.redraw();
 				System.out.println("2 " + one.name + " got pushed back from " + two.name + "'s shield");
 				board.reactions.remove(p);
+				if (board.checkForReaction()) {
+					fight();
+				}
 			} else if (one.south == 1 && two.north == 0) { // sword - nothing
 				board.killToken(two.name);
 				board.redraw();
 				System.out.println("3 " + two.name + " died, due to " + one.name + "'s Sword, vs Nothing. ");
 				board.reactions.remove(p);
+				if (board.checkForReaction()) {
+					fight();
+				}
 			} else if (one.south == 0 && two.north == 1) { // nothing - sword
 				board.killToken(one.name);
 				board.redraw();
-				System.out.println("4 " + one.name + "died, due to Nothing vs Sword. ");
+				System.out.println("4 " + one.name + " died, due to Nothing vs Sword. ");
 				board.reactions.remove(p);
+				if (board.checkForReaction()) {
+					fight();
+				}
 			} else if (one.south == 2 && two.north == 1) { // shield - sword
 				board.tryPushDown(one.name);
 				board.redraw();
 				System.out.println("5 " + two.name + " got pushed back from " + one.name + "'s shield");
 				board.reactions.remove(p);
+				if (board.checkForReaction()) {
+					fight();
+				}
 			} else {
 				System.out.println("Something went wrong in vertical reactions");
 			}
@@ -324,26 +361,41 @@ public class TextClient {
 				board.redraw();
 				System.out.println("6 " +one.name + " and " + two.name + " died, due to Sword vs Sword. ");
 				board.reactions.remove(p);
+				if (board.checkForReaction()) {
+					fight();
+				}
 			} else if (two.south == 1 && one.north == 2) { // sword - shield
 				board.tryPushUp(one.name);
 				board.redraw();
 				System.out.println("7 " + one.name + " got pushed back from " + two.name + "'s shield");
 				board.reactions.remove(p);
+				if (board.checkForReaction()) {
+					fight();
+				}
 			} else if (two.south == 1 && one.north == 0) { // sword - nothing
 				board.killToken(one.name);
 				board.redraw();
 				System.out.println("8 " +one.name + " died, due to Sword vs Nothing. ");
 				board.reactions.remove(p);
+				if (board.checkForReaction()) {
+					fight();
+				}
 			} else if (two.south == 0 && one.north == 1) { // nothing - sword
 				board.killToken(two.name);
 				board.redraw();
 				System.out.println("9 " + two.name + " died, due to Sword vs nothing");
 				board.reactions.remove(p);
+				if (board.checkForReaction()) {
+					fight();
+				}
 			} else if (two.south == 2 && one.north == 1) { // shield - sword
 				board.tryPushDown(two.name);
 				board.redraw();
 				System.out.println("10 " + one.name + " got pushed back from " + two.name + "'s shield");
 				board.reactions.remove(p);
+				if (board.checkForReaction()) {
+					fight();
+				}
 
 			} else {
 				System.out.println("Something went wrong in vertical reactions");

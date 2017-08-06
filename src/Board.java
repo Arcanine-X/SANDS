@@ -24,7 +24,7 @@ public class Board {
 	public boolean checkForReaction() {
 		reactions.clear();
 		/*
-		 * Need to check for reactions up down left and right... so four sets of double four loops....
+		 * Need to check for reactions up down left and right... so two sets of double four loops....
 		 */
 		for(int r = 0; r < board.length; r++) {
 			for(int c = 0; c < board[0].length-1; c++) {
@@ -32,7 +32,7 @@ public class Board {
 					BoardPiece temp1 = (BoardPiece) board[r][c];
 					BoardPiece temp2 = (BoardPiece) board[r][c+1];
 					if(temp1.east == 1 || temp2.west == 1) {
-						reactions.add(new Pair(temp1,temp2,"hori"));
+						reactions.add(new Pair(temp1,temp2,"hori", this));
 					}
 				}
 			}
@@ -44,7 +44,7 @@ public class Board {
 					BoardPiece temp1 = (BoardPiece) board[r][c];
 					BoardPiece temp2 = (BoardPiece) board[r+1][c];
 					if(temp1.south == 1 || temp2.north == 1) {
-						reactions.add(new Pair(temp1,temp2,"vert"));
+						reactions.add(new Pair(temp1,temp2,"vert", this));
 					}
 				}
 			}
