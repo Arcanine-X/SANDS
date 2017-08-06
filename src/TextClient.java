@@ -60,7 +60,7 @@ public class TextClient {
 			System.out.println("Something went wrong in create token");
 			return;
 		}
-		
+
 		BoardPiece item = board.findMoveToken(player, letter);
 		int num = (rotation == 0) ? 0 : (rotation == 90) ? 1 : (rotation == 180) ? 2 : 3;
 		while (num > 0) {
@@ -227,7 +227,7 @@ public class TextClient {
 				board.tryPushLeft(two.name);
 				board.reactions.remove(p);
 				board.redraw();
-				
+
 
 			} else if (one.east == 0 && two.west == 1) { // nothing - sword
 				board.killToken(one.name);
@@ -280,10 +280,12 @@ public class TextClient {
 				board.reactions.remove(p);
 			} else if (one.south == 1 && two.north == 2) { // sword - shield
 				System.out.println("top token gets pushed back one");
-				board.tryToPushToken(one.name, "up");
+				//board.tryToPushToken(one.name, "up");
+				board.tryPushUp(two.name);
 				board.redraw();
 				board.reactions.remove(p);
 				System.out.println(one.name + " got pushed back from " + two.name + "'s shield");
+				System.out.println("wtf");
 			} else if (one.south == 1 && two.north == 0) { // sword - nothing
 				System.out.println("bottom token dies");
 				board.killToken(two.name);
@@ -298,9 +300,12 @@ public class TextClient {
 				board.reactions.remove(p);
 			} else if (one.south == 2 && two.north == 1) { // shield - sword
 				System.out.println("bottom token gets pushed back one");
-				board.tryToPushToken(two.name, "down");
+				//board.tryToPushToken(two.name, "down");
+				board.tryPushDown(one.name);
 				board.redraw();
 				board.reactions.remove(p);
+				System.out.println("?????");
+
 				System.out.println(two.name + " got pushed back from " + one.name + "'s shield");
 			} else {
 				System.out.println("Something went wrong in vertical reactions");

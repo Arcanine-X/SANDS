@@ -399,6 +399,46 @@ public class Board {
 		}
 	}
 
+	public void tryPushUp(String pusher) {
+		int c = getX(pusher);
+		int r = getY(pusher);
+		int count = 0;
+		for(int i = r -1, j = 0; i>= 0; i--, j++) {
+			if(board[i][c] instanceof BoardPiece && count == j) {
+				count++;
+			}
+		}
+
+		if(count!=0) {
+			System.out.println("Count is : " + count);
+			for(int i = r - count; i < r; i++) {
+				board[i-1][c] = board[i][c];
+			}
+			board[r-1][c] = null;
+		}
+		System.out.println("all done");
+	}
+
+	public void tryPushDown(String pusher) {
+		int c = getX(pusher);
+		int r = getY(pusher);
+		int count = 0;
+		for(int i = r + 1, j = 0; i < board.length; i++, j++) {
+			if(board[i][c] instanceof BoardPiece && count == j) {
+				count++;
+			}
+		}
+
+		if(count!=0) {
+			System.out.println("count is : " + count);
+			for(int i = r + count; i > r; i --) {
+				System.out.println("in here");
+				board[i+1][c] = board[i][c];
+			}
+			board[r+1][c] = null;
+		}
+	}
+
 	public void tryPushRight(String pusher) {
 		int c = getX(pusher);
 		int r = getY(pusher);
@@ -422,7 +462,7 @@ public class Board {
 			System.out.println("successful push");
 		}
 	}
-	
+
 	public void tryPushLeft(String pusher) {
 		int c = getX(pusher);
 		int r = getY(pusher);

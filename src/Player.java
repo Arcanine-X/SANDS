@@ -45,14 +45,14 @@ public class Player extends Token {
 
 	public boolean Hax(String lettera, String letterb, String letterc, Player player, Board board) {
 		BoardPiece tokenToAddA = null, tokenToAddB = null, tokenToAddC = null;
-		tokenToAddA = find(player, lettera);
-		tokenToAddB = find(player, "g");
-		tokenToAddC = find(player, letterc);
+		tokenToAddA = find(player, "l");
+		tokenToAddB = find(player, "t");
+		tokenToAddC = find(player, "c");
 		BoardPiece tokenToAddD  = find(player, "k");
 		System.out.println("letter a is " + lettera);
-		board.board[6][6] = tokenToAddA;
-		board.board[7][6] = tokenToAddB;
-		board.board[7][5] = tokenToAddC;
+		board.board[4][5] = tokenToAddA;
+		board.board[5][5] = tokenToAddB;
+		board.board[6][5] = tokenToAddC;
 		//board.board[7][8] = tokenToAddD;
 		System.out.println("token added");
 		return true;
