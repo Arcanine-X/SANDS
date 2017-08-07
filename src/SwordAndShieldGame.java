@@ -26,7 +26,7 @@ public class SwordAndShieldGame {
 		gerneratePieces(yelList);
 		gerneratePieces(greList);
 		for (BoardPiece bp : greList) {
-			bp.name = bp.name.toUpperCase();
+			bp.setName(bp.getName().toUpperCase());
 		}
 		board.initialise();
 		board.addPlayers(green, yellow);
@@ -221,11 +221,11 @@ public class SwordAndShieldGame {
 	}
 
 	public void rotator(BoardPiece item, int rotation) {
-		int tn = item.north, te = item.east, ts = item.south, tw = item.west;
-		item.north = tw;
-		item.east = tn;
-		item.south = te;
-		item.west = ts;
+		int tn = item.getNorth(), te = item.getEast(), ts = item.getSouth(), tw = item.getWest();
+		item.setNorth(tw);
+		item.setEast(tn);
+		item.setSouth(te);
+		item.setWest(ts);
 	}
 
 
@@ -262,26 +262,26 @@ public class SwordAndShieldGame {
 		System.out.println("Horizontal Reaction");
 		BoardPiece one = p.one;
 		BoardPiece two = p.two;
-		if (one.east == 1 && two.west == 1) { // sword - sword
-			board.killToken(one.name);
-			board.killToken(two.name);
-			System.out.println("1 " + one.name + " and " + two.name + " died, due to Sword vs Sword. ");
+		if (one.getEast() == 1 && two.getWest() == 1) { // sword - sword
+			board.killToken(one.getName());
+			board.killToken(two.getName());
+			System.out.println("1 " + one.getName() + " and " + two.getName() + " died, due to Sword vs Sword. ");
 			reactionCompleted(player,p);
-		} else if (one.east == 1 && two.west == 0) { // sword - nothing
-			board.killToken(two.name);
-			System.out.println("2 " + two.name + " died, due to " + one.name + "'s Sword, vs Nothing. ");
+		} else if (one.getEast() == 1 && two.getWest() == 0) { // sword - nothing
+			board.killToken(two.getName());
+			System.out.println("2 " + two.getName() + " died, due to " + one.getName() + "'s Sword, vs Nothing. ");
 			reactionCompleted(player,p);
-		} else if (one.east == 1 && two.west == 2) { // sword - shield
-			board.tryPushLeft(two.name);
-			System.out.println("3 " + one.name + " got pushed back from " + two.name + "'s shield");
+		} else if (one.getEast() == 1 && two.getWest() == 2) { // sword - shield
+			board.tryPushLeft(two.getName());
+			System.out.println("3 " + one.getName() + " got pushed back from " + two.getName() + "'s shield");
 			reactionCompleted(player,p);
-		} else if (one.east == 0 && two.west == 1) { // nothing - sword
-			board.killToken(one.name);
-			System.out.println("4 " + one.name + " died from " + two.west + "'s sword");
+		} else if (one.getEast() == 0 && two.getWest() == 1) { // nothing - sword
+			board.killToken(one.getName());
+			System.out.println("4 " + one.getName() + " died from " + two.getWest() + "'s sword");
 			reactionCompleted(player,p);
-		} else if (one.east == 2 && two.west == 1) { // shield - sword
-			board.tryPushRight(one.name);
-			System.out.println("5 " + two.name + " got pushed back from " + one.name + "'s shield");
+		} else if (one.getEast() == 2 && two.getWest() == 1) { // shield - sword
+			board.tryPushRight(one.getName());
+			System.out.println("5 " + two.getName() + " got pushed back from " + one.getName() + "'s shield");
 			reactionCompleted(player,p);
 		} else {
 			System.out.println("Something went wrong in horizontal reactions");
@@ -294,26 +294,26 @@ public class SwordAndShieldGame {
 		System.out.println("Vertical Reaction");
 		BoardPiece one = p.one;
 		BoardPiece two = p.two;
-		if (one.south == 1 && two.north == 1) { // sword - sword
-			board.killToken(one.name);
-			board.killToken(two.name);
-			System.out.println("1 " + one.name + " and " + two.name + " died, due to Sword vs Sword. ");
+		if (one.getSouth() == 1 && two.getNorth() == 1) { // sword - sword
+			board.killToken(one.getName());
+			board.killToken(two.getName());
+			System.out.println("1 " + one.getName() + " and " + two.getName() + " died, due to Sword vs Sword. ");
 			reactionCompleted(player, p);
-		} else if (one.south == 1 && two.north == 2) { // sword - shield
-			board.tryPushUp(two.name);
-			System.out.println("2 " + one.name + " got pushed back from " + two.name + "'s shield");
+		} else if (one.getSouth() == 1 && two.getNorth() == 2) { // sword - shield
+			board.tryPushUp(two.getName());
+			System.out.println("2 " + one.getName() + " got pushed back from " + two.getName() + "'s shield");
 			reactionCompleted(player, p);
-		} else if (one.south == 1 && two.north == 0) { // sword - nothing
-			board.killToken(two.name);
-			System.out.println("3 " + two.name + " died, due to " + one.name + "'s Sword, vs Nothing. ");
+		} else if (one.getSouth() == 1 && two.getNorth() == 0) { // sword - nothing
+			board.killToken(two.getName());
+			System.out.println("3 " + two.getName() + " died, due to " + one.getName() + "'s Sword, vs Nothing. ");
 			reactionCompleted(player, p);
-		} else if (one.south == 0 && two.north == 1) { // nothing - sword
-			board.killToken(one.name);
-			System.out.println("4 " + one.name + " died, due to Nothing vs Sword. ");
+		} else if (one.getSouth() == 0 && two.getNorth() == 1) { // nothing - sword
+			board.killToken(one.getName());
+			System.out.println("4 " + one.getName() + " died, due to Nothing vs Sword. ");
 			reactionCompleted(player, p);
-		} else if (one.south == 2 && two.north == 1) { // shield - sword
-			board.tryPushDown(one.name);
-			System.out.println("5 " + two.name + " got pushed back from " + one.name + "'s shield");
+		} else if (one.getSouth() == 2 && two.getNorth() == 1) { // shield - sword
+			board.tryPushDown(one.getName());
+			System.out.println("5 " + two.getName() + " got pushed back from " + one.getName() + "'s shield");
 			reactionCompleted(player, p);
 		} else {
 			System.out.println("Something went wrong in vertical reactions");

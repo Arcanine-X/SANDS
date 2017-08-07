@@ -28,7 +28,7 @@ public class Board {
 				if(board[r][c] instanceof BoardPiece && board[r][c+1] instanceof BoardPiece) {
 					BoardPiece temp1 = (BoardPiece) board[r][c];
 					BoardPiece temp2 = (BoardPiece) board[r][c+1];
-					if(temp1.east == 1 || temp2.west == 1) {
+					if(temp1.getEast() == 1 || temp2.getWest() == 1) {
 						reactions.add(new Pair(temp1,temp2,"hori"));
 					}
 				}
@@ -40,7 +40,7 @@ public class Board {
 				if(board[r][c] instanceof BoardPiece && board[r+1][c] instanceof BoardPiece) {
 					BoardPiece temp1 = (BoardPiece) board[r][c];
 					BoardPiece temp2 = (BoardPiece) board[r+1][c];
-					if(temp1.south == 1 || temp2.north == 1) {
+					if(temp1.getSouth() == 1 || temp2.getNorth() == 1) {
 						reactions.add(new Pair(temp1,temp2,"vert"));
 					}
 				}
@@ -56,7 +56,7 @@ public class Board {
 			for(int c = 0; c < board[0].length; c++) {
 				if(board[r][c] instanceof BoardPiece) {
 					BoardPiece temp = (BoardPiece)board[r][c];
-					if(temp.name.equals(letter)) {
+					if(temp.getName().equals(letter)) {
 						return c; //c is x
 					}
 				}
@@ -70,7 +70,7 @@ public class Board {
 			for(int c = 0; c < board[0].length; c++) {
 				if(board[r][c] instanceof BoardPiece) {
 					BoardPiece temp = (BoardPiece)board[r][c];
-					if(temp.name.equals(letter)) {
+					if(temp.getName().equals(letter)) {
 						return r; //r is y
 					}
 				}
@@ -112,7 +112,7 @@ public class Board {
 				System.out.print(r == 1 && i == 1 ? "|green" : "|yelow"); // Draw Player
 			} else if (board[r][i] instanceof BoardPiece) { // Logic for drawing the tokens in the array
 				BoardPiece temp = (BoardPiece) board[r][i];
-				System.out.print(getWest(temp) + temp.name + getEast(temp));
+				System.out.print(getWest(temp) + temp.getName() + getEast(temp));
 			} else if (r == 2 && i == 2 && !(board[2][2] instanceof Token)) { // Draw creation box for green
 				System.out.print("| [ ] ");
 			} else if (r == 7 && i == 7 && !(board[7][7] instanceof Token)) { // Draw creation box for yellow
@@ -128,7 +128,7 @@ public class Board {
 			for (int i = 0; i < player.tokens[0].length; i++) {
 				if (player.tokens[r][i] != null) { // Logic for drawing the tokens in the array
 					System.out.print(
-							getWest(player.tokens[r][i]) + player.tokens[r][i].name + getEast(player.tokens[r][i]));
+							getWest(player.tokens[r][i]) + player.tokens[r][i].getName() + getEast(player.tokens[r][i]));
 				} else {
 					System.out.print("|     ");
 				}
@@ -219,19 +219,19 @@ public class Board {
 	}
 
 	public String getNorth(BoardPiece b) {
-		return (b.north == 0) ? "|     " : (b.north == 1) ? "|  |  " : "|  +  ";
+		return (b.getNorth() == 0) ? "|     " : (b.getNorth() == 1) ? "|  |  " : "|  +  ";
 	}
 
 	public String getSouth(BoardPiece b) {
-		return (b.south == 0) ? "|     " : (b.south == 1) ? "|  |  " : "|  +  ";
+		return (b.getSouth() == 0) ? "|     " : (b.getSouth() == 1) ? "|  |  " : "|  +  ";
 	}
 
 	public String getEast(BoardPiece b) {
-		return (b.east == 0) ? "  " : (b.east == 1) ? "- " : "+ ";
+		return (b.getEast() == 0) ? "  " : (b.getEast() == 1) ? "- " : "+ ";
 	}
 
 	public String getWest(BoardPiece b) {
-		return (b.west == 0) ? "|  " : (b.west == 1) ? "| -" : "| +";
+		return (b.getWest() == 0) ? "|  " : (b.getWest() == 1) ? "| -" : "| +";
 	}
 
 	public void createRecord() {
@@ -241,8 +241,8 @@ public class Board {
 			for (int c = 0; c < record[0].length; c++) {
 				if (board[r][c] instanceof BoardPiece) {
 					BoardPiece temp = (BoardPiece) board[r][c];
-					BoardPiece newBP = new BoardPiece(temp.name, temp.north, temp.east, temp.south, temp.west,
-							temp.col);
+					BoardPiece newBP = new BoardPiece(temp.getName(), temp.getNorth(), temp.getEast(), temp.getSouth(), temp.getWest(),
+							temp.getCol());
 					record[r][c] = newBP;
 
 				} else {
@@ -272,7 +272,7 @@ public class Board {
 				if (board[r][c] instanceof BoardPiece) {
 					System.out.println("getting closer");
 					BoardPiece temp = (BoardPiece) board[r][c];
-					if (temp.col.equals(player.name) && temp.name.equals(letter)) {
+					if (temp.getCol().equals(player.name) && temp.getName().equals(letter)) {
 						returnToken = temp;
 						System.out.println("Always a good sign");
 						return returnToken;
@@ -290,7 +290,7 @@ public class Board {
 			for (int c = 0; c < board[0].length; c++) {
 				if (board[r][c] instanceof BoardPiece) {
 					BoardPiece temp = (BoardPiece) board[r][c];
-					if (temp.name.equals(letter)) {
+					if (temp.getName().equals(letter)) {
 						board[r][c] = null;
 						temp = null;
 						System.out.println("Dead");
@@ -308,7 +308,7 @@ public class Board {
 				if (board[r][c] instanceof BoardPiece) {
 					System.out.println("getting closer");
 					BoardPiece temp = (BoardPiece) board[r][c];
-					if (temp.name.equals(letter)) {
+					if (temp.getName().equals(letter)) {
 						returnToken = temp;
 						System.out.println("Always a good sign");
 						return returnToken;

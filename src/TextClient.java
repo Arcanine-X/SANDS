@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class TextClient {
-	static Board board;
+	private static Board board;
 	private static SwordAndShieldGame game;
 
 	/**
@@ -22,7 +22,7 @@ public class TextClient {
 	}
 
 
-	public static void playerOptions(Player player) {
+	private static void playerOptions(Player player) {
 		while (true) {
 			try {
 				if (board.checkForReaction()) {
@@ -52,13 +52,13 @@ public class TextClient {
 		}
 	}
 
-	public static void fight(Player player) {
+	private static void fight(Player player) {
 		while (!board.reactions.isEmpty()) {
 			board.redraw();
 			try {
 				System.out.println("Here are the possiable reactions:");
 				for (Pair p : board.reactions) {
-					System.out.println("There is a reaction between " + p.one.name + " and " + p.two.name);
+					System.out.println("There is a reaction between " + p.one.getName() + " and " + p.two.getName());
 				}
 				String options = "";
 				if (board.reactions.size() > 1) {
@@ -75,8 +75,8 @@ public class TextClient {
 						String a = tokens[0], b = tokens[1];
 						Pair pair = null;
 						for (Pair p : board.reactions) {
-							if ((p.one.name.equals(a) && p.two.name.equals(b))
-									|| (p.one.name.equals(b) && p.two.name.equals(a))) {
+							if ((p.one.getName().equals(a) && p.two.getName().equals(b))
+									|| (p.one.getName().equals(b) && p.two.getName().equals(a))) {
 								System.out.println("Found pair");
 								pair = p;
 								break;

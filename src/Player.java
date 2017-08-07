@@ -67,7 +67,7 @@ public class Player extends Token {
 				if (tokens[r][c] == null) {
 					continue;
 				}
-				if (tokens[r][c].name.equals(letter)) {
+				if (tokens[r][c].getName().equals(letter)) {
 					returnToken = tokens[r][c];
 					tokens[r][c] = null;
 					System.out.println("All good in find returned token to add");
@@ -107,67 +107,15 @@ public class Player extends Token {
 		for (int r = 0; r < tokens.length; r++) {
 			for (int c = 0; c < tokens[0].length; c++) {
 				tokens[r][c] = t.get(i++);
-				tokens[r][c].col = name;
+				tokens[r][c].setCol(name);
 			}
 		}
-	}
-
-	/**
-	 * First finds the token, and if its found moves it in the appropriate direction
-	 *
-	 * @param player
-	 * @param token
-	 * @param direction
-	 * @param board
-	 * @return
-	 */
-
-	public boolean moveToken(Player player, BoardPiece token, String direction, Board board) {
-		System.out.println("in move token");
-		// Find the piece
-		int row = 0, col = 0;
-		boolean found = false;
-		for (int r = 0; r < board.board.length; r++) {
-			for (int c = 0; c < board.board.length; c++) {
-				if (board.board[r][c] == token) {
-					row = r;
-					col = c;
-					if (player.name.equals(token.col)) {
-						System.out.println("Found token to move");
-
-						found = true;
-					}
-				}
-			}
-		}
-		if (found) {
-			System.out.println(direction);
-			board.board[row][col] = null;
-			if (direction.equals("up")) {
-				row--;
-			} else if (direction.equals("right")) {
-				col++;
-			} else if (direction.equals("down")) {
-				row++;
-			} else if (direction.equals("left")) {
-				col--;
-			} else {
-				System.out.println("error in movetoken()");
-			}
-			// if they go of the board, they go to the grave yard O_O
-			if (row < 0 || row > 9 || col < 0 || col > 9) {
-				return true;
-			}
-			board.board[row][col] = token;
-			return true;
-		}
-		return false;
 	}
 
 	public void checkForSpace(Player player, BoardPiece token, String dir, Board board) {
 		System.out.println("CheckForSpace");
-		int c = board.getX(token.name);
-		int r = board.getY(token.name);
+		int c = board.getX(token.getName());
+		int r = board.getY(token.getName());
 		int count = 0;
 		if (dir.equals("up")) {
 			if(r - 1 < 0) {
