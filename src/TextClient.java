@@ -110,6 +110,9 @@ public class TextClient {
 		player.checkForSpace(player, tokenToMove, direction, board);
 		player.everyMovement.add(tokenToMove);
 		success();
+		if (board.checkForReaction()) {
+			fight();
+		}
 		/*
 		if (player.moveToken(player, tokenToMove, direction, board) == true) {
 			player.everyMovement.add(tokenToMove);
