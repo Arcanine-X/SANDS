@@ -29,51 +29,51 @@ public class BoardPiece extends Token {
 		return " " + n + " \n" + w + name + e + "\n" + " " + s + " \n";
 	}
 
-	String getName() {
+	public String getName() {
 		return name;
 	}
 
-	String getCol() {
+	public String getCol() {
 		return col;
 	}
 
-	int getNorth() {
+	public int getNorth() {
 		return north;
 	}
 
-	int getEast() {
+	public int getEast() {
 		return east;
 	}
 
-	int getSouth() {
+	public int getSouth() {
 		return south;
 	}
 
-	int getWest() {
+	public int getWest() {
 		return west;
 	}
 
-	void setName(String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 
-	void setCol(String col) {
+	public void setCol(String col) {
 		this.col = col;
 	}
 
-	void setNorth(int north) {
+	public void setNorth(int north) {
 		this.north = north;
 	}
 
-	void setEast(int east) {
+	public void setEast(int east) {
 		this.east = east;
 	}
 
-	void setSouth(int south) {
+	public void setSouth(int south) {
 		this.south = south;
 	}
 
-	void setWest(int west) {
+	public void setWest(int west) {
 		this.west = west;
 	}
 

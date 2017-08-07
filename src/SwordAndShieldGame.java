@@ -260,8 +260,8 @@ public class SwordAndShieldGame {
 
 	public void horizontalReaction(Player player, Pair p) {
 		System.out.println("Horizontal Reaction");
-		BoardPiece one = p.one;
-		BoardPiece two = p.two;
+		BoardPiece one = p.getOne();
+		BoardPiece two = p.getTwo();
 		if (one.getEast() == 1 && two.getWest() == 1) { // sword - sword
 			board.killToken(one.getName());
 			board.killToken(two.getName());
@@ -292,8 +292,8 @@ public class SwordAndShieldGame {
 		// Five possibale reactions, sword - sword, sword - nothing, nothing - sword,
 		// shield - sword, sword - shield
 		System.out.println("Vertical Reaction");
-		BoardPiece one = p.one;
-		BoardPiece two = p.two;
+		BoardPiece one = p.getOne();
+		BoardPiece two = p.getTwo();
 		if (one.getSouth() == 1 && two.getNorth() == 1) { // sword - sword
 			board.killToken(one.getName());
 			board.killToken(two.getName());

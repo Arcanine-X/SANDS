@@ -1,9 +1,8 @@
 
 public class Pair {
-	Board board;
-	BoardPiece one;
-	BoardPiece two;
-	String dir = "";
+	private BoardPiece one;
+	private BoardPiece two;
+	private String dir = "";
 
 	public Pair(BoardPiece one, BoardPiece two, String dir) {
 		this.one = one;
@@ -46,5 +45,17 @@ public class Pair {
 			System.out.println("Something went wrong");
 		}
 		return returnString;
+	}
+
+	public BoardPiece getOne() {
+		return one;
+	}
+
+	public BoardPiece getTwo() {
+		return two;
+	}
+
+	public String getDir() {
+		return dir;
 	}
 }

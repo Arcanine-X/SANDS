@@ -36,8 +36,6 @@ public class SwordAndShieldTests {
 		game.moveToken(yellow, move);
 		BoardPiece testPiece = (BoardPiece)game.getBoard().board[6][7];
 		assertEquals("c", testPiece.getName());
-
-
 	}
 
 

@@ -58,7 +58,7 @@ public class TextClient {
 			try {
 				System.out.println("Here are the possiable reactions:");
 				for (Pair p : board.reactions) {
-					System.out.println("There is a reaction between " + p.one.getName() + " and " + p.two.getName());
+					System.out.println("There is a reaction between " + p.getOne().getName() + " and " + p.getTwo().getName());
 				}
 				String options = "";
 				if (board.reactions.size() > 1) {
@@ -75,8 +75,8 @@ public class TextClient {
 						String a = tokens[0], b = tokens[1];
 						Pair pair = null;
 						for (Pair p : board.reactions) {
-							if ((p.one.getName().equals(a) && p.two.getName().equals(b))
-									|| (p.one.getName().equals(b) && p.two.getName().equals(a))) {
+							if ((p.getOne().getName().equals(a) && p.getTwo().getName().equals(b))
+									|| (p.getOne().getName().equals(b) && p.getTwo().getName().equals(a))) {
 								System.out.println("Found pair");
 								pair = p;
 								break;
@@ -86,11 +86,11 @@ public class TextClient {
 							System.out.println("Invalid input");
 							continue;
 						}
-						if (pair.dir.equals("vert")) {
+						if (pair.getDir().equals("vert")) {
 							System.out.println("vertical");
 							game.verticalReaction(player, pair);
 						}
-						if (pair.dir.equals("hori")) {
+						if (pair.getDir().equals("hori")) {
 							System.out.println("horizontal");
 							game.horizontalReaction(player, pair);
 						}
@@ -102,9 +102,9 @@ public class TextClient {
 						game.undo(player);
 					} else if (options.startsWith("yes") || options.startsWith("y")) {
 						// do the reaction
-						if (board.reactions.get(0).dir.equals("hori")) {
+						if (board.reactions.get(0).getDir().equals("hori")) {
 							game.horizontalReaction(player, board.reactions.get(0));
-						} else if (board.reactions.get(0).dir.equals("vert")) {
+						} else if (board.reactions.get(0).getDir().equals("vert")) {
 							game.verticalReaction(player, board.reactions.get(0));
 						} else {
 							System.out.println("error");
