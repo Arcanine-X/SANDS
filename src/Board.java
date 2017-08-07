@@ -321,20 +321,32 @@ public class Board {
 	}
 
 
+
+
 	public void tryPushUp(String pusher) {
 		int c = getX(pusher);
 		int r = getY(pusher);
 		int count = 0;
-		for(int i = r -1, j = 0; i>= 0; i--, j++) {
-			if(board[i][c] instanceof BoardPiece && count == j) {
-				count++;
-			}
+		if(r - 1 < 0) {
+			board[r][c] = null;
 		}
-		if(count!=0) {
-			for(int i = r - count; i < r; i++) {
-				board[i-1][c] = board[i][c];
+		else { // requires shifting
+			for (int i = r -1, j = 0; i >= 0; i--, j++) {
+				if (board[i][c] instanceof BoardPiece && count == j) {
+					count++;
+				}
 			}
-			board[r-1][c] = null;
+			if (count != 0) {
+				for (int i = r - count; i <= r; i++) {
+					if(i - 1 < 0) {
+						board[i][c] = null;
+					}
+					else {
+						board[i - 1][c] = board[i][c];
+					}
+				}
+				board[r-1][c] = null;
+			}
 		}
 	}
 
@@ -342,52 +354,77 @@ public class Board {
 		int c = getX(pusher);
 		int r = getY(pusher);
 		int count = 0;
-		for(int i = r + 1, j = 0; i < board.length; i++, j++) {
-			if(board[i][c] instanceof BoardPiece && count == j) {
-				count++;
-			}
-		}
 
-		if(count!=0) {
-			for(int i = r + count; i > r; i --) {
-				board[i+1][c] = board[i][c];
+		if (r + 1 > 9) {
+			board[r][c] = null;
+		} else {
+			for (int i = r + 1, j = 0; i < board.length; i++, j++) {
+				if (board[i][c] instanceof BoardPiece && count == j) {
+					count++;
+				}
 			}
-			board[r+1][c] = null;
+			if (count != 0) {
+				for (int i = r + count; i >= r; i--) {
+					if (i + 1 > 9) {
+						board[i][c] = null;
+					} else {
+						board[i + 1][c] = board[i][c];
+					}
+				}
+				board[r + 1][c] = null;
+			}
 		}
 	}
+
 
 	public void tryPushRight(String pusher) {
 		int c = getX(pusher);
 		int r = getY(pusher);
 		int count = 0;
-		for(int i = c + 1, j = 0; i < board.length; i++, j++) {
-			System.out.println("first four loop");
-			if(board[r][i] instanceof BoardPiece && count == j) {
-				count++;
+		if (c + 1 > 9) {
+			board[r][c] = null;
+		} else {
+			for (int i = c + 1, j = 0; i < board.length; i++, j++) {
+				if (board[r][i] instanceof BoardPiece && count == j) {
+					count++;
+				}
 			}
-		}
-		if(count!=0) {
-			for(int i = c + count; i > c; i--) {
-				board[r][i+1] = board[r][i];
+			if (count != 0) {
+				for (int i = c + count; i >= c; i--) {
+					if (i + 1 > 9) {
+						board[r][i] = null;
+					} else {
+						board[r][i + 1] = board[r][i];
+					}
+				}
+				board[r][c+1] = null;
 			}
-			board[r][c+1] = null;
 		}
 	}
+
 
 	public void tryPushLeft(String pusher) {
 		int c = getX(pusher);
 		int r = getY(pusher);
 		int count = 0;
-		for(int i = c - 1, j = 0; i >=0; i--, j++) {
-			if(board[r][i] instanceof BoardPiece && count == j) {
-				count++;
+		if (c - 1 < 0) {
+			board[r][c] = null;
+		} else {
+			for (int i = c - 1, j = 0; i >= 0; i--, j++) {
+				if (board[r][i] instanceof BoardPiece && count == j) {
+					count++;
+				}
 			}
-		}
-		if(count!=0) {
-			for(int i = c - count; i < c; i++) {
-				board[r][i-1] = board[r][i];
+			if (count != 0) {
+				for (int i = c - count; i <= c; i++) {
+					if (i - 1 < 0) {
+						board[r][i] = null;
+					} else {
+						board[r][i - 1] = board[r][i];
+					}
+				}
+				board[r][c-1] = null;
 			}
-			board[r][c-1] = null;
 		}
 	}
 
