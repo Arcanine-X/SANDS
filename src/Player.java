@@ -3,13 +3,13 @@ import java.util.List;
 import java.util.Stack;
 
 public class Player extends Token {
-	String name = "";
-	int originalCount = 0;
-	int setterCount = 0;
-	BoardPiece[][] tokens = new BoardPiece[6][4];
-	Stack<BoardPiece[][]> undoStack = new Stack<BoardPiece[][]>();
-	List<String> movesSoFar = new ArrayList<String>(); // contains both rotated and moved pieces
-	List<BoardPiece> everyMovement = new ArrayList<BoardPiece>();
+	private String name = "";
+	private int originalCount = 0;
+	private int setterCount = 0;
+	private BoardPiece[][] tokens = new BoardPiece[6][4];
+	private Stack<BoardPiece[][]> undoStack = new Stack<BoardPiece[][]>();
+	private List<String> movesSoFar = new ArrayList<String>(); // contains both rotated and moved pieces
+	private List<BoardPiece> everyMovement = new ArrayList<BoardPiece>();
 
 	public Player(String name) {
 		this.name = name;
@@ -32,9 +32,9 @@ public class Player extends Token {
 		tokenToAdd = find(player, letter);
 		if (tokenToAdd != null) {
 			if (player.name.equals("green")) {
-				board.board[2][2] = tokenToAdd;
+				board.getBoard()[2][2] = tokenToAdd;
 			} else {
-				board.board[7][7] = tokenToAdd;
+				board.getBoard()[7][7] = tokenToAdd;
 			}
 			System.out.println("token added");
 			return true;
@@ -89,12 +89,12 @@ public class Player extends Token {
 	 */
 	public boolean checkValidCreationSpot(Board board, String color) {
 		if (color.equals("green")) {
-			if (board.board[2][2] instanceof BoardPiece) {
+			if (board.getBoard()[2][2] instanceof BoardPiece) {
 				return false;
 			}
 		}
 		if (color.equals("yellow")) {
-			if (board.board[7][7] instanceof BoardPiece) {
+			if (board.getBoard()[7][7] instanceof BoardPiece) {
 				return false;
 			}
 		}
@@ -119,100 +119,100 @@ public class Player extends Token {
 		int count = 0;
 		if (dir.equals("up")) {
 			if(r - 1 < 0) {
-				board.board[r][c] = null;
+				board.getBoard()[r][c] = null;
 			}
-			else if (!(board.board[r - 1][c] instanceof BoardPiece) && !(r - 1 < 0)) {
-				board.board[r][c] = null;
+			else if (!(board.getBoard()[r - 1][c] instanceof BoardPiece) && !(r - 1 < 0)) {
+				board.getBoard()[r][c] = null;
 				r--;
-				board.board[r][c] = token;
+				board.getBoard()[r][c] = token;
 			} else { // requires shifting
 				for (int i = r -1, j = 0; i >= 0; i--, j++) {
-					if (board.board[i][c] instanceof BoardPiece && count == j) {
+					if (board.getBoard()[i][c] instanceof BoardPiece && count == j) {
 						count++;
 					}
 				}
 				if (count != 0) {
 					for (int i = r - count; i <= r; i++) {
 						if(i - 1 < 0) {
-							board.board[i][c] = null;
+							board.getBoard()[i][c] = null;
 						}
 						else {
-							board.board[i - 1][c] = board.board[i][c];
+							board.getBoard()[i - 1][c] = board.getBoard()[i][c];
 						}
 					}
-					board.board[r][c] = null;
+					board.getBoard()[r][c] = null;
 				}
 			}
 		} else if (dir.equals("down")) {
 			if (r + 1 > 9) {
-				board.board[r][c] = null;
-			} else if (!(board.board[r + 1][c] instanceof BoardPiece) && !(r + 1 > 9)) {
-				board.board[r][c] = null;
+				board.getBoard()[r][c] = null;
+			} else if (!(board.getBoard()[r + 1][c] instanceof BoardPiece) && !(r + 1 > 9)) {
+				board.getBoard()[r][c] = null;
 				r++;
-				board.board[r][c] = token;
+				board.getBoard()[r][c] = token;
 			} else {
-				for (int i = r + 1, j = 0; i < board.board.length; i++, j++) {
-					if (board.board[i][c] instanceof BoardPiece && count == j) {
+				for (int i = r + 1, j = 0; i < board.getBoard().length; i++, j++) {
+					if (board.getBoard()[i][c] instanceof BoardPiece && count == j) {
 						count++;
 					}
 				}
 				if (count != 0) {
 					for (int i = r + count; i >= r; i--) {
 						if (i + 1 > 9) {
-							board.board[i][c] = null;
+							board.getBoard()[i][c] = null;
 						} else {
-							board.board[i + 1][c] = board.board[i][c];
+							board.getBoard()[i + 1][c] = board.getBoard()[i][c];
 						}
 					}
-					board.board[r][c] = null;
+					board.getBoard()[r][c] = null;
 				}
 			}
 		} else if (dir.equals("left")) {
 			if (c - 1 < 0) {
-				board.board[r][c] = null;
-			} else if (!(board.board[r][c - 1] instanceof BoardPiece) && !(c - 1 < 0)) {
-				board.board[r][c] = null;
+				board.getBoard()[r][c] = null;
+			} else if (!(board.getBoard()[r][c - 1] instanceof BoardPiece) && !(c - 1 < 0)) {
+				board.getBoard()[r][c] = null;
 				c--;
-				board.board[r][c] = token;
+				board.getBoard()[r][c] = token;
 			} else {
 				for (int i = c - 1, j = 0; i >= 0; i--, j++) {
-					if (board.board[r][i] instanceof BoardPiece && count == j) {
+					if (board.getBoard()[r][i] instanceof BoardPiece && count == j) {
 						count++;
 					}
 				}
 				if (count != 0) {
 					for (int i = c - count; i <= c; i++) {
 						if (i - 1 < 0) {
-							board.board[r][i] = null;
+							board.getBoard()[r][i] = null;
 						} else {
-							board.board[r][i - 1] = board.board[r][i];
+							board.getBoard()[r][i - 1] = board.getBoard()[r][i];
 						}
 					}
-					board.board[r][c] = null;
+					board.getBoard()[r][c] = null;
 				}
 			}
 		} else if (dir.equals("right")) {
 			if (c + 1 > 9) {
-				board.board[r][c] = null;
-			} else if (!(board.board[r][c + 1] instanceof BoardPiece) && !(c + 1 > 9)) {
-				board.board[r][c] = null;
+				board.getBoard()[r][c] = null;
+			} else if (!(board.getBoard()[r][c + 1] instanceof BoardPiece) && !(c + 1 > 9)) {
+				board.getBoard()[r][c] = null;
 				c++;
-				board.board[r][c] = token;
+				board.getBoard()[r][c] = token;
 			} else {
-				for (int i = c + 1, j = 0; i < board.board.length; i++, j++) {
-					if (board.board[r][i] instanceof BoardPiece && count == j) {
+				for (int i = c + 1, j = 0; i < board.getBoard().length; i++, j++) {
+					if (board.getBoard()[r][i] instanceof BoardPiece && count == j) {
 						count++;
 					}
 				}
 				if (count != 0) {
 					for (int i = c + count; i >= c; i--) {
 						if (i + 1 > 9) {
-							board.board[r][i] = null;
+							board.getBoard()[r][i] = null;
 						} else {
-							board.board[r][i + 1] = board.board[r][i];
+							board.getBoard()[r][i + 1] = board.getBoard()[r][i];
 						}
 					}
-					board.board[r][c] = null;
+					board.getBoard()[r][c] = null;
 				}
 			}
 		} else {
@@ -272,4 +272,32 @@ public class Player extends Token {
 		System.out.println("Setter Count is : " + setterCount);
 		return setterCount;
 	}
+
+	public String getName() {
+		return name;
+	}
+
+	public List<String> getMovesSoFar() {
+		return movesSoFar;
+	}
+
+	public List<BoardPiece> getEveryMovement() {
+		return everyMovement;
+	}
+
+	public BoardPiece[][] getTokens() {
+		return tokens;
+	}
+
+	public Stack<BoardPiece[][]> getUndoStack() {
+		return undoStack;
+	}
+
+
+
+
+
+
+
+
 }

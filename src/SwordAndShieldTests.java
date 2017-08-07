@@ -10,7 +10,7 @@ public class SwordAndShieldTests {
 		Player yellow = game.getYellow();
 		String options = "create w 90";
 		game.createToken(yellow, options);
-		BoardPiece testPiece = (BoardPiece)game.getBoard().board[7][7];
+		BoardPiece testPiece = (BoardPiece)game.getBoard().getBoard()[7][7];
 		assertEquals("w", testPiece.getName());
 	}
 
@@ -21,7 +21,7 @@ public class SwordAndShieldTests {
 		Player yellow = game.getGreen();
 		String options = "create C 90";
 		game.createToken(yellow, options);
-		BoardPiece testPiece = (BoardPiece)game.getBoard().board[2][2];
+		BoardPiece testPiece = (BoardPiece)game.getBoard().getBoard()[2][2];
 		assertEquals("C", testPiece.getName());
 	}
 
@@ -34,7 +34,7 @@ public class SwordAndShieldTests {
 		String move = "move c up";
 		game.createToken(yellow, create);
 		game.moveToken(yellow, move);
-		BoardPiece testPiece = (BoardPiece)game.getBoard().board[6][7];
+		BoardPiece testPiece = (BoardPiece)game.getBoard().getBoard()[6][7];
 		assertEquals("c", testPiece.getName());
 	}
 

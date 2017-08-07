@@ -53,15 +53,15 @@ public class TextClient {
 	}
 
 	private static void fight(Player player) {
-		while (!board.reactions.isEmpty()) {
+		while (!board.getReactions().isEmpty()) {
 			board.redraw();
 			try {
 				System.out.println("Here are the possiable reactions:");
-				for (Pair p : board.reactions) {
+				for (Pair p : board.getReactions()) {
 					System.out.println("There is a reaction between " + p.getOne().getName() + " and " + p.getTwo().getName());
 				}
 				String options = "";
-				if (board.reactions.size() > 1) {
+				if (board.getReactions().size() > 1) {
 					options = inputString(
 							"There are multiple reactions. Enter the two letters of which the interactions should occur between first (or undo) : ");
 					String[] tokens = options.split(" ");
@@ -74,7 +74,7 @@ public class TextClient {
 						}
 						String a = tokens[0], b = tokens[1];
 						Pair pair = null;
-						for (Pair p : board.reactions) {
+						for (Pair p : board.getReactions()) {
 							if ((p.getOne().getName().equals(a) && p.getTwo().getName().equals(b))
 									|| (p.getOne().getName().equals(b) && p.getTwo().getName().equals(a))) {
 								System.out.println("Found pair");
@@ -102,10 +102,10 @@ public class TextClient {
 						game.undo(player);
 					} else if (options.startsWith("yes") || options.startsWith("y")) {
 						// do the reaction
-						if (board.reactions.get(0).getDir().equals("hori")) {
-							game.horizontalReaction(player, board.reactions.get(0));
-						} else if (board.reactions.get(0).getDir().equals("vert")) {
-							game.verticalReaction(player, board.reactions.get(0));
+						if (board.getReactions().get(0).getDir().equals("hori")) {
+							game.horizontalReaction(player, board.getReactions().get(0));
+						} else if (board.getReactions().get(0).getDir().equals("vert")) {
+							game.verticalReaction(player, board.getReactions().get(0));
 						} else {
 							System.out.println("error");
 						}

@@ -41,8 +41,8 @@ public class SwordAndShieldGame {
 	}
 
 	public boolean checkIfAllowedToMove(Player player, String letter) {
-		if (!player.movesSoFar.contains(letter)) {
-			player.movesSoFar.add(letter);
+		if (!player.getMovesSoFar().contains(letter)) {
+			player.getMovesSoFar().add(letter);
 			return true;
 		}
 		System.out.println("You have already moved this piece this turn");
@@ -75,14 +75,14 @@ public class SwordAndShieldGame {
 			return;
 		}
 		// Check that they haven't rotated
-		if (player.everyMovement.contains(tokenToMove)) {
+		if (player.getEveryMovement().contains(tokenToMove)) {
 			System.out.println("You have already rotated or moved this piece this turn.\nSo you cannot rotate");
 			return;
 		}
 		// Find the piece to move
 
 		player.checkForSpace(player, tokenToMove, direction, board);
-		player.everyMovement.add(tokenToMove);
+		player.getEveryMovement().add(tokenToMove);
 		success();
 	}
 
@@ -111,15 +111,15 @@ public class SwordAndShieldGame {
 			rotator(itemToRotate, rotation);
 			num--;
 		}
-		if (player.everyMovement.contains(itemToRotate)) {
+		if (player.getEveryMovement().contains(itemToRotate)) {
 			System.out.println("You have already moved or rotated this token this turn");
 			System.out.println("You cannot rotate it again");
 			return;
 		}
-		player.everyMovement.add(itemToRotate);
+		player.getEveryMovement().add(itemToRotate);
 		// Have to add have this to for to ensure that you cannot move after undoing a
 		// rotation.
-		player.movesSoFar.add("" + rotation);
+		player.getMovesSoFar().add("" + rotation);
 		success();
 		System.out.println("Successful rotation");
 	}
@@ -170,14 +170,14 @@ public class SwordAndShieldGame {
 		yellow.createRecord();
 		board.createRecord(); // create new record
 		// undo lists which ensure a player can only move something once per turn
-		if (!player.movesSoFar.isEmpty()) {
-			player.movesSoFar.remove(player.movesSoFar.size() - 1);
+		if (!player.getMovesSoFar().isEmpty()) {
+			player.getMovesSoFar().remove(player.getMovesSoFar().size() - 1);
 		}
 		if (player.getSetterCount() > player.getOriginalCount()) {
 			firstCreation = true;
 		}
-		if (!player.everyMovement.isEmpty()) {
-			player.everyMovement.remove(player.everyMovement.size() - 1);
+		if (!player.getEveryMovement().isEmpty()) {
+			player.getEveryMovement().remove(player.getEveryMovement().size() - 1);
 		}
 		if (board.checkForReaction()) {
 			return;
@@ -189,7 +189,7 @@ public class SwordAndShieldGame {
 	public void reactionCompleted(Player player, Pair p) {
 		board.redraw();
 		System.out.println(p.toString());
-		board.reactions.remove(p);
+		board.getReactions().remove(p);
 		board.createRecord();
 		yellow.createRecord();
 		green.createRecord();
@@ -207,14 +207,14 @@ public class SwordAndShieldGame {
 	}
 
 	public void reset(Player player, Board board) {// after passing need to reset stuff
-		yellow.everyMovement.clear();
-		green.everyMovement.clear();
-		yellow.movesSoFar.clear();
-		green.movesSoFar.clear();
+		yellow.getEveryMovement().clear();
+		green.getEveryMovement().clear();
+		yellow.getMovesSoFar().clear();
+		green.getMovesSoFar().clear();
 		firstCreation = true;
-		yellow.undoStack.clear();
-		green.undoStack.clear();
-		board.undoStack.clear();
+		yellow.getUndoStack().clear();
+		green.getUndoStack().clear();
+		board.getUndoStack().clear();
 		green.createRecord();
 		yellow.createRecord();
 		board.createRecord();

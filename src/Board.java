@@ -3,9 +3,9 @@ import java.util.List;
 import java.util.Stack;
 
 public class Board {
-	Token[][] board = new Token[10][10];
-	Stack<Token[][]> undoStack = new Stack<Token[][]>();
-	List<Pair> reactions = new ArrayList<Pair>();
+	private Token[][] board = new Token[10][10];
+	private Stack<Token[][]> undoStack = new Stack<Token[][]>();
+	private List<Pair> reactions = new ArrayList<Pair>();
 	private static final String SEPARATOR = "     "; //Separator between token and board, and board and token
 	private static final String TLINE = "-------------------------"; //Token board line
 	private static final String BLINE = "-------------------------------------------------------------"; //Board line
@@ -97,9 +97,9 @@ public class Board {
 	}
 
 	public void drawTopRowTokens(Player player, int r) {
-		for (int c = 0; c < player.tokens[0].length; c++) {
-			if (player.tokens[r][c] != null) {
-				System.out.print(getNorth(player.tokens[r][c])); // Deal with North
+		for (int c = 0; c < player.getTokens()[0].length; c++) {
+			if (player.getTokens()[r][c] != null) {
+				System.out.print(getNorth(player.getTokens()[r][c])); // Deal with North
 			} else {
 				System.out.print("|     ");
 			}
@@ -124,11 +124,11 @@ public class Board {
 	}
 
 	public void drawMiddleRowTokens(Player player, int r) {
-		if (r < player.tokens.length) {
-			for (int i = 0; i < player.tokens[0].length; i++) {
-				if (player.tokens[r][i] != null) { // Logic for drawing the tokens in the array
+		if (r < player.getTokens().length) {
+			for (int i = 0; i < player.getTokens()[0].length; i++) {
+				if (player.getTokens()[r][i] != null) { // Logic for drawing the tokens in the array
 					System.out.print(
-							getWest(player.tokens[r][i]) + player.tokens[r][i].getName() + getEast(player.tokens[r][i]));
+							getWest(player.getTokens()[r][i]) + player.getTokens()[r][i].getName() + getEast(player.getTokens()[r][i]));
 				} else {
 					System.out.print("|     ");
 				}
@@ -140,9 +140,9 @@ public class Board {
 	}
 
 	public void drawLastRowTokens(Player player, int r) {
-		for (int i = 0; i < player.tokens[0].length; i++) {
-			if (player.tokens[r][i] != null) {
-				System.out.print(getSouth(player.tokens[r][i])); // Deal with South
+		for (int i = 0; i < player.getTokens()[0].length; i++) {
+			if (player.getTokens()[r][i] != null) {
+				System.out.print(getSouth(player.getTokens()[r][i])); // Deal with South
 			} else {
 				System.out.print("|     ");
 			}
@@ -170,7 +170,7 @@ public class Board {
 		for (int r = 0; r < board.length; r++) {
 			//~~~~~~~~~ TOP ROW ~~~~~~~~~~~~~~~
 			// Top row of player tokens
-			if (r < green.tokens.length) {
+			if (r < green.getTokens().length) {
 				drawTopRowTokens(green, r);
 				System.out.print("|" + SEPARATOR);
 			} else {
@@ -179,7 +179,7 @@ public class Board {
 			// Top row for board
 			drawTopRowBoard(r);
 			// Top row for yellow tokens
-			if (r < yellow.tokens.length) {
+			if (r < yellow.getTokens().length) {
 				System.out.print("|"+SEPARATOR);
 				drawTopRowTokens(yellow, r);
 			}
@@ -196,19 +196,19 @@ public class Board {
 
 			//~~~~~~~ LAST ROW ~~~~~~~~~~~~~
 
-			if (r < green.tokens.length) {
+			if (r < green.getTokens().length) {
 				drawLastRowTokens(green, r);
 				System.out.print("|" + SEPARATOR);
 			} else {
 				System.out.print(EDGESEPARATOR);
 			}
 			drawLastRowBoard(r);
-			if (r < yellow.tokens.length) {
+			if (r < yellow.getTokens().length) {
 				System.out.print("|"+SEPARATOR);
 				drawLastRowTokens(yellow, r);
 			}
 			System.out.println("|");
-			if (r < yellow.tokens.length) {
+			if (r < yellow.getTokens().length) {
 				System.out.print(TLINE + SEPARATOR + BLINE + SEPARATOR + TLINE);
 				System.out.println();
 			} else {
@@ -272,7 +272,7 @@ public class Board {
 				if (board[r][c] instanceof BoardPiece) {
 					System.out.println("getting closer");
 					BoardPiece temp = (BoardPiece) board[r][c];
-					if (temp.getCol().equals(player.name) && temp.getName().equals(letter)) {
+					if (temp.getCol().equals(player.getName()) && temp.getName().equals(letter)) {
 						returnToken = temp;
 						System.out.println("Always a good sign");
 						return returnToken;
@@ -441,4 +441,19 @@ public class Board {
 			}
 		}
 	}
+	public List<Pair> getReactions() {
+		return reactions;
+	}
+	public Stack<Token[][]> getUndoStack() {
+		return undoStack;
+	}
+	public Token[][] getBoard() {
+		return board;
+	}
+
+
+
+
+
+
 }
