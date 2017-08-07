@@ -72,7 +72,7 @@ public class TextClient {
 		player.Hax("d", "b", "c", player, board);
 		success();
 		if (board.checkForReaction()) {
-			fight();
+			fight(player);
 		}
 	}
 
@@ -106,12 +106,12 @@ public class TextClient {
 			return;
 		}
 		// Find the piece to move
-		
+
 		player.checkForSpace(player, tokenToMove, direction, board);
 		player.everyMovement.add(tokenToMove);
 		success();
 		if (board.checkForReaction()) {
-			fight();
+			fight(player);
 		}
 		/*
 		if (player.moveToken(player, tokenToMove, direction, board) == true) {
@@ -175,13 +175,13 @@ public class TextClient {
 		player.movesSoFar.add("" + rotation);
 		success();
 		if (board.checkForReaction()) {
-			fight();
+			fight(player);
 		}
 
 		System.out.println("Successful rotation");
 	}
 
-	public static void fight() {
+	public static void fight(Player player) {
 		// Print out the reactions
 		while (!board.reactions.isEmpty()) {
 			board.redraw();
@@ -196,8 +196,7 @@ public class TextClient {
 							"There are multiple reactions. Enter the two letters of which the interactions should occur between first (or undo) : ");
 					String[] tokens = options.split(" ");
 					if (options.startsWith("undo")) {
-						undo(green);
-						undo(yellow);
+						undo(player);
 					} else {
 						if (tokens.length != 2) {
 							System.out.println("Incorrect input");
@@ -219,11 +218,11 @@ public class TextClient {
 						}
 						if (pair.dir.equals("vert")) {
 							System.out.println("vertical");
-							verticalReaction(pair);
+							verticalReaction(player, pair);
 						}
 						if (pair.dir.equals("hori")) {
 							System.out.println("horizontal");
-							horizontalReaction(pair);
+							horizontalReaction(player, pair);
 						}
 					}
 				} else {
@@ -231,14 +230,13 @@ public class TextClient {
 					String[] tokens = options.split(" ");
 					if (options.startsWith("undo")) {
 						// then undo
-						undo(green);
-						undo(yellow);
+						undo(player);
 					} else if (options.startsWith("yes") || options.startsWith("y")) {
 						// do the reaction
 						if (board.reactions.get(0).dir.equals("hori")) {
-							horizontalReaction(board.reactions.get(0));
+							horizontalReaction(player, board.reactions.get(0));
 						} else if (board.reactions.get(0).dir.equals("vert")) {
-							verticalReaction(board.reactions.get(0));
+							verticalReaction(player, board.reactions.get(0));
 						} else {
 							System.out.println("error");
 						}
@@ -253,7 +251,7 @@ public class TextClient {
 		}
 	}
 
-	public static void reactionCompleted(Pair p) {
+	public static void reactionCompleted(Player player, Pair p) {
 		board.redraw();
 		System.out.println(p.toString());
 		board.reactions.remove(p);
@@ -262,11 +260,11 @@ public class TextClient {
 		green.createRecord();
 		if (board.checkForReaction()) {
 			board.redraw();
-			fight();
+			fight(player);
 		}
 	}
 
-	public static void horizontalReaction(Pair p) {
+	public static void horizontalReaction(Player player, Pair p) {
 		System.out.println("Horizontal Reaction");
 		BoardPiece one = p.one;
 		BoardPiece two = p.two;
@@ -274,29 +272,29 @@ public class TextClient {
 			board.killToken(one.name);
 			board.killToken(two.name);
 			System.out.println("1 " + one.name + " and " + two.name + " died, due to Sword vs Sword. ");
-			reactionCompleted(p);
+			reactionCompleted(player,p);
 		} else if (one.east == 1 && two.west == 0) { // sword - nothing
 			board.killToken(two.name);
 			System.out.println("2 " + two.name + " died, due to " + one.name + "'s Sword, vs Nothing. ");
-			reactionCompleted(p);
+			reactionCompleted(player,p);
 		} else if (one.east == 1 && two.west == 2) { // sword - shield
 			board.tryPushLeft(two.name);
 			System.out.println("3 " + one.name + " got pushed back from " + two.name + "'s shield");
-			reactionCompleted(p);
+			reactionCompleted(player,p);
 		} else if (one.east == 0 && two.west == 1) { // nothing - sword
 			board.killToken(one.name);
 			System.out.println("4 " + one.name + " died from " + two.west + "'s sword");
-			reactionCompleted(p);
+			reactionCompleted(player,p);
 		} else if (one.east == 2 && two.west == 1) { // shield - sword
 			board.tryPushRight(one.name);
 			System.out.println("5 " + two.name + " got pushed back from " + one.name + "'s shield");
-			reactionCompleted(p);
+			reactionCompleted(player,p);
 		} else {
 			System.out.println("Something went wrong in horizontal reactions");
 		}
 	}
 
-	public static void verticalReaction(Pair p) {
+	public static void verticalReaction(Player player, Pair p) {
 		// Five possibale reactions, sword - sword, sword - nothing, nothing - sword,
 		// shield - sword, sword - shield
 		System.out.println("Vertical Reaction");
@@ -306,23 +304,23 @@ public class TextClient {
 			board.killToken(one.name);
 			board.killToken(two.name);
 			System.out.println("1 " + one.name + " and " + two.name + " died, due to Sword vs Sword. ");
-			reactionCompleted(p);
+			reactionCompleted(player, p);
 		} else if (one.south == 1 && two.north == 2) { // sword - shield
 			board.tryPushUp(two.name);
 			System.out.println("2 " + one.name + " got pushed back from " + two.name + "'s shield");
-			reactionCompleted(p);
+			reactionCompleted(player, p);
 		} else if (one.south == 1 && two.north == 0) { // sword - nothing
 			board.killToken(two.name);
 			System.out.println("3 " + two.name + " died, due to " + one.name + "'s Sword, vs Nothing. ");
-			reactionCompleted(p);
+			reactionCompleted(player, p);
 		} else if (one.south == 0 && two.north == 1) { // nothing - sword
 			board.killToken(one.name);
 			System.out.println("4 " + one.name + " died, due to Nothing vs Sword. ");
-			reactionCompleted(p);
+			reactionCompleted(player, p);
 		} else if (one.south == 2 && two.north == 1) { // shield - sword
 			board.tryPushDown(one.name);
 			System.out.println("5 " + two.name + " got pushed back from " + one.name + "'s shield");
-			reactionCompleted(p);
+			reactionCompleted(player, p);
 		} else {
 			System.out.println("Something went wrong in vertical reactions");
 		}
@@ -382,7 +380,7 @@ public class TextClient {
 			player.everyMovement.remove(player.everyMovement.size() - 1);
 		}
 		if (board.checkForReaction()) {
-			fight();
+			fight(player);
 		}
 		board.redraw();
 	}
