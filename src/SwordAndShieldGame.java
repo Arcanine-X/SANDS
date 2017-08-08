@@ -13,6 +13,7 @@ public class SwordAndShieldGame {
 	private Set<String> movement = new HashSet<String>(Arrays.asList("up", "down", "left", "right"));
 	private Set<Integer> rotations = new HashSet<Integer>(Arrays.asList(0, 90, 180, 270));
 	private boolean firstCreation = true;
+	private boolean skippedCreation = false;
 
 
 	public SwordAndShieldGame() {
@@ -169,6 +170,10 @@ public class SwordAndShieldGame {
 		green.createRecord();
 		yellow.createRecord();
 		board.createRecord(); // create new record
+		if(skippedCreation == true && firstCreation == false) {
+			firstCreation = true;
+			skippedCreation = false;
+		}
 		// undo lists which ensure a player can only move something once per turn
 		if (!player.getMovesSoFar().isEmpty()) {
 			player.getMovesSoFar().remove(player.getMovesSoFar().size() - 1);
@@ -197,6 +202,12 @@ public class SwordAndShieldGame {
 			board.redraw();
 			return;
 		}
+	}
+
+	public void testMethod() {
+		board.createRecord();
+		green.createRecord();
+		yellow.createRecord();
 	}
 
 	public void success() {
@@ -330,5 +341,21 @@ public class SwordAndShieldGame {
 
 	public Board getBoard() {
 		return board;
+	}
+
+	public boolean isFirstCreation() {
+		return firstCreation;
+	}
+
+	public void setFirstCreation(boolean firstCreation) {
+		this.firstCreation = firstCreation;
+	}
+
+	public boolean getSkippedCreation() {
+		return skippedCreation;
+	}
+
+	public void setSkippedCreation(boolean skippedCreation) {
+		this.skippedCreation = skippedCreation;
 	}
 }

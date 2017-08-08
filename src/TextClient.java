@@ -21,30 +21,45 @@ public class TextClient {
 		}
 	}
 
-
 	private static void playerOptions(Player player) {
 		while (true) {
 			try {
 				if (board.checkForReaction()) {
 					fight(player);
 				}
-				String options = inputString(
-						"[create <letter> <0/90/180/270> / rotate <letter> <0/90/180/270> / move <letter> <up/right/down/left> / pass");
-				System.out.println(options);
-				if (options.startsWith("create")) {
-					game.createToken(player, options);
-				} else if (options.startsWith("rotate")) {
-					game.rotateToken(player, options);
-				} else if (options.startsWith("move")) {
-					game.moveToken(player, options);
-				} else if (options.startsWith("pass")) {
-					System.out.println("Next persons turn");
-					game.reset(player, board);
-					return;
-				} else if (options.startsWith("undo")) {
-					game.undo(player);
+				String options = "";
+
+				if (game.isFirstCreation()) {
+					options = inputString("[create <letter> <0/90/180/270> / pass]");
+					if (options.startsWith("create")) {
+						game.createToken(player, options);
+					}else if (options.startsWith("pass")) {
+						game.setSkippedCreation(true);
+						game.setFirstCreation(false);
+						game.testMethod();
+						playerOptions(player);
+						return;
+					}else {
+						System.out.println("Invalid option....");
+					}
 				} else {
-					System.out.println("Invalid option....");
+					options = inputString("[rotate <letter> <0/90/180/270> / move <letter> <up/right/down/left>");
+					System.out.println(options);
+					if (options.startsWith("rotate")) {
+						game.rotateToken(player, options);
+					} else if (options.startsWith("move")) {
+						game.moveToken(player, options);
+					} else if (options.startsWith("pass")) {
+						System.out.println("Next persons turn");
+						game.setSkippedCreation(false);
+						game.setFirstCreation(true);
+						game.reset(player, board);
+						return;
+					} else if (options.startsWith("undo")) {
+						game.undo(player);
+					} else {
+						System.out.println("Invalid option....");
+					}
 				}
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
@@ -58,7 +73,8 @@ public class TextClient {
 			try {
 				System.out.println("Here are the possiable reactions:");
 				for (Pair p : board.getReactions()) {
-					System.out.println("There is a reaction between " + p.getOne().getName() + " and " + p.getTwo().getName());
+					System.out.println(
+							"There is a reaction between " + p.getOne().getName() + " and " + p.getTwo().getName());
 				}
 				String options = "";
 				if (board.getReactions().size() > 1) {

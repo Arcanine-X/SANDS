@@ -450,10 +450,4 @@ public class Board {
 	public Token[][] getBoard() {
 		return board;
 	}
-
-
-
-
-
-
 }

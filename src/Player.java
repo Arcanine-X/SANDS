@@ -292,12 +292,4 @@ public class Player extends Token {
 	public Stack<BoardPiece[][]> getUndoStack() {
 		return undoStack;
 	}
-
-
-
-
-
-
-
-
 }
