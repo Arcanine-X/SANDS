@@ -7,6 +7,7 @@ public class Player extends Token {
 	private int originalCount = 0;
 	private int setterCount = 0;
 	private BoardPiece[][] tokens = new BoardPiece[6][4];
+	private BoardPiece[][] graveYard = new BoardPiece[6][4];
 	private Stack<BoardPiece[][]> undoStack = new Stack<BoardPiece[][]>();
 	private List<String> movesSoFar = new ArrayList<String>(); // contains both rotated and moved pieces
 	private List<BoardPiece> everyMovement = new ArrayList<BoardPiece>();
@@ -239,7 +240,6 @@ public class Player extends Token {
 				tokens[r][c] = setter[r][c];
 			}
 		}
-
 	}
 
 	/**
@@ -292,4 +292,10 @@ public class Player extends Token {
 	public Stack<BoardPiece[][]> getUndoStack() {
 		return undoStack;
 	}
+
+	public BoardPiece[][] getGraveYard() {
+		return graveYard;
+	}
+
+
 }

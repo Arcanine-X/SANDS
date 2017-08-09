@@ -31,6 +31,9 @@ public class BoardPiece extends Token {
 
 
 	public boolean equals(Object o) {
+		if(o==null || !this.getClass().equals(o.getClass())) {
+			return false;
+		}
 		if(o instanceof BoardPiece) {
 			BoardPiece bp = (BoardPiece)o;
 			if(!((BoardPiece) bp).name.equals(this.name)) {

@@ -39,7 +39,7 @@ public class TextClient {
                          game.success();
                      }else{
                          System.out.println("invalid option");
-                     }
+                     } 
                 }
                 System.out.println("Stack size is " + game.getBoard().getUndoStack().size());
                 options = "";

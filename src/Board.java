@@ -183,6 +183,8 @@ public class Board {
 				System.out.print("|"+SEPARATOR);
 				drawTopRowTokens(yellow, r);
 			}
+
+
 			System.out.println("|");
 			//~~~~~~~~~~~~ MIDDLE ROW ~~~~~~~~~~
 			// Middle row for green tokens
