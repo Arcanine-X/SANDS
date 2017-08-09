@@ -21,51 +21,52 @@ public class TextClient {
 		}
 	}
 
-	private static void playerOptions(Player player) {
-		while (true) {
-			try {
-				if (board.checkForReaction()) {
-					fight(player);
-				}
-				String options = "";
+	public static void playerOptions(Player player) {
+        while (true) {
+            System.out.println("Stack size is " + game.getBoard().getUndoStack().size());
+            try {
+                if (board.checkForReaction()) {
+                    fight(player);
+                }
+                String options = "";
+                if(game.getBoard().getUndoStack().size() == 1){
+                    game.setFirstCreation(true);
+                     options = inputString("[create <letter> <0/90/180/270>  / pass");
+                     if(options.startsWith("create")){
+                         game.createToken(player, options);
+                     }else if(options.startsWith("pass")){
+                         game.setFirstCreation(false);
+                         game.success();
+                     }else{
+                         System.out.println("invalid option");
+                     }
+                }
+                System.out.println("Stack size is " + game.getBoard().getUndoStack().size());
+                options = "";
+                if(game.getBoard().getUndoStack().size()>1){
+                     options = inputString("[rotate <letter> <0/90/180/270> / move <letter> <up/right/down/left> / pass");
+                     if (options.startsWith("rotate")) {
+                        game.rotateToken(player, options);
+                    } else if (options.startsWith("move")) {
+                        game.moveToken(player, options);
+                    } else if (options.startsWith("pass")) {
+                        System.out.println("Next persons turn");
+                        game.reset(player, board);
+                        return;
+                    } else if (options.startsWith("undo")) {
+                        System.out.println("in undo");
+                        game.undo(player);
+                    } else {
+                            System.out.println("Invalid option....");
+                    }
+                }
 
-				if (game.isFirstCreation()) {
-					options = inputString("[create <letter> <0/90/180/270> / pass]");
-					if (options.startsWith("create")) {
-						game.createToken(player, options);
-					}else if (options.startsWith("pass")) {
-						game.setSkippedCreation(true);
-						game.setFirstCreation(false);
-						game.testMethod();
-						playerOptions(player);
-						return;
-					}else {
-						System.out.println("Invalid option....");
-					}
-				} else {
-					options = inputString("[rotate <letter> <0/90/180/270> / move <letter> <up/right/down/left>");
-					System.out.println(options);
-					if (options.startsWith("rotate")) {
-						game.rotateToken(player, options);
-					} else if (options.startsWith("move")) {
-						game.moveToken(player, options);
-					} else if (options.startsWith("pass")) {
-						System.out.println("Next persons turn");
-						game.setSkippedCreation(false);
-						game.setFirstCreation(true);
-						game.reset(player, board);
-						return;
-					} else if (options.startsWith("undo")) {
-						game.undo(player);
-					} else {
-						System.out.println("Invalid option....");
-					}
-				}
-			} catch (Exception e) {
-				System.out.println(e.getMessage());
-			}
-		}
-	}
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
 
 	private static void fight(Player player) {
 		while (!board.getReactions().isEmpty()) {
@@ -149,11 +150,11 @@ public class TextClient {
 			System.out.println("********************\n");
 			if (turn % 2 == 0) {
 				System.out.println("It is yellows turn!");
-				playerOptions(yellow);
+					playerOptions(yellow);
 				board.redraw();
 			} else {
 				System.out.println("It is greens turn!");
-				playerOptions(green);
+					playerOptions(green);
 				board.redraw();
 			}
 			turn++;
