@@ -20,7 +20,6 @@ public class SwordAndShieldGame {
 		yellow = new Player("yellow");
 		board = new Board();
 		initialiseGame();
-		//green.getGraveYard()[2][2] = new BoardPiece("u", 1, 1, 1, 1, "green");
 	}
 
 	public void initialiseGame(){
@@ -188,6 +187,7 @@ public class SwordAndShieldGame {
 		}
 		firstCreation = false;
 		System.out.println("Made a copy");
+		player.Hax(player, board);
 		success();
 	}
 
@@ -201,8 +201,6 @@ public class SwordAndShieldGame {
 		green.createRecord();
 		yellow.createRecord();
 		board.createRecord(); // create new record
-		// undo lists which ensure a player can only move something once per turn
-		board.differences.clear();
 		green.clearRipList();
 		yellow.clearRipList();
 		if (!player.getMovesSoFar().isEmpty()) {
@@ -217,8 +215,6 @@ public class SwordAndShieldGame {
 		if (board.checkForReaction()) {
 			return;
 		}
-
-		//yellow.setGraveYard(new BoardPiece[3][8]);
 		board.redraw();
 	}
 

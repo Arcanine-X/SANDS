@@ -28,7 +28,7 @@ public class TextClient {
                 if (board.checkForReaction()) {
                     fight(player);
                 }
-                String options = ""; 
+                String options = "";
                 if(game.getBoard().getUndoStack().size() == 1){
                     game.setFirstCreation(true);
                      options = inputString("[create <letter> <0/90/180/270>  / pass");
@@ -63,13 +63,11 @@ public class TextClient {
                             System.out.println("Invalid option....");
                     }
                 }
-
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
     }
-
 
 	private static void fight(Player player) {
 		while (!board.getReactions().isEmpty()) {

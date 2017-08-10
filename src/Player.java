@@ -13,13 +13,11 @@ public class Player extends Token {
 	private List<BoardPiece> everyMovement = new ArrayList<BoardPiece>();
 	private List<BoardPiece> listOfTokens = new ArrayList<BoardPiece>();
 	List<BoardPiece> diffs = new ArrayList<BoardPiece>();
-	List<BoardPiece> RIPlist = new ArrayList<BoardPiece>();
+
 
 	public Player(String name) {
 		this.name = name;
 	}
-
-
 
 	/**
 	 * Adds the a token on the board
@@ -49,18 +47,15 @@ public class Player extends Token {
 		return false;
 	}
 
-	public boolean Hax(String lettera, String letterb, String letterc, Player player, Board board) {
-		BoardPiece tokenToAddA = null, tokenToAddB = null, tokenToAddC = null;
-		//tokenToAddA = find(player, "c");
-		//tokenToAddB = find(player, "x");
-		//tokenToAddC = find(player, "g");
-		//BoardPiece tokenToAddD = find(player, "g");
-		// BoardPiece tokenToAddD = find(player, "k");
-		System.out.println("letter a is " + lettera);
-		//board.board[7][7] = tokenToAddA;
-		//board.board[9][7] = tokenToAddB;
-		//board.board[8][7] = tokenToAddC;
-		// board.board[7][8] = tokenToAddD;
+	public boolean Hax(Player player, Board board) {
+		BoardPiece one = find(player, "c");
+		BoardPiece two = find(player, "h");
+		BoardPiece three = find(player, "u");
+		BoardPiece four = find(player, "r");
+		board.getBoard()[7][7] = one;
+		board.getBoard()[9][7] = two;
+		board.getBoard()[8][7] = three;
+		board.getBoard()[7][8] = four;
 		System.out.println("token added");
 		return true;
 
@@ -305,7 +300,6 @@ public class Player extends Token {
 				diffs.add(bp);
 			}
 		}
-		System.out.println("diff size is " + diffs.size());
 	}
 
 	public void clearRipList() {
@@ -364,10 +358,4 @@ public class Player extends Token {
 	public void setGraveYard(BoardPiece[][] graveYard) {
 		this.graveYard = graveYard;
 	}
-
-
-
-
-
-
 }

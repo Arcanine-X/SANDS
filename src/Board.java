@@ -6,9 +6,6 @@ public class Board {
 	private Token[][] board = new Token[10][10];
 	private Stack<Token[][]> undoStack = new Stack<Token[][]>();
 	private List<Pair> reactions = new ArrayList<Pair>();
-	private List<BoardPiece> yTokens = new ArrayList<BoardPiece>();
-	private List<BoardPiece> gTokens = new ArrayList<BoardPiece>();
-	List<BoardPiece> differences = new ArrayList<BoardPiece>();
 	private static final String SEPARATOR = "     "; //Separator between token and board, and board and token
 	private static final String TLINE = "-------------------------"; //Token board line
 	private static final String BLINE = "-------------------------------------------------------------"; //Board line
@@ -17,13 +14,6 @@ public class Board {
 	private Player yellow;
 
 
-
-	public void setyTokens(List<BoardPiece> yTokens) {
-		this.yTokens = yTokens;
-	}
-	public void setgTokens(List<BoardPiece> gTokens) {
-		this.gTokens = gTokens;
-	}
 	public void setGreen(Player green) {
 		this.green = green;
 	}
@@ -170,14 +160,9 @@ public class Board {
 		}
 	}
 
-
-
-
-
-
-
-
 	public void redraw() {
+		addPlayers(green, yellow);
+		addInvalidSquares();
 		System.out.println("\n\n");
 		System.out.println(SEPARATOR + "~~Green Tokens~~" + EDGESEPARATOR + "  ~~Game Board~~" + EDGESEPARATOR + "   ~~Yellow Tokens~~");
 		System.out.println(TLINE + SEPARATOR + BLINE + SEPARATOR + TLINE);
@@ -231,56 +216,16 @@ public class Board {
 				System.out.println();
 			}
 		}
-		//green.getGraveYard()[2][2] = new BoardPiece("b", 1, 1, 2, 2, "green");
-		//System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~???????~~~~~~~~~~~~~~");
-		//updateGraveyard(green);
-		//updateGraveyard(yellow);
 		green.diffs.clear();
 		yellow.diffs.clear();
 		green.updateGraveyard(board);
 		yellow.updateGraveyard(board);
-		System.out.println(yellow.diffs.size());
 		pupulateGraveyard(green, green.diffs);
 		pupulateGraveyard(yellow, yellow.diffs);
-
-
-
-		//System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~hello~~~~~~~~~~~~~~");
 		drawGraveYard();
-		//System.out.println("gskdjfsdfasfasdads");
 	}
 
-	/*public void updateGraveyard(Player player) {
-		//check differences between board and players tokens and add them to graveyard
-		List<BoardPiece> boardTokens = new ArrayList<BoardPiece>();
-		List<BoardPiece> playerTokens = new ArrayList<BoardPiece>();
-		for(int r = 0; r < 10; r++) {
-			for(int c = 0; c < 10; c++) {
-				if(board[r][c] instanceof BoardPiece) {
-					boardTokens.add((BoardPiece) board[r][c]);
-				}
-			}
-		}
-		for(int r = 0; r < player.getTokens().length; r++) {
-			for(int c = 0; c < player.getTokens()[0].length; c++) {
-				if(player.getTokens()[r][c] instanceof BoardPiece) {
-					playerTokens.add((BoardPiece)player.getTokens()[r][c]);
-				}
-			}
-		}
-		for(BoardPiece bp : player.getListOfTokens()) {
-			if(!boardTokens.contains(bp) && !playerTokens.contains(bp)) {
-				differences.add(bp);
-			}
-		}
-		if(!differences.isEmpty()) {
-			pupulateGraveyard(player, differences);
-		}
-		else {
-			return;
-		}
-	}
-*/
+
 	public void pupulateGraveyard(Player player, List<BoardPiece> deathList) {
 		int size = deathList.size();
 
@@ -298,7 +243,6 @@ public class Board {
 				player.getGraveYard()[r][c] = deathList.get(i++);
 			}
 		}
-
 	}
 
 
@@ -596,6 +540,15 @@ public class Board {
 	public void addPlayers(Player green, Player yellow) {
 		board[1][1] = green;
 		board[8][8] = yellow;
+	}
+
+	public void addInvalidSquares() {
+		board[0][0] = new InvalidSquare();
+		board[0][1] = new InvalidSquare();
+		board[1][0] = new InvalidSquare();
+		board[8][9] = new InvalidSquare();
+		board[9][8] = new InvalidSquare();
+		board[9][9] = new InvalidSquare();
 	}
 
 	public void initialise() {
