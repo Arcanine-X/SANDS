@@ -10,6 +10,7 @@ public class Board {
 	private static final String TLINE = "-------------------------"; //Token board line
 	private static final String BLINE = "-------------------------------------------------------------"; //Board line
 	private static final String EDGESEPARATOR = "                              "; //Distance between edge and board
+	private static final String INVALID_SQUARE = "|\u2591\u2591\u2591\u2591\u2591";
 	private Player green;
 	private Player yellow;
 
@@ -90,7 +91,15 @@ public class Board {
 			if (board[r][c] instanceof BoardPiece) {
 				BoardPiece temp = (BoardPiece) board[r][c];
 				System.out.print(getNorth(temp)); // Deal with North
-			} else {
+			} else if((r==0 && c<2)){
+				System.out.print(INVALID_SQUARE);
+			}else if(r==1 && c ==0){
+				System.out.print(INVALID_SQUARE);
+			}else if((r==8 && c==9)){
+				System.out.print(INVALID_SQUARE);
+			}else if((r==9 && c>7)){
+				System.out.print(INVALID_SQUARE);
+			}else {
 				System.out.print("|     ");
 			}
 		}
@@ -117,6 +126,14 @@ public class Board {
 				System.out.print("| [ ] ");
 			} else if (r == 7 && i == 7 && !(board[7][7] instanceof Token)) { // Draw creation box for yellow
 				System.out.print("| [ ] ");
+			}else if((r==1 && i==0)){
+				System.out.print(INVALID_SQUARE);
+			}else if((r==0 && i<2)){
+				System.out.print(INVALID_SQUARE);
+			}else if((r==8 && i==9)){
+				System.out.print(INVALID_SQUARE);
+			}else if((r==9 && i>7)){
+				System.out.print(INVALID_SQUARE);
 			} else {
 				System.out.print("|     ");
 			}
@@ -154,6 +171,14 @@ public class Board {
 			if (board[r][i] instanceof BoardPiece) {
 				BoardPiece temp = (BoardPiece) board[r][i];
 				System.out.print(getSouth(temp)); // Deal with South
+			}else if((r==1 && i==0)){
+				System.out.print(INVALID_SQUARE);
+			}else if((r==0 && i<2)){
+				System.out.print(INVALID_SQUARE);
+			}else if((r==8 && i==9)){
+				System.out.print(INVALID_SQUARE);
+			}else if((r==9 && i>7)){
+				System.out.print(INVALID_SQUARE);
 			} else {
 				System.out.print("|     ");
 			}
@@ -249,7 +274,7 @@ public class Board {
 
 	public void drawGraveYard() {
 		System.out.println();
-		System.out.println(SEPARATOR+SEPARATOR+"~~~Green GraveYard~~~"+EDGESEPARATOR+EDGESEPARATOR+"~~~Yellow GraveYard~~~");
+		System.out.println(SEPARATOR+SEPARATOR+"   ~~~Green GraveYard~~~"+EDGESEPARATOR+SEPARATOR+"                   ~~~Yellow GraveYard~~~");
 		System.out.print("-------------------------------------------------");
 		System.out.print(SEPARATOR+SEPARATOR+SEPARATOR+SEPARATOR+SEPARATOR);
 		System.out.println("-------------------------------------------------");
