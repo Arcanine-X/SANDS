@@ -6,6 +6,9 @@ public class Board {
 	private Token[][] board = new Token[10][10];
 	private Stack<Token[][]> undoStack = new Stack<Token[][]>();
 	private List<Pair> reactions = new ArrayList<Pair>();
+	private List<BoardPiece> yTokens = new ArrayList<BoardPiece>();
+	private List<BoardPiece> gTokens = new ArrayList<BoardPiece>();
+	List<BoardPiece> differences = new ArrayList<BoardPiece>();
 	private static final String SEPARATOR = "     "; //Separator between token and board, and board and token
 	private static final String TLINE = "-------------------------"; //Token board line
 	private static final String BLINE = "-------------------------------------------------------------"; //Board line
@@ -14,6 +17,13 @@ public class Board {
 	private Player yellow;
 
 
+
+	public void setyTokens(List<BoardPiece> yTokens) {
+		this.yTokens = yTokens;
+	}
+	public void setgTokens(List<BoardPiece> gTokens) {
+		this.gTokens = gTokens;
+	}
 	public void setGreen(Player green) {
 		this.green = green;
 	}
@@ -163,6 +173,10 @@ public class Board {
 
 
 
+
+
+
+
 	public void redraw() {
 		System.out.println("\n\n");
 		System.out.println(SEPARATOR + "~~Green Tokens~~" + EDGESEPARATOR + "  ~~Game Board~~" + EDGESEPARATOR + "   ~~Yellow Tokens~~");
@@ -184,7 +198,6 @@ public class Board {
 				drawTopRowTokens(yellow, r);
 			}
 
-
 			System.out.println("|");
 			//~~~~~~~~~~~~ MIDDLE ROW ~~~~~~~~~~
 			// Middle row for green tokens
@@ -196,7 +209,7 @@ public class Board {
 			drawMiddleRowTokens(yellow, r);
 			System.out.println("");
 
-			//~~~~~~~ LAST ROW ~~~~~~~~~~~~~
+		 	//~~~~~~~ LAST ROW ~~~~~~~~~~~~~
 
 			if (r < green.getTokens().length) {
 				drawLastRowTokens(green, r);
@@ -217,6 +230,156 @@ public class Board {
 				System.out.print(EDGESEPARATOR + BLINE);
 				System.out.println();
 			}
+		}
+		//green.getGraveYard()[2][2] = new BoardPiece("b", 1, 1, 2, 2, "green");
+		//System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~???????~~~~~~~~~~~~~~");
+		//updateGraveyard(green);
+		//updateGraveyard(yellow);
+		green.diffs.clear();
+		yellow.diffs.clear();
+		green.updateGraveyard(board);
+		yellow.updateGraveyard(board);
+		System.out.println(yellow.diffs.size());
+		pupulateGraveyard(green, green.diffs);
+		pupulateGraveyard(yellow, yellow.diffs);
+
+
+
+		//System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~hello~~~~~~~~~~~~~~");
+		drawGraveYard();
+		//System.out.println("gskdjfsdfasfasdads");
+	}
+
+	/*public void updateGraveyard(Player player) {
+		//check differences between board and players tokens and add them to graveyard
+		List<BoardPiece> boardTokens = new ArrayList<BoardPiece>();
+		List<BoardPiece> playerTokens = new ArrayList<BoardPiece>();
+		for(int r = 0; r < 10; r++) {
+			for(int c = 0; c < 10; c++) {
+				if(board[r][c] instanceof BoardPiece) {
+					boardTokens.add((BoardPiece) board[r][c]);
+				}
+			}
+		}
+		for(int r = 0; r < player.getTokens().length; r++) {
+			for(int c = 0; c < player.getTokens()[0].length; c++) {
+				if(player.getTokens()[r][c] instanceof BoardPiece) {
+					playerTokens.add((BoardPiece)player.getTokens()[r][c]);
+				}
+			}
+		}
+		for(BoardPiece bp : player.getListOfTokens()) {
+			if(!boardTokens.contains(bp) && !playerTokens.contains(bp)) {
+				differences.add(bp);
+			}
+		}
+		if(!differences.isEmpty()) {
+			pupulateGraveyard(player, differences);
+		}
+		else {
+			return;
+		}
+	}
+*/
+	public void pupulateGraveyard(Player player, List<BoardPiece> deathList) {
+		int size = deathList.size();
+
+		for(int i = size; i < 24; i++) {
+			deathList.add(null);
+		}
+		for(int i = 0; i < 24; i++) {
+			if(deathList.get(i)!=null) {
+				System.out.println("uhm,.... " + deathList.get(i).toString());
+			}
+		}
+		int i = 0;
+		for (int r = 0; r < player.getGraveYard().length; r++) {
+			for (int c = 0; c < player.getGraveYard()[0].length; c++) {
+				player.getGraveYard()[r][c] = deathList.get(i++);
+			}
+		}
+
+	}
+
+
+
+	public void drawGraveYard() {
+		System.out.println();
+		System.out.println(SEPARATOR+SEPARATOR+"~~~Green GraveYard~~~"+EDGESEPARATOR+EDGESEPARATOR+"~~~Yellow GraveYard~~~");
+		System.out.print("-------------------------------------------------");
+		System.out.print(SEPARATOR+SEPARATOR+SEPARATOR+SEPARATOR+SEPARATOR);
+		System.out.println("-------------------------------------------------");
+		for(int r = 0; r < 3; r++) {
+			for(int c = 0; c<8; c++) {
+				//Top row green
+				if (green.getGraveYard()[r][c] != null) {
+					System.out.print(getNorth(green.getGraveYard()[r][c])); // Deal with North
+				} else {
+					System.out.print("|     ");
+				}
+			}
+
+			System.out.print("|" + SEPARATOR+SEPARATOR+SEPARATOR+SEPARATOR+SEPARATOR);
+			//Top row yellow
+			for(int c = 0; c<8; c++) {
+				if (yellow.getGraveYard()[r][c] != null) {
+					System.out.print(getNorth(yellow.getGraveYard()[r][c])); // Deal with North
+				} else {
+					System.out.print("|     ");
+				}
+			}
+
+			System.out.println("|");
+
+
+			//Middle Row green
+			for (int i = 0; i < 8; i++) {
+				if (green.getGraveYard()[r][i] != null) { // Logic for drawing the tokens in the array
+					System.out.print(
+							getWest(green.getGraveYard()[r][i]) + green.getGraveYard()[r][i].getName() + getEast(green.getGraveYard()[r][i]));
+				} else {
+					System.out.print("|     ");
+				}
+			}
+
+			System.out.print("|" + SEPARATOR+SEPARATOR+SEPARATOR+SEPARATOR+SEPARATOR);
+
+			//Middle Row yellow
+
+			for (int i = 0; i < 8; i++) {
+				if (yellow.getGraveYard()[r][i] != null) { // Logic for drawing the tokens in the array
+					System.out.print(
+							getWest(yellow.getGraveYard()[r][i]) + yellow.getGraveYard()[r][i].getName() + getEast(yellow.getGraveYard()[r][i]));
+				} else {
+					System.out.print("|     ");
+				}
+			}
+
+			System.out.println("|");
+
+
+			//Last row yellow
+			for (int i = 0; i < 8; i++) {
+				if (green.getGraveYard()[r][i] != null) {
+					System.out.print(getSouth(green.getGraveYard()[r][i])); // Deal with South
+				} else {
+					System.out.print("|     ");
+				}
+			}
+
+			System.out.print("|" + SEPARATOR+SEPARATOR+SEPARATOR+SEPARATOR+SEPARATOR);
+
+			for (int i = 0; i < 8; i++) {
+				if (yellow.getGraveYard()[r][i] != null) {
+					System.out.print(getSouth(yellow.getGraveYard()[r][i])); // Deal with South
+				} else {
+					System.out.print("|     ");
+				}
+			}
+			System.out.println("|");
+			System.out.print("-------------------------------------------------");
+			System.out.print(SEPARATOR+SEPARATOR+SEPARATOR+SEPARATOR+SEPARATOR);
+			System.out.println("-------------------------------------------------");
 		}
 	}
 

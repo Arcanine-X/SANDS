@@ -28,7 +28,7 @@ public class TextClient {
                 if (board.checkForReaction()) {
                     fight(player);
                 }
-                String options = "";
+                String options = ""; 
                 if(game.getBoard().getUndoStack().size() == 1){
                     game.setFirstCreation(true);
                      options = inputString("[create <letter> <0/90/180/270>  / pass");
@@ -39,7 +39,10 @@ public class TextClient {
                          game.success();
                      }else{
                          System.out.println("invalid option");
-                     } 
+                     }
+                }
+            	if (board.checkForReaction()) {
+                    fight(player);
                 }
                 System.out.println("Stack size is " + game.getBoard().getUndoStack().size());
                 options = "";

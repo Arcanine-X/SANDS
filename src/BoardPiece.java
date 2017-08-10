@@ -37,31 +37,24 @@ public class BoardPiece extends Token {
 		if(o instanceof BoardPiece) {
 			BoardPiece bp = (BoardPiece)o;
 			if(!((BoardPiece) bp).name.equals(this.name)) {
-				System.out.println("init 11");
 				return false;
 			}
 			if(((BoardPiece) bp).north!=this.north) {
-				System.out.println("init 22");
 				return false;
 			}
 			if(((BoardPiece) bp).east!=this.east) {
-				System.out.println("init 33");
 				return false;
 			}
 			if(((BoardPiece) bp).south!=this.south) {
-				System.out.println("init 44");
 				return false;
 			}
 			if(((BoardPiece) bp).west!=this.west) {
-				System.out.println("init 55");
 				return false;
 			}
 			if(!((BoardPiece) bp).col.equals(this.col)) {
-				System.out.println("init 66");
 				return false;
 			}
 		}
-		System.out.println("ideal");
 		return true;
 	}
 

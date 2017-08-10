@@ -7,14 +7,19 @@ public class Player extends Token {
 	private int originalCount = 0;
 	private int setterCount = 0;
 	private BoardPiece[][] tokens = new BoardPiece[6][4];
-	private BoardPiece[][] graveYard = new BoardPiece[6][4];
+	private BoardPiece[][] graveYard = new BoardPiece[3][8];
 	private Stack<BoardPiece[][]> undoStack = new Stack<BoardPiece[][]>();
 	private List<String> movesSoFar = new ArrayList<String>(); // contains both rotated and moved pieces
 	private List<BoardPiece> everyMovement = new ArrayList<BoardPiece>();
+	private List<BoardPiece> listOfTokens = new ArrayList<BoardPiece>();
+	List<BoardPiece> diffs = new ArrayList<BoardPiece>();
+	List<BoardPiece> RIPlist = new ArrayList<BoardPiece>();
 
 	public Player(String name) {
 		this.name = name;
 	}
+
+
 
 	/**
 	 * Adds the a token on the board
@@ -111,6 +116,20 @@ public class Player extends Token {
 				tokens[r][c].setCol(name);
 			}
 		}
+	}
+
+	public void pupulateGraveyard(List<BoardPiece> deathList) {
+		int size = deathList.size();
+		for(int i = size; i < 24; i++) {
+			deathList.add(null);
+		}
+		int i = 0;
+		for (int r = 0; r < graveYard.length; r++) {
+			for (int c = 0; c < graveYard[0].length; c++) {
+				graveYard[r][c] = deathList.get(i++);
+			}
+		}
+
 	}
 
 	public void checkForSpace(Player player, BoardPiece token, String dir, Board board) {
@@ -262,6 +281,40 @@ public class Player extends Token {
 			}
 		}
 	}
+	//TODO check for names specifically maybe? not sure
+	public void updateGraveyard(Token[][] board) {
+		//check differences between board and players tokens and add them to graveyard
+		List<BoardPiece> boardTokens = new ArrayList<BoardPiece>();
+		List<BoardPiece> playerTokens = new ArrayList<BoardPiece>();
+		for(int r = 0; r < 10; r++) {
+			for(int c = 0; c < 10; c++) {
+				if(board[r][c] instanceof BoardPiece) {
+					boardTokens.add((BoardPiece) board[r][c]);
+				}
+			}
+		}
+		for(int r = 0; r < tokens.length; r++) {
+			for(int c = 0; c < tokens[0].length; c++) {
+				if(tokens[r][c] instanceof BoardPiece) {
+					playerTokens.add((BoardPiece)tokens[r][c]);
+				}
+			}
+		}
+		for(BoardPiece bp : listOfTokens) {
+			if(!boardTokens.contains(bp) && !playerTokens.contains(bp)) {
+				diffs.add(bp);
+			}
+		}
+		System.out.println("diff size is " + diffs.size());
+	}
+
+	public void clearRipList() {
+		for(int r = 0; r < graveYard.length; r++) {
+			for(int c = 0; c < graveYard[0].length; c++) {
+				graveYard[r][c] = null;
+			}
+		}
+	}
 
 	public int getOriginalCount() {
 		System.out.println("Original Count is : " + originalCount);
@@ -296,6 +349,25 @@ public class Player extends Token {
 	public BoardPiece[][] getGraveYard() {
 		return graveYard;
 	}
+
+
+	public void setListOfTokens(List<BoardPiece> listOfTokens) {
+		this.listOfTokens = listOfTokens;
+	}
+
+
+	public List<BoardPiece> getListOfTokens() {
+		return listOfTokens;
+	}
+
+
+	public void setGraveYard(BoardPiece[][] graveYard) {
+		this.graveYard = graveYard;
+	}
+
+
+
+
 
 
 }

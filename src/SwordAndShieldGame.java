@@ -20,6 +20,7 @@ public class SwordAndShieldGame {
 		yellow = new Player("yellow");
 		board = new Board();
 		initialiseGame();
+		//green.getGraveYard()[2][2] = new BoardPiece("u", 1, 1, 1, 1, "green");
 	}
 
 	public void initialiseGame(){
@@ -28,6 +29,8 @@ public class SwordAndShieldGame {
 		for (BoardPiece bp : greList) {
 			bp.setName(bp.getName().toUpperCase());
 		}
+		green.setListOfTokens(greList);
+		yellow.setListOfTokens(yelList);
 		board.initialise();
 		board.addPlayers(green, yellow);
 		board.createRecord();
@@ -38,6 +41,35 @@ public class SwordAndShieldGame {
 		board.setGreen(green);
 		board.setYellow(yellow);
 		board.redraw();
+	}
+
+	public void updateGraveyard(Player player) {
+		//check differences between board and players tokens and add them to graveyard
+		List<BoardPiece> boardTokens = new ArrayList<BoardPiece>();
+		List<BoardPiece> playerTokens = new ArrayList<BoardPiece>();
+		List<BoardPiece> differences = new ArrayList<BoardPiece>();
+		for(int r = 0; r < 10; r++) {
+			for(int c = 0; c < 10; c++) {
+				if(board.getBoard()[r][c] instanceof BoardPiece) {
+					boardTokens.add((BoardPiece) board.getBoard()[r][c]);
+				}
+			}
+		}
+
+		for(int r = 0; r < player.getTokens().length; r++) {
+			for(int c = 0; c < player.getTokens()[0].length; c++) {
+				if(player.getTokens()[r][c] instanceof BoardPiece) {
+					playerTokens.add((BoardPiece)board.getBoard()[r][c]);
+				}
+			}
+		}
+
+		for(BoardPiece bp : yelList) {
+			if(!boardTokens.contains(bp) && !playerTokens.contains(bp)) {
+				differences.add(bp);
+			}
+		}
+
 	}
 
 	public boolean checkIfAllowedToMove(Player player, String letter) {
@@ -170,6 +202,9 @@ public class SwordAndShieldGame {
 		yellow.createRecord();
 		board.createRecord(); // create new record
 		// undo lists which ensure a player can only move something once per turn
+		board.differences.clear();
+		green.clearRipList();
+		yellow.clearRipList();
 		if (!player.getMovesSoFar().isEmpty()) {
 			player.getMovesSoFar().remove(player.getMovesSoFar().size() - 1);
 		}
@@ -182,6 +217,8 @@ public class SwordAndShieldGame {
 		if (board.checkForReaction()) {
 			return;
 		}
+
+		//yellow.setGraveYard(new BoardPiece[3][8]);
 		board.redraw();
 	}
 

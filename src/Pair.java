@@ -49,7 +49,7 @@ public class Pair {
 
 	public BoardPiece getOne() {
 		return one;
-	}
+	} 
 
 	public BoardPiece getTwo() {
 		return two;
