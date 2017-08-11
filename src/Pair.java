@@ -2,11 +2,18 @@
 public class Pair {
 	private BoardPiece one;
 	private BoardPiece two;
+	private Player player;
 	private String dir = "";
 
 	public Pair(BoardPiece one, BoardPiece two, String dir) {
 		this.one = one;
 		this.two = two;
+		this.dir = dir;
+	}
+
+	public Pair(BoardPiece one, Player two, String dir) {
+		this.one = one;
+		this.player = two;
 		this.dir = dir;
 	}
 
@@ -49,7 +56,7 @@ public class Pair {
 
 	public BoardPiece getOne() {
 		return one;
-	} 
+	}
 
 	public BoardPiece getTwo() {
 		return two;
@@ -57,5 +64,9 @@ public class Pair {
 
 	public String getDir() {
 		return dir;
+	}
+
+	public Player getPlayer() {
+		return player;
 	}
 }

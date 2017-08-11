@@ -77,7 +77,7 @@ public class SwordAndShieldTests {
 		BoardPiece testPiece = (BoardPiece)game.getBoard().getBoard()[2][2];
 		BoardPiece newPiece = new BoardPiece("K", 1, 1, 2, 0, "green");
 		assertTrue(testPiece.equals(newPiece));
-	}
+	} 
 	
 	//Test undo
 	@Test
@@ -140,7 +140,7 @@ public class SwordAndShieldTests {
 		d = game.getBoard().findToken("d");
 		assertTrue(t == null);
 		assertTrue(d == null);
-	}
+	} 
 	
 
 

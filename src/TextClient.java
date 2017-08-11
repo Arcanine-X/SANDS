@@ -22,61 +22,80 @@ public class TextClient {
 	}
 
 	public static void playerOptions(Player player) {
-        while (true) {
-            System.out.println("Stack size is " + game.getBoard().getUndoStack().size());
-            try {
-                if (board.checkForReaction()) {
-                    fight(player);
-                }
-                String options = "";
-                if(game.getBoard().getUndoStack().size() == 1){
-                    game.setFirstCreation(true);
-                     options = inputString("[create <letter> <0/90/180/270>  / pass");
-                     if(options.startsWith("create")){
-                         game.createToken(player, options);
-                     }else if(options.startsWith("pass")){
-                         game.setFirstCreation(false);
-                         game.success();
-                     }else{
-                         System.out.println("invalid option");
-                     }
-                }
-            	if (board.checkForReaction()) {
-                    fight(player);
-                }
-                System.out.println("Stack size is " + game.getBoard().getUndoStack().size());
-                options = "";
-                if(game.getBoard().getUndoStack().size()>1){
-                     options = inputString("[rotate <letter> <0/90/180/270> / move <letter> <up/right/down/left> / pass");
-                     if (options.startsWith("rotate")) {
-                        game.rotateToken(player, options);
-                    } else if (options.startsWith("move")) {
-                        game.moveToken(player, options);
-                    } else if (options.startsWith("pass")) {
-                        System.out.println("Next persons turn");
-                        game.reset(player, board);
-                        return;
-                    } else if (options.startsWith("undo")) {
-                        System.out.println("in undo");
-                        game.undo(player);
-                    } else {
-                            System.out.println("Invalid option....");
-                    }
-                }
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-        }
-    }
+		while (true) {
+			System.out.println("Stack size is " + game.getBoard().getUndoStack().size());
+			try {
+				if (game.isGameEnd()) {
+					return;
+				}
+				if (board.checkForReaction()) {
+					fight(player);
+				}
+				String options = "";
+				if (game.getBoard().getUndoStack().size() == 1) {
+					game.setFirstCreation(true);
+					options = inputString("[create <letter> <0/90/180/270>  / pass");
+					if (options.startsWith("create")) {
+						game.createToken(player, options);
+					} else if (options.startsWith("pass")) {
+						game.setFirstCreation(false);
+						game.success();
+					} else {
+						System.out.println("invalid option");
+					}
+				}
+				if (game.isGameEnd()) {
+					return;
+				}
+				if (board.checkForReaction()) {
+					fight(player);
+				}
+				if (game.isGameEnd()) {
+					return;
+				}
+				System.out.println("Stack size is " + game.getBoard().getUndoStack().size());
+				options = "";
+				if (game.getBoard().getUndoStack().size() > 1) {
+					options = inputString(
+							"[rotate <letter> <0/90/180/270> / move <letter> <up/right/down/left> / pass");
+					if (options.startsWith("rotate")) {
+						game.rotateToken(player, options);
+					} else if (options.startsWith("move")) {
+						game.moveToken(player, options);
+					} else if (options.startsWith("pass")) {
+						System.out.println("Next persons turn");
+						game.reset(player, board);
+						return;
+					} else if (options.startsWith("undo")) {
+						System.out.println("in undo");
+						game.undo(player);
+					} else {
+						System.out.println("Invalid option....");
+					}
+				}
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+		}
+	}
 
 	private static void fight(Player player) {
 		while (!board.getReactions().isEmpty()) {
+			if (game.isGameEnd()) {
+				System.out.println("in here");
+				return;
+			}
 			board.redraw();
 			try {
 				System.out.println("Here are the possiable reactions:");
 				for (Pair p : board.getReactions()) {
-					System.out.println(
-							"There is a reaction between " + p.getOne().getName() + " and " + p.getTwo().getName());
+					if (p.getPlayer() != null) {
+						System.out.println("There is a reaction between " + p.getOne().getName() + " and "
+								+ p.getPlayer().getName());
+					} else {
+						System.out.println(
+								"There is a reaction between " + p.getOne().getName() + " and " + p.getTwo().getName());
+					}
 				}
 				String options = "";
 				if (board.getReactions().size() > 1) {
@@ -92,12 +111,36 @@ public class TextClient {
 						}
 						String a = tokens[0], b = tokens[1];
 						Pair pair = null;
-						for (Pair p : board.getReactions()) {
-							if ((p.getOne().getName().equals(a) && p.getTwo().getName().equals(b))
-									|| (p.getOne().getName().equals(b) && p.getTwo().getName().equals(a))) {
-								System.out.println("Found pair");
-								pair = p;
-								break;
+						System.out.println("a is : " + a + " b is : " + b);
+						if (a.length() > 1 || b.length() > 1) {
+							System.out.println("in length > 1");
+							for (Pair p : board.getReactions()) {
+								if (p.getPlayer() != null) {
+									System.out.println(p.getPlayer().getName());
+									// TODO - implement other way round
+									if (p.getPlayer().getName().equals(b) && p.getOne().getName().equals(a)) {
+										System.out.println("init 2");
+										pair = p;
+										break;
+									}
+								} else {
+									System.out.println("oka");
+								}
+
+								/*
+								 * if((p.getPlayer().getName().equals(a) && p.getOne().getName().equals(b)) ||
+								 * (p.getPlayer().getName().equals(b) && p.getOne().getName().equals(a))) {
+								 * System.out.println("Found player reaction pair"); pair = p; break; }
+								 */
+							}
+						} else {
+							for (Pair p : board.getReactions()) {
+								if ((p.getOne().getName().equals(a) && p.getTwo().getName().equals(b))
+										|| (p.getOne().getName().equals(b) && p.getTwo().getName().equals(a))) {
+									System.out.println("Found pair");
+									pair = p;
+									break;
+								}
 							}
 						}
 						if (pair == null) {
@@ -114,6 +157,7 @@ public class TextClient {
 						}
 					}
 				} else {
+					System.out.println("in here i supppose");
 					options = inputString("Would you like to continue with the reaction? Yes/Undo");
 					if (options.startsWith("undo")) {
 						// then undo
@@ -145,20 +189,26 @@ public class TextClient {
 		board = game.getBoard();
 		int turn = 0;
 		System.out.println("~*~*~ Sword & Shield ~*~*~");
-		while (true) {// loop forever
+		while (!game.isGameEnd()) {// loop forever
 			System.out.println("\n********************");
 			System.out.println("***** TURN " + turn + " *******");
 			System.out.println("********************\n");
 			if (turn % 2 == 0) {
 				System.out.println("It is yellows turn!");
-					playerOptions(yellow);
+				playerOptions(yellow);
 				board.redraw();
 			} else {
 				System.out.println("It is greens turn!");
-					playerOptions(green);
+				playerOptions(green);
 				board.redraw();
 			}
 			turn++;
 		}
+		board.setGameEnded(true);
+		String winner = board.getBoard()[1][1] ==null ? "Yellow" : "Green";
+		System.out.println("The winner is " + winner + "!");
+		System.out.println("Thats for playing");
+		System.out.println("=========================================================================\n\n\n\n");
+
 	}
 }

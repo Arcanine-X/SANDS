@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class SwordAndShieldGame {
@@ -13,6 +14,7 @@ public class SwordAndShieldGame {
 	private Set<String> movement = new HashSet<String>(Arrays.asList("up", "down", "left", "right"));
 	private Set<Integer> rotations = new HashSet<Integer>(Arrays.asList(0, 90, 180, 270));
 	private boolean firstCreation = true;
+	private boolean gameEnd = false;
 
 
 	public SwordAndShieldGame() {
@@ -220,6 +222,9 @@ public class SwordAndShieldGame {
 
 
 	public void reactionCompleted(Player player, Pair p) {
+		if(gameEnd == true) {
+			return;
+		}
 		board.redraw();
 		System.out.println(p.toString());
 		board.getReactions().remove(p);
@@ -295,29 +300,46 @@ public class SwordAndShieldGame {
 		System.out.println("Horizontal Reaction");
 		BoardPiece one = p.getOne();
 		BoardPiece two = p.getTwo();
-		if (one.getEast() == 1 && two.getWest() == 1) { // sword - sword
-			board.killToken(one.getName());
-			board.killToken(two.getName());
-			System.out.println("1 " + one.getName() + " and " + two.getName() + " died, due to Sword vs Sword. ");
-			reactionCompleted(player,p);
-		} else if (one.getEast() == 1 && two.getWest() == 0) { // sword - nothing
-			board.killToken(two.getName());
-			System.out.println("2 " + two.getName() + " died, due to " + one.getName() + "'s Sword, vs Nothing. ");
-			reactionCompleted(player,p);
-		} else if (one.getEast() == 1 && two.getWest() == 2) { // sword - shield
-			board.tryPushLeft(two.getName());
-			System.out.println("3 " + one.getName() + " got pushed back from " + two.getName() + "'s shield");
-			reactionCompleted(player,p);
-		} else if (one.getEast() == 0 && two.getWest() == 1) { // nothing - sword
-			board.killToken(one.getName());
-			System.out.println("4 " + one.getName() + " died from " + two.getWest() + "'s sword");
-			reactionCompleted(player,p);
-		} else if (one.getEast() == 2 && two.getWest() == 1) { // shield - sword
-			board.tryPushRight(one.getName());
-			System.out.println("5 " + two.getName() + " got pushed back from " + one.getName() + "'s shield");
-			reactionCompleted(player,p);
-		} else {
-			System.out.println("Something went wrong in horizontal reactions");
+		Player play = p.getPlayer();
+		if(two!=null) {
+			if (one.getEast() == 1 && two.getWest() == 1) { // sword - sword
+				board.killToken(one.getName());
+				board.killToken(two.getName());
+				System.out.println("1 " + one.getName() + " and " + two.getName() + " died, due to Sword vs Sword. ");
+				reactionCompleted(player,p);
+			} else if (one.getEast() == 1 && two.getWest() == 0) { // sword - nothing
+				board.killToken(two.getName());
+				System.out.println("2 " + two.getName() + " died, due to " + one.getName() + "'s Sword, vs Nothing. ");
+				reactionCompleted(player,p);
+			} else if (one.getEast() == 1 && two.getWest() == 2) { // sword - shield
+				board.tryPushLeft(two.getName());
+				System.out.println("3 " + one.getName() + " got pushed back from " + two.getName() + "'s shield");
+				reactionCompleted(player,p);
+			} else if (one.getEast() == 0 && two.getWest() == 1) { // nothing - sword
+				board.killToken(one.getName());
+				System.out.println("4 " + one.getName() + " died from " + two.getWest() + "'s sword");
+				reactionCompleted(player,p);
+			} else if (one.getEast() == 2 && two.getWest() == 1) { // shield - sword
+				board.tryPushRight(one.getName());
+				System.out.println("5 " + two.getName() + " got pushed back from " + one.getName() + "'s shield");
+				reactionCompleted(player,p);
+			} else {
+				System.out.println("Something went wrong in horizontal reactions");
+			}
+		}else {
+			if(one.getEast() == 1 && play!=null && play.getName().equals("yellow")) {
+				System.out.println("winner green");
+				gameEnd = true;
+				board.killPlayer("yellow");
+				reactionCompleted(player, p);
+			}else if(one.getWest() == 1 && play!=null && play.getName().equals("green")){
+				System.out.println("winner yello");
+				gameEnd = true;
+				board.killPlayer("green");
+				reactionCompleted(player, p);
+			}else {
+				System.out.println("Something went wrong in horizontal reactions");
+			}
 		}
 	}
 
@@ -327,29 +349,53 @@ public class SwordAndShieldGame {
 		System.out.println("Vertical Reaction");
 		BoardPiece one = p.getOne();
 		BoardPiece two = p.getTwo();
-		if (one.getSouth() == 1 && two.getNorth() == 1) { // sword - sword
-			board.killToken(one.getName());
-			board.killToken(two.getName());
-			System.out.println("1 " + one.getName() + " and " + two.getName() + " died, due to Sword vs Sword. ");
-			reactionCompleted(player, p);
-		} else if (one.getSouth() == 1 && two.getNorth() == 2) { // sword - shield
-			board.tryPushUp(two.getName());
-			System.out.println("2 " + one.getName() + " got pushed back from " + two.getName() + "'s shield");
-			reactionCompleted(player, p);
-		} else if (one.getSouth() == 1 && two.getNorth() == 0) { // sword - nothing
-			board.killToken(two.getName());
-			System.out.println("3 " + two.getName() + " died, due to " + one.getName() + "'s Sword, vs Nothing. ");
-			reactionCompleted(player, p);
-		} else if (one.getSouth() == 0 && two.getNorth() == 1) { // nothing - sword
-			board.killToken(one.getName());
-			System.out.println("4 " + one.getName() + " died, due to Nothing vs Sword. ");
-			reactionCompleted(player, p);
-		} else if (one.getSouth() == 2 && two.getNorth() == 1) { // shield - sword
-			board.tryPushDown(one.getName());
-			System.out.println("5 " + two.getName() + " got pushed back from " + one.getName() + "'s shield");
-			reactionCompleted(player, p);
-		} else {
-			System.out.println("Something went wrong in vertical reactions");
+		//Optional<BoardPiece> two = Optional.ofNullable(p.getTwo());
+		Player play = p.getPlayer();
+		System.out.println("testtttttt"); 
+		if(two!=null) {
+			if (one.getSouth() == 1 && two.getNorth() == 1) { // sword - sword
+				board.killToken(one.getName());
+				board.killToken(two.getName());
+				System.out.println("1 " + one.getName() + " and " + two.getName() + " died, due to Sword vs Sword. ");
+				reactionCompleted(player, p);
+			} else if (one.getSouth() == 1 && two.getNorth() == 2) { // sword - shield
+				board.tryPushUp(two.getName());
+				System.out.println("2 " + one.getName() + " got pushed back from " + two.getName() + "'s shield");
+				reactionCompleted(player, p);
+			} else if (one.getSouth() == 1 && two.getNorth() == 0) { // sword - nothing
+				board.killToken(two.getName());
+				System.out.println("3 " + two.getName() + " died, due to " + one.getName() + "'s Sword, vs Nothing. ");
+				reactionCompleted(player, p);
+			} else if (one.getSouth() == 0 && two.getNorth() == 1) { // nothing - sword
+				board.killToken(one.getName());
+				System.out.println("4 " + one.getName() + " died, due to Nothing vs Sword. ");
+				reactionCompleted(player, p);
+			} else if (one.getSouth() == 2 && two.getNorth() == 1) { // shield - sword
+				board.tryPushDown(one.getName());
+				System.out.println("5 " + two.getName() + " got pushed back from " + one.getName() + "'s shield");
+				reactionCompleted(player, p);
+			} else if(one.getSouth()==1) {
+				System.out.println("in first layer");
+				if(play.getName()!=null) {
+					System.out.println("second layer");
+				}
+			}else {
+				System.out.println("Something went wrong in vertical reactions");
+			}
+		}else {
+			if(one.getSouth()==1 && play!=null && play.getName().equals("yellow")) { // sword - player south
+				System.out.println("winner green");
+				board.killPlayer("yellow");
+				gameEnd = true;
+				reactionCompleted(player, p);
+			}else if(one.getNorth() == 1 && play!=null && play.getName().equals("green")){
+				System.out.println("winner yellow");
+				board.killPlayer("green");
+				gameEnd = true;
+				reactionCompleted(player, p);
+			}else {
+				System.out.println("Something went wrong in vertical reactions");
+			}
 		}
 	}
 
@@ -371,4 +417,10 @@ public class SwordAndShieldGame {
 	public void setFirstCreation(boolean firstCreation) {
 		this.firstCreation = firstCreation;
 	}
+
+	public boolean isGameEnd() {
+		return gameEnd;
+	}
+
+
 }

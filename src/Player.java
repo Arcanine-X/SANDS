@@ -49,13 +49,13 @@ public class Player extends Token {
 
 	public boolean Hax(Player player, Board board) {
 		BoardPiece one = find(player, "c");
-		BoardPiece two = find(player, "h");
-		BoardPiece three = find(player, "u");
-		BoardPiece four = find(player, "r");
-		board.getBoard()[7][7] = one;
-		board.getBoard()[9][7] = two;
-		board.getBoard()[8][7] = three;
-		board.getBoard()[7][8] = four;
+		//BoardPiece two = find(player, "h");
+		//BoardPiece three = find(player, "u");
+		//BoardPiece four = find(player, "t");
+		board.getBoard()[6][7] = one;
+		//board.getBoard()[9][7] = two;
+	    //board.getBoard()[8][7] = three;
+		//board.getBoard()[7][8] = four;
 		System.out.println("token added");
 		return true;
 
@@ -318,7 +318,7 @@ public class Player extends Token {
 	public int getSetterCount() {
 		System.out.println("Setter Count is : " + setterCount);
 		return setterCount;
-	}
+	} 
 
 	public String getName() {
 		return name;
