@@ -409,6 +409,8 @@ public class SwordAndShieldGame {
 		}
 	}
 
+
+
 	public Player getGreen() {
 		return green;
 	}

@@ -3,28 +3,49 @@ import java.util.List;
 import java.util.Stack;
 
 public class Board {
-	private Token[][] board = new Token[10][10];
-	private Stack<Token[][]> undoStack = new Stack<Token[][]>();
+	private Player green;
+	private Player yellow;
+	private boolean gameEnded = false;
+	private Token[][] board = new Token[10][10]; // Main board that is drawn in the console and contains tokens
+	private Stack<Token[][]> undoStack = new Stack<Token[][]>(); // Stack that is used for the undo command
 	private List<Pair> reactions = new ArrayList<Pair>();
 	private static final String SEPARATOR = "     "; // Separator between token and board, and board and token
 	private static final String TLINE = "-------------------------"; // Token board line
 	private static final String BLINE = "-------------------------------------------------------------"; // Board line
 	private static final String EDGESEPARATOR = "                              "; // Distance between edge and board
-	private static final String INVALID_SQUARE = "|\u2591\u2591\u2591\u2591\u2591";
-	private Player green;
-	private Player yellow;
-	private boolean gameEnded = false;
+	private static final String INVALID_SQUARE = "|\u2591\u2591\u2591\u2591\u2591"; // The three grayed out areas behind each player
+	private static final String GRAVEYARD_GAP = "                         "; // Gap between the two grave yards
+	private static final String DOUBLE_SEPARATOR = "          "; // Width of two squares of the board
 
-	public void setGreen(Player green) {
-		this.green = green;
+	public Board() {
+
+	}
+	// Initialize board to nulls
+	public void initialise() {
+		for (int r = 0; r < board.length; r++) {
+			for (int c = 0; c < board.length; c++) {
+				board[r][c] = null;
+			}
+		}
 	}
 
-	public void setYellow(Player yellow) {
-		this.yellow = yellow;
+	public void addPlayers(Player green, Player yellow) {
+		board[1][1] = green;
+		board[8][8] = yellow;
+	}
+
+	public void addInvalidSquares() {
+		board[0][0] = new InvalidSquare();
+		board[0][1] = new InvalidSquare();
+		board[1][0] = new InvalidSquare();
+		board[8][9] = new InvalidSquare();
+		board[9][8] = new InvalidSquare();
+		board[9][9] = new InvalidSquare();
 	}
 
 	public boolean checkForReaction() {
 		reactions.clear();
+		//Checks for horizontal reactions between two board pieces (if a sword is involved)
 		for (int r = 0; r < board.length; r++) {
 			for (int c = 0; c < board[0].length - 1; c++) {
 				if (board[r][c] instanceof BoardPiece && board[r][c + 1] instanceof BoardPiece) {
@@ -36,7 +57,7 @@ public class Board {
 				}
 			}
 		}
-
+		//Checks for vertical reactions between two board pieces (if a sword is involved)
 		for (int r = 0; r < board.length - 1; r++) {
 			for (int c = 0; c < board[0].length; c++) {
 				if (board[r][c] instanceof BoardPiece && board[r + 1][c] instanceof BoardPiece) {
@@ -48,58 +69,50 @@ public class Board {
 				}
 			}
 		}
-		//////// ########## Reaction with green player #############////////////////
+		//Checks for horizontal reaction between the green player and a board piece (if a sword is involved)
 		if (board[1][1] instanceof Player && board[1][2] instanceof BoardPiece) {
 			BoardPiece temp1 = (BoardPiece) board[1][2];
 			Player temp2 = (Player) board[1][1];
 			if (temp1.getWest() == 1) {
-				// reaction with player
 				reactions.add(new Pair(temp1, temp2, "hori"));
-
 			}
 		}
-
+		//Checks for a vertical reaction between a green player and a board piece (if a sword is involved)
 		if (board[1][1] instanceof Player && board[2][1] instanceof BoardPiece) {
 			BoardPiece temp1 = (BoardPiece) board[2][1];
 			Player temp2 = (Player) board[1][1];
-
 			if (temp1.getNorth() == 1) {
-				// reaction with player
 				reactions.add(new Pair(temp1, temp2, "vert"));
 
 			}
 		}
-
-		////////// Reaction with yellow player #################/////////////////
+		//Checks for a vertical reaction between a yellow player and a board piece (if a sword is involved)
 		if (board[8][8] instanceof Player && board[7][8] instanceof BoardPiece) {
 			BoardPiece temp1 = (BoardPiece) board[7][8];
 			Player temp2 = (Player) board[8][8];
 			if (temp1.getSouth() == 1) {
-				// reaction with player
 				reactions.add(new Pair(temp1, temp2, "vert"));
-
 			}
 		}
-
+		//Checks for a horizontal reaction between a yellow player and a board piece (if a sword is involved)
 		if (board[8][8] instanceof Player && board[8][7] instanceof BoardPiece) {
 			BoardPiece temp1 = (BoardPiece) board[8][7];
 			Player temp2 = (Player) board[8][8];
 			if (temp1.getEast() == 1) {
-				// reaction with player
 				reactions.add(new Pair(temp1, temp2, "hori"));
-
 			}
 		}
 		return reactions.isEmpty() ? false : true;
 	}
 
+	// Gets the column index of the specified token letter
 	public int getX(String letter) {
 		for (int r = 0; r < board.length; r++) {
 			for (int c = 0; c < board[0].length; c++) {
 				if (board[r][c] instanceof BoardPiece) {
 					BoardPiece temp = (BoardPiece) board[r][c];
 					if (temp.getName().equals(letter)) {
-						return c; // c is x
+						return c;
 					}
 				}
 			}
@@ -107,6 +120,7 @@ public class Board {
 		return -1;
 	}
 
+	// Gets the row index for the specified token letter
 	public int getY(String letter) {
 		for (int r = 0; r < board.length; r++) {
 			for (int c = 0; c < board[0].length; c++) {
@@ -121,8 +135,7 @@ public class Board {
 		return -1;
 	}
 
-	public Board() {
-	}
+
 
 	public void drawTopRowBoard(int r) {
 		for (int c = 0; c < board[0].length; c++) {
@@ -157,7 +170,6 @@ public class Board {
 		for (int i = 0; i < 10; i++) {
 			if (board[r][i] instanceof Player) {
 				System.out.print(r == 1 && i == 1 ? "|green" : "|yelow");
-				//if (!gameEnded) {System.out.print(r == 1 && i == 1 ? "|green" : "|yelow");} // Draw Player
 			} else if (board[r][i] instanceof BoardPiece) { // Logic for drawing the tokens in the array
 				BoardPiece temp = (BoardPiece) board[r][i];
 				System.out.print(getWest(temp) + temp.getName() + getEast(temp));
@@ -195,15 +207,6 @@ public class Board {
 		}
 	}
 
-	public void drawLastRowTokens(Player player, int r) {
-		for (int i = 0; i < player.getTokens()[0].length; i++) {
-			if (player.getTokens()[r][i] != null) {
-				System.out.print(getSouth(player.getTokens()[r][i])); // Deal with South
-			} else {
-				System.out.print("|     ");
-			}
-		}
-	}
 
 	public void drawLastRowBoard(int r) {
 		for (int i = 0; i < 10; i++) {
@@ -224,8 +227,17 @@ public class Board {
 		}
 	}
 
+	public void drawLastRowTokens(Player player, int r) {
+		for (int i = 0; i < player.getTokens()[0].length; i++) {
+			if (player.getTokens()[r][i] != null) {
+				System.out.print(getSouth(player.getTokens()[r][i])); // Deal with South
+			} else {
+				System.out.print("|     ");
+			}
+		}
+	}
+
 	public void redraw() {
-		System.out.println("Game ended is " + gameEnded);
 		if (gameEnded == false) {
 			addPlayers(green, yellow);
 		}
@@ -263,7 +275,6 @@ public class Board {
 			System.out.println("");
 
 			// ~~~~~~~ LAST ROW ~~~~~~~~~~~~~
-
 			if (r < green.getTokens().length) {
 				drawLastRowTokens(green, r);
 				System.out.print("|" + SEPARATOR);
@@ -284,6 +295,7 @@ public class Board {
 				System.out.println();
 			}
 		}
+		// Update grave yards and draw them
 		green.diffs.clear();
 		yellow.diffs.clear();
 		green.updateGraveyard(board);
@@ -308,8 +320,8 @@ public class Board {
 
 	public void drawGraveYard() {
 		System.out.println();
-		System.out.println(SEPARATOR + SEPARATOR + "   ~~~Green GraveYard~~~" + EDGESEPARATOR + SEPARATOR
-				+ "                   ~~~Yellow GraveYard~~~");
+		System.out.println(DOUBLE_SEPARATOR + SEPARATOR + "~~Green GraveYard~~ "
+		+ DOUBLE_SEPARATOR + GRAVEYARD_GAP + DOUBLE_SEPARATOR+ DOUBLE_SEPARATOR + "~~Yellow GraveYard~~ ");
 		System.out.print("-------------------------------------------------");
 		System.out.print(SEPARATOR + SEPARATOR + SEPARATOR + SEPARATOR + SEPARATOR);
 		System.out.println("-------------------------------------------------");
@@ -322,7 +334,6 @@ public class Board {
 					System.out.print("|     ");
 				}
 			}
-
 			System.out.print("|" + SEPARATOR + SEPARATOR + SEPARATOR + SEPARATOR + SEPARATOR);
 			// Top row yellow
 			for (int c = 0; c < 8; c++) {
@@ -332,9 +343,7 @@ public class Board {
 					System.out.print("|     ");
 				}
 			}
-
 			System.out.println("|");
-
 			// Middle Row green
 			for (int i = 0; i < 8; i++) {
 				if (green.getGraveYard()[r][i] != null) { // Logic for drawing the tokens in the array
@@ -344,11 +353,8 @@ public class Board {
 					System.out.print("|     ");
 				}
 			}
-
 			System.out.print("|" + SEPARATOR + SEPARATOR + SEPARATOR + SEPARATOR + SEPARATOR);
-
 			// Middle Row yellow
-
 			for (int i = 0; i < 8; i++) {
 				if (yellow.getGraveYard()[r][i] != null) { // Logic for drawing the tokens in the array
 					System.out.print(getWest(yellow.getGraveYard()[r][i]) + yellow.getGraveYard()[r][i].getName()
@@ -357,9 +363,7 @@ public class Board {
 					System.out.print("|     ");
 				}
 			}
-
 			System.out.println("|");
-
 			// Last row yellow
 			for (int i = 0; i < 8; i++) {
 				if (green.getGraveYard()[r][i] != null) {
@@ -368,7 +372,6 @@ public class Board {
 					System.out.print("|     ");
 				}
 			}
-
 			System.out.print("|" + SEPARATOR + SEPARATOR + SEPARATOR + SEPARATOR + SEPARATOR);
 
 			for (int i = 0; i < 8; i++) {
@@ -431,25 +434,6 @@ public class Board {
 		System.out.println("Done loading");
 	}
 
-	public BoardPiece findMoveToken(Player player, String letter) {
-		System.out.println("in findmoveToken");
-		BoardPiece returnToken = null;
-		for (int r = 0; r < board.length; r++) {
-			for (int c = 0; c < board[0].length; c++) {
-				if (board[r][c] instanceof BoardPiece) {
-					System.out.println("getting closer");
-					BoardPiece temp = (BoardPiece) board[r][c];
-					if (temp.getCol().equals(player.getName()) && temp.getName().equals(letter)) {
-						returnToken = temp;
-						System.out.println("Always a good sign");
-						return returnToken;
-					}
-				}
-			}
-		}
-		System.out.println("error returning null");
-		return null;
-	}
 
 	public void killToken(String letter) {
 		System.out.println("in findmoveToken");
@@ -472,20 +456,33 @@ public class Board {
 			gameEnded = true;
 			board[1][1] = null;
 		} else if (player.equals("yellow")) {
-			System.out.println("done");
-			System.out.println("yello shud be nullz");
 			board[8][8] = null;
 			gameEnded = true;
 			redraw();
 		} else {
 			System.out.println("Something went wrong");
 		}
-		if(board[8][8] == null) {
-			System.out.println("work pls");
+	}
+
+
+	public BoardPiece findMoveToken(Player player, String letter) {
+		System.out.println("in findmoveToken");
+		BoardPiece returnToken = null;
+		for (int r = 0; r < board.length; r++) {
+			for (int c = 0; c < board[0].length; c++) {
+				if (board[r][c] instanceof BoardPiece) {
+					System.out.println("getting closer");
+					BoardPiece temp = (BoardPiece) board[r][c];
+					if (temp.getCol().equals(player.getName()) && temp.getName().equals(letter)) {
+						returnToken = temp;
+						System.out.println("Always a good sign");
+						return returnToken;
+					}
+				}
+			}
 		}
-		else {
-			System.out.println("Board 8 8 is " + (Player)board[8][8]);
-		}
+		System.out.println("error returning null");
+		return null;
 	}
 
 	public BoardPiece findToken(String letter) {
@@ -609,28 +606,7 @@ public class Board {
 		}
 	}
 
-	public void addPlayers(Player green, Player yellow) {
-		board[1][1] = green;
-		board[8][8] = yellow;
-	}
 
-	public void addInvalidSquares() {
-		board[0][0] = new InvalidSquare();
-		board[0][1] = new InvalidSquare();
-		board[1][0] = new InvalidSquare();
-		board[8][9] = new InvalidSquare();
-		board[9][8] = new InvalidSquare();
-		board[9][9] = new InvalidSquare();
-	}
-
-	public void initialise() {
-		// Initialize board to nulls
-		for (int r = 0; r < board.length; r++) {
-			for (int c = 0; c < board.length; c++) {
-				board[r][c] = null;
-			}
-		}
-	}
 
 	public List<Pair> getReactions() {
 		return reactions;
@@ -646,6 +622,14 @@ public class Board {
 
 	public void setGameEnded(boolean gameEnded) {
 		this.gameEnded = gameEnded;
+	}
+
+	public void setGreen(Player green) {
+		this.green = green;
+	}
+
+	public void setYellow(Player yellow) {
+		this.yellow = yellow;
 	}
 
 }

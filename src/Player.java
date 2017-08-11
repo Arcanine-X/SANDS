@@ -237,6 +237,8 @@ public class Player extends Token {
 		}
 	}
 
+
+
 	public void createRecord() {
 		BoardPiece[][] record = new BoardPiece[6][4];
 		for (int r = 0; r < record.length; r++) {
@@ -320,7 +322,7 @@ public class Player extends Token {
 	public int getSetterCount() {
 		System.out.println("Setter Count is : " + setterCount);
 		return setterCount;
-	} 
+	}
 
 	public String getName() {
 		return name;
