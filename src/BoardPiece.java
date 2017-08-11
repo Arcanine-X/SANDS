@@ -29,39 +29,51 @@ public class BoardPiece extends Token {
 		return " " + n + " \n" + w + name + e + "\n" + " " + s + " \n";
 	}
 
-
-	public boolean equals(Object o) {
-		if(o==null || !this.getClass().equals(o.getClass())) {
-			return false;
-		}
-		if(o instanceof BoardPiece) {
-			BoardPiece bp = (BoardPiece)o;
-			if(!((BoardPiece) bp).name.equals(this.name)) {
-				return false;
-			}
-			if(((BoardPiece) bp).north!=this.north) {
-				return false;
-			}
-			if(((BoardPiece) bp).east!=this.east) {
-				return false;
-			}
-			if(((BoardPiece) bp).south!=this.south) {
-				return false;
-			}
-			if(((BoardPiece) bp).west!=this.west) {
-				return false;
-			}
-			if(!((BoardPiece) bp).col.equals(this.col)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-
-
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((col == null) ? 0 : col.hashCode());
+		result = prime * result + east;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + north;
+		result = prime * result + south;
+		result = prime * result + west;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		BoardPiece other = (BoardPiece) obj;
+		if (col == null) {
+			if (other.col != null)
+				return false;
+		} else if (!col.equals(other.col))
+			return false;
+		if (east != other.east)
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (north != other.north)
+			return false;
+		if (south != other.south)
+			return false;
+		if (west != other.west)
+			return false;
+		return true;
 	}
 
 	public String getCol() {
