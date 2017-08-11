@@ -48,14 +48,16 @@ public class Player extends Token {
 	}
 
 	public boolean Hax(Player player, Board board) {
-		BoardPiece one = find(player, "c");
-		//BoardPiece two = find(player, "h");
-		//BoardPiece three = find(player, "u");
-		//BoardPiece four = find(player, "t");
-		board.getBoard()[6][7] = one;
-		//board.getBoard()[9][7] = two;
-	    //board.getBoard()[8][7] = three;
-		//board.getBoard()[7][8] = four;
+		BoardPiece one = find(player, "e");
+		BoardPiece two = find(player, "s");
+		BoardPiece three = find(player, "c");
+		BoardPiece four = find(player, "x");
+		BoardPiece five = find(player, "i");
+		board.getBoard()[3][9] = one;
+		board.getBoard()[4][9] = two;
+	    board.getBoard()[5][9] = three;
+		board.getBoard()[6][9] = four;
+		board.getBoard()[7][9] = five;
 		System.out.println("token added");
 		return true;
 

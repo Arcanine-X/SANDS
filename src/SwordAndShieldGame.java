@@ -93,8 +93,11 @@ public class SwordAndShieldGame {
 		}
 		String letter = tokens[1];
 		String direction = tokens[2];
-
+		if(player.getName().equals("green")){
+			letter = letter.toUpperCase();
+		}
 		BoardPiece tokenToMove = board.findMoveToken(player, letter);
+
 		if (tokenToMove == null) {
 			System.out.println("Your token to move doesn't exist");
 			return;
@@ -104,6 +107,7 @@ public class SwordAndShieldGame {
 			System.out.println("Input error in moveToken");
 			return;
 		}
+
 		if (checkIfAllowedToMove(player, letter) == false) {
 			return;
 		}
@@ -128,6 +132,9 @@ public class SwordAndShieldGame {
 			System.out.println("Rotation input error");
 		}
 		String letter = tokens[1];
+		if(player.getName().equals("green")){
+			letter = letter.toUpperCase();
+		}
 		int rotation = Integer.parseInt(tokens[2]);
 		if (!rotations.contains(rotation) || letter.length() != 1) {
 			System.out.println("Input error in rotation");
@@ -175,6 +182,9 @@ public class SwordAndShieldGame {
 		if (!rotations.contains(rotation) || letter.length() != 1) {
 			System.out.println("Input error in create token");
 			return;
+		}
+		if(player.getName().equals("green")){
+			letter = letter.toUpperCase();
 		}
 		if (player.addToken(letter, player, board) == false) {
 			System.out.println("Something went wrong in create token");
@@ -351,7 +361,7 @@ public class SwordAndShieldGame {
 		BoardPiece two = p.getTwo();
 		//Optional<BoardPiece> two = Optional.ofNullable(p.getTwo());
 		Player play = p.getPlayer();
-		System.out.println("testtttttt"); 
+		System.out.println("testtttttt");
 		if(two!=null) {
 			if (one.getSouth() == 1 && two.getNorth() == 1) { // sword - sword
 				board.killToken(one.getName());

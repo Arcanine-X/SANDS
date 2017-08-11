@@ -111,27 +111,19 @@ public class TextClient {
 						}
 						String a = tokens[0], b = tokens[1];
 						Pair pair = null;
-						System.out.println("a is : " + a + " b is : " + b);
 						if (a.length() > 1 || b.length() > 1) {
-							System.out.println("in length > 1");
 							for (Pair p : board.getReactions()) {
 								if (p.getPlayer() != null) {
 									System.out.println(p.getPlayer().getName());
 									// TODO - implement other way round
-									if (p.getPlayer().getName().equals(b) && p.getOne().getName().equals(a)) {
-										System.out.println("init 2");
+									if ((p.getPlayer().getName().equals(b) && p.getOne().getName().equals(a)) ||(
+											p.getPlayer().getName().equals(a) && p.getOne().getName().equals(b))){
 										pair = p;
 										break;
 									}
 								} else {
 									System.out.println("oka");
 								}
-
-								/*
-								 * if((p.getPlayer().getName().equals(a) && p.getOne().getName().equals(b)) ||
-								 * (p.getPlayer().getName().equals(b) && p.getOne().getName().equals(a))) {
-								 * System.out.println("Found player reaction pair"); pair = p; break; }
-								 */
 							}
 						} else {
 							for (Pair p : board.getReactions()) {
@@ -159,10 +151,12 @@ public class TextClient {
 				} else {
 					System.out.println("in here i supppose");
 					options = inputString("Would you like to continue with the reaction? Yes/Undo");
-					if (options.startsWith("undo")) {
+					options = options.toLowerCase();
+					options = options.trim();
+					if (options.equals("undo")) {
 						// then undo
 						game.undo(player);
-					} else if (options.startsWith("yes") || options.startsWith("y")) {
+					} else if (options.equals("yes") || options.equals("y")) {
 						// do the reaction
 						if (board.getReactions().get(0).getDir().equals("hori")) {
 							game.horizontalReaction(player, board.getReactions().get(0));
@@ -207,7 +201,7 @@ public class TextClient {
 		board.setGameEnded(true);
 		String winner = board.getBoard()[1][1] ==null ? "Yellow" : "Green";
 		System.out.println("The winner is " + winner + "!");
-		System.out.println("Thats for playing");
+		System.out.println("Thanks for playing");
 		System.out.println("=========================================================================\n\n\n\n");
 
 	}

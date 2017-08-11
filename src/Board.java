@@ -156,7 +156,8 @@ public class Board {
 	public void drawMiddleRowBoard(int r) {
 		for (int i = 0; i < 10; i++) {
 			if (board[r][i] instanceof Player) {
-				if (!gameEnded) {System.out.print(r == 1 && i == 1 ? "|green" : "|yelow");} // Draw Player
+				System.out.print(r == 1 && i == 1 ? "|green" : "|yelow");
+				//if (!gameEnded) {System.out.print(r == 1 && i == 1 ? "|green" : "|yelow");} // Draw Player
 			} else if (board[r][i] instanceof BoardPiece) { // Logic for drawing the tokens in the array
 				BoardPiece temp = (BoardPiece) board[r][i];
 				System.out.print(getWest(temp) + temp.getName() + getEast(temp));
@@ -294,14 +295,8 @@ public class Board {
 
 	public void pupulateGraveyard(Player player, List<BoardPiece> deathList) {
 		int size = deathList.size();
-
 		for (int i = size; i < 24; i++) {
 			deathList.add(null);
-		}
-		for (int i = 0; i < 24; i++) {
-			if (deathList.get(i) != null) {
-				// System.out.println("uhm,.... " + deathList.get(i).toString());
-			}
 		}
 		int i = 0;
 		for (int r = 0; r < player.getGraveYard().length; r++) {
@@ -472,7 +467,7 @@ public class Board {
 		}
 	}
 
-	public void killPlayer(String player) { 
+	public void killPlayer(String player) {
 		if (player.equals("green")) {
 			gameEnded = true;
 			board[1][1] = null;
