@@ -2,7 +2,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-
 /**
  * This class holds the main board, and deals with most of the drawing.
  * @author Chin Patel
@@ -17,15 +16,18 @@ public class Board {
 	private Stack<Token[][]> undoStack = new Stack<Token[][]>(); // Stack that is used for the undo command
 	private List<Pair> reactions = new ArrayList<Pair>();
 	private static final String SEPARATOR = "     "; // Separator between token and board, and board and token
+	private static final String DOUBLE_SEPARATOR = "          "; // Width of two squares of the board
+	private static final String SEPERATOR_X5 = "                         "; // Space of 5 separators
+	private static final String EDGESEPARATOR = "                              "; // Distance between edge and board
+	private static final String GRAVEYARD_SEPARATOR = "                         "; // Gap between the two grave yards
 	private static final String TLINE = "-------------------------"; // Token board line
 	private static final String BLINE = "-------------------------------------------------------------"; // Board line
-	private static final String EDGESEPARATOR = "                              "; // Distance between edge and board
-	private static final String INVALID_SQUARE = "|:::::"; // The three grayed out areas behind
-																					// each player
-	private static final String GRAVEYARD_GAP = "                         "; // Gap between the two grave yards
-	private static final String DOUBLE_SEPARATOR = "          "; // Width of two squares of the board
+	private static final String GLINE = "-------------------------------------------------"; //Grave yard line
+	private static final String INVALID_SQUARE = "|:::::"; // The three out of bounds areas behind each player
 
-	// Initialize board to nulls
+	/**
+	 * Initisalises the board to nulls
+	 */
 	public void initialise() {
 		for (int r = 0; r < board.length; r++) {
 			for (int c = 0; c < board.length; c++) {
@@ -34,11 +36,19 @@ public class Board {
 		}
 	}
 
+	/**
+	 * Adds the two players onto the board, in their specified locations
+	 * @param green --- green player which is being added
+	 * @param yellow --- yellow player which is being added
+	 */
 	private void addPlayers(Player green, Player yellow) {
 		board[1][1] = green;
 		board[8][8] = yellow;
 	}
 
+	/**
+	 * Adds the 6 invalid squares, 3 behind each player
+	 */
 	private void addInvalidSquares() {
 		board[0][0] = new InvalidSquare();
 		board[0][1] = new InvalidSquare();
@@ -124,7 +134,11 @@ public class Board {
 		return reactions.isEmpty() ? false : true;
 	}
 
-	// Gets the column index of the specified token letter
+	/**
+	 * Returns the column index of the specified token letter
+	 * @param letter --- letter of the token we are searching for
+	 * @return --- the column index
+	 */
 	public int getX(String letter) {
 		for (int r = 0; r < board.length; r++) {
 			for (int c = 0; c < board[0].length; c++) {
@@ -139,7 +153,11 @@ public class Board {
 		return -1;
 	}
 
-	// Gets the row index for the specified token letter
+	/**
+	 * Returns the row index of the specified token letter
+	 * @param letter --- letter of the token we are searching for
+	 * @return --- the row index
+	 */
 	public int getY(String letter) {
 		for (int r = 0; r < board.length; r++) {
 			for (int c = 0; c < board[0].length; c++) {
@@ -185,7 +203,7 @@ public class Board {
 
 	private void drawMiddleRowBoard(int r) {
 		for (int i = 0; i < 10; i++) {
-			if (board[r][i] instanceof Player) {
+			if (board[r][i] instanceof Player) { // Write the players
 				System.out.print(r == 1 && i == 1 ? "|green" : "|yelow");
 			} else if (board[r][i] instanceof BoardPiece) { // Logic for drawing the tokens in the array
 				BoardPiece temp = (BoardPiece) board[r][i];
@@ -213,7 +231,7 @@ public class Board {
 			for (int i = 0; i < player.getTokens()[0].length; i++) {
 				if (player.getTokens()[r][i] != null) { // Logic for drawing the tokens in the array
 					System.out.print(getWest(player.getTokens()[r][i]) + player.getTokens()[r][i].getName()
-							+ getEast(player.getTokens()[r][i]));
+							+ getEast(player.getTokens()[r][i])); // Deal with west, name, and east
 				} else {
 					System.out.print("|     ");
 				}
@@ -226,7 +244,7 @@ public class Board {
 
 	private void drawLastRowBoard(int r) {
 		for (int i = 0; i < 10; i++) {
-			if (board[r][i] instanceof BoardPiece) {
+			if (board[r][i] instanceof BoardPiece) { // Logic for drawing the tokens in the array
 				BoardPiece temp = (BoardPiece) board[r][i];
 				System.out.print(getSouth(temp)); // Deal with South
 			} else if ((r == 1 && i == 0)) {
@@ -322,95 +340,89 @@ public class Board {
 			}
 		}
 		// Update grave yards and draw them
-		green.differences.clear();
-		yellow.differences.clear();
+		green.getDifferences().clear();
+		yellow.getDifferences().clear();
 		green.updateGraveyard(board);
 		yellow.updateGraveyard(board);
-		populateGraveyard(green, green.differences);
-		populateGraveyard(yellow, yellow.differences);
+		populateGraveyard(green, green.getDifferences());
+		populateGraveyard(yellow, yellow.getDifferences());
 		drawGraveYard();
 	}
 
-	private void populateGraveyard(Player player, List<BoardPiece> deathList) {
-		int size = deathList.size();
+	/**
+	 * Fill up the players grave yard
+	 * @param player
+	 * @param deadTokens --- list of all dead tokens
+	 */
+	private void populateGraveyard(Player player, List<BoardPiece> deadTokens) {
+		int size = deadTokens.size();
 		for (int i = size; i < 24; i++) {
-			deathList.add(null);
+			deadTokens.add(null);
 		}
 		int i = 0;
 		for (int r = 0; r < player.getGraveYard().length; r++) {
 			for (int c = 0; c < player.getGraveYard()[0].length; c++) {
-				player.getGraveYard()[r][c] = deathList.get(i++);
+				player.getGraveYard()[r][c] = deadTokens.get(i++);
+			}
+		}
+	}
+
+	private void drawTopRowGraveYard(Player player, int r) {
+		for (int c = 0; c < player.getGraveYard()[0].length; c++) {
+			if (player.getGraveYard()[r][c] != null) {
+				System.out.print(getNorth(player.getGraveYard()[r][c])); // Deal with North
+			} else {
+				System.out.print("|     ");
+			}
+		}
+	}
+
+	private void drawMiddleRowGraveYard(Player player, int r) {
+		for (int i = 0; i < player.getGraveYard()[0].length; i++) {
+			if (player.getGraveYard()[r][i] != null) { // Logic for drawing the tokens in the array
+				System.out.print(getWest(player.getGraveYard()[r][i]) + player.getGraveYard()[r][i].getName()
+						+ getEast(player.getGraveYard()[r][i]));
+			} else {
+				System.out.print("|     ");
+			}
+		}
+	}
+
+	private void drawLastRowGraveYard(Player player, int r) {
+		for (int i = 0; i < player.getGraveYard()[0].length; i++) {
+			if (player.getGraveYard()[r][i] != null) {
+				System.out.print(getSouth(player.getGraveYard()[r][i])); // Deal with South
+			} else {
+				System.out.print("|     ");
 			}
 		}
 	}
 
 	private void drawGraveYard() {
 		System.out.println();
-		System.out.println(DOUBLE_SEPARATOR + SEPARATOR + "~~Green GraveYard~~ " + DOUBLE_SEPARATOR + GRAVEYARD_GAP
+		System.out.println(DOUBLE_SEPARATOR + SEPARATOR + "~~Green GraveYard~~ " + DOUBLE_SEPARATOR + GRAVEYARD_SEPARATOR
 				+ DOUBLE_SEPARATOR + DOUBLE_SEPARATOR + "~~Yellow GraveYard~~ ");
-		System.out.print("-------------------------------------------------");
-		System.out.print(SEPARATOR + SEPARATOR + SEPARATOR + SEPARATOR + SEPARATOR);
-		System.out.println("-------------------------------------------------");
-		for (int r = 0; r < 3; r++) {
-			for (int c = 0; c < 8; c++) {
-				// Top row green
-				if (green.getGraveYard()[r][c] != null) {
-					System.out.print(getNorth(green.getGraveYard()[r][c])); // Deal with North
-				} else {
-					System.out.print("|     ");
-				}
-			}
-			System.out.print("|" + SEPARATOR + SEPARATOR + SEPARATOR + SEPARATOR + SEPARATOR);
+		System.out.println(GLINE + SEPERATOR_X5 + GLINE);
+		for (int r = 0; r < yellow.getGraveYard().length; r++) {
+			// Top row green
+			drawTopRowGraveYard(green, r);
+			System.out.print("|" + SEPERATOR_X5);
 			// Top row yellow
-			for (int c = 0; c < 8; c++) {
-				if (yellow.getGraveYard()[r][c] != null) {
-					System.out.print(getNorth(yellow.getGraveYard()[r][c])); // Deal with North
-				} else {
-					System.out.print("|     ");
-				}
-			}
+			drawTopRowGraveYard(yellow, r);
 			System.out.println("|");
 			// Middle Row green
-			for (int i = 0; i < 8; i++) {
-				if (green.getGraveYard()[r][i] != null) { // Logic for drawing the tokens in the array
-					System.out.print(getWest(green.getGraveYard()[r][i]) + green.getGraveYard()[r][i].getName()
-							+ getEast(green.getGraveYard()[r][i]));
-				} else {
-					System.out.print("|     ");
-				}
-			}
-			System.out.print("|" + SEPARATOR + SEPARATOR + SEPARATOR + SEPARATOR + SEPARATOR);
+			drawMiddleRowGraveYard(green, r);
+			System.out.print("|" + SEPERATOR_X5);
 			// Middle Row yellow
-			for (int i = 0; i < 8; i++) {
-				if (yellow.getGraveYard()[r][i] != null) { // Logic for drawing the tokens in the array
-					System.out.print(getWest(yellow.getGraveYard()[r][i]) + yellow.getGraveYard()[r][i].getName()
-							+ getEast(yellow.getGraveYard()[r][i]));
-				} else {
-					System.out.print("|     ");
-				}
-			}
+			drawMiddleRowGraveYard(yellow, r);
 			System.out.println("|");
 			// Last row green
-			for (int i = 0; i < 8; i++) {
-				if (green.getGraveYard()[r][i] != null) {
-					System.out.print(getSouth(green.getGraveYard()[r][i])); // Deal with South
-				} else {
-					System.out.print("|     ");
-				}
-			}
-			System.out.print("|" + SEPARATOR + SEPARATOR + SEPARATOR + SEPARATOR + SEPARATOR);
+			drawLastRowGraveYard(green, r);
+			System.out.print("|" + SEPERATOR_X5);
 			// Last row yellow
-			for (int i = 0; i < 8; i++) {
-				if (yellow.getGraveYard()[r][i] != null) {
-					System.out.print(getSouth(yellow.getGraveYard()[r][i])); // Deal with South
-				} else {
-					System.out.print("|     ");
-				}
-			}
+			drawLastRowGraveYard(yellow, r);
 			System.out.println("|");
-			System.out.print("-------------------------------------------------");
-			System.out.print(SEPARATOR + SEPARATOR + SEPARATOR + SEPARATOR + SEPARATOR);
-			System.out.println("-------------------------------------------------");
+			System.out.println(GLINE + SEPERATOR_X5 + GLINE);
 		}
 	}
 
@@ -455,7 +467,7 @@ public class Board {
 	 * the user undos.
 	 */
 	public void setBoard() {
-		Token[][] original = undoStack.pop(); // Need to pop out the current identicle version in the stack
+		Token[][] original = undoStack.pop(); // Need to pop out the current identical version in the stack
 		Token[][] setter = undoStack.pop();
 		for (int r = 0; r < board.length; r++) {
 			for (int c = 0; c < board[0].length; c++) {
@@ -543,136 +555,6 @@ public class Board {
 		return null;
 	}
 
-	/**
-	 * This method is used in reactions. It takes name of the pusher, which is the token
-	 * which has the shield. It finds the number of adjacent tiles
-	 * of the tile that is being pushed. With this number it can loop through backwards, so from the
-	 * row - number of adjacent tiles, off setting each tile by - 1 row.
-	 * @param pusher --- name of the token with the shield pushing the sword token
-	 */
-	public void tryPushUp(String pusher) {
-		int c = getX(pusher);
-		int r = getY(pusher);
-		int count = 0;
-		if (r - 1 < 0) {
-			board[r][c] = null;
-		} else { // requires shifting
-			for (int i = r - 1, j = 0; i >= 0; i--, j++) {
-				if (board[i][c] instanceof BoardPiece && count == j) {
-					count++;
-				}
-			}
-			if (count != 0) {
-				for (int i = r - count; i <= r; i++) {
-					if (i - 1 < 0) {
-						board[i][c] = null;
-					} else {
-						board[i - 1][c] = board[i][c];
-					}
-				}
-				board[r - 1][c] = null;
-			}
-		}
-	}
-	/**
-	 * This method is used in reactions. It takes name of the pusher, which is the token
-	 * which has the shield. It finds the number of adjacent tiles
-	 * of the tile that is being pushed. With this number it can loop through backwards, so from the
-	 * row + number of adjacent tiles, off setting each tile by + 1 row.
-	 * @param pusher --- name of the token with the shield pushing the sword token
-	 */
-	public void tryPushDown(String pusher) {
-		int c = getX(pusher);
-		int r = getY(pusher);
-		int count = 0;
-
-		if (r + 1 > 9) {
-			board[r][c] = null;
-		} else {
-			for (int i = r + 1, j = 0; i < board.length; i++, j++) {
-				if (board[i][c] instanceof BoardPiece && count == j) {
-					count++;
-				}
-			}
-			if (count != 0) {
-				for (int i = r + count; i >= r; i--) {
-					if (i + 1 > 9) {
-						board[i][c] = null;
-					} else {
-						board[i + 1][c] = board[i][c];
-					}
-				}
-				board[r + 1][c] = null;
-			}
-		}
-	}
-	/**
-	 * This method is used in reactions. It takes name of the pusher, which is the token
-	 * which has the shield. It finds the number of adjacent tiles
-	 * of the tile that is being pushed. With this number it can loop through backwards, so from the
-	 * col + number of adjacent tiles, off setting each tile by + 1 column.
-	 * @param pusher --- name of the token with the shield pushing the sword token
-	 */
-	public void tryPushRight(String pusher) {
-		int c = getX(pusher);
-		int r = getY(pusher);
-		int count = 0;
-		if (c + 1 > 9) {
-			board[r][c] = null;
-		} else {
-			for (int i = c + 1, j = 0; i < board.length; i++, j++) {
-				if (board[r][i] instanceof BoardPiece && count == j) {
-					count++;
-				}
-			}
-			if (count != 0) {
-				for (int i = c + count; i >= c; i--) {
-					if (i + 1 > 9) {
-						board[r][i] = null;
-					} else {
-						board[r][i + 1] = board[r][i];
-					}
-				}
-				board[r][c + 1] = null;
-			}
-		}
-	}
-	/**
-	 * This method is used in reactions. It takes name of the pusher, which is the token
-	 * which has the shield. It finds the number of adjacent tiles
-	 * of the tile that is being pushed. With this number it can loop through backwards, so from the
-	 * col - number of adjacent tiles, off setting each tile by - 1 column.
-	 * @param pusher --- name of the token with the shield pushing the sword token
-	 */
-	public void tryPushLeft(String pusher) {
-		int c = getX(pusher);
-		int r = getY(pusher);
-		int count = 0;
-		// if its less then 0 than set it to null - going of the board
-		if (c - 1 < 0) {
-			board[r][c] = null;
-		} else {
-			//calculate number of adjacent tiles
-			for (int i = c - 1, j = 0; i >= 0; i--, j++) {
-				if (board[r][i] instanceof BoardPiece && count == j) {
-					count++;
-				}
-			}
-			if (count != 0) {
-				//shift everything down by 1
-				for (int i = c - count; i <= c; i++) {
-					if (i - 1 < 0) { //in this case set it to null as we are going off the board
-						board[r][i] = null;
-					} else {
-						board[r][i - 1] = board[r][i];
-					}
-				}
-				//set the position of the original tile being pushed to null as its been pushed by now
-				board[r][c - 1] = null;
-			}
-		}
-	}
-
 	public List<Pair> getReactions() {
 		return reactions;
 	}
@@ -696,5 +578,4 @@ public class Board {
 	public void setYellow(Player yellow) {
 		this.yellow = yellow;
 	}
-
 }

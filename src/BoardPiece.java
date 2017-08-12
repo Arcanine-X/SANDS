@@ -1,7 +1,11 @@
-import java.util.ArrayList;
-import java.util.List;
-
-public class BoardPiece extends Token {
+/**
+ * This class contains each BoardPiece which represents each players set of 24 tokens. Each boardPiece, has a name and color where the name is the
+ * letter of the token, and color is either green or yellow. It also contains a north, east, south and west which are all
+ * integers, and either a 0, 1 , or 2. A 0, means nothing, 1 means a sword and 2 means a shield.
+ * @author Chin Patel
+ *
+ */
+public class BoardPiece implements Token {
 	private String name = "";
 	private String col = "";
 	private int north;
@@ -27,10 +31,6 @@ public class BoardPiece extends Token {
 		s = (south == 0) ? "" : (south == 0) ? "|" : "+";
 		w = (west == 0) ? " " : (west == 1) ? "-" : "+";
 		return " " + n + " \n" + w + name + e + "\n" + " " + s + " \n";
-	}
-
-	public String getName() {
-		return name;
 	}
 
 	@Override
@@ -74,6 +74,10 @@ public class BoardPiece extends Token {
 		if (west != other.west)
 			return false;
 		return true;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	public String getCol() {

@@ -10,17 +10,17 @@ import java.util.Stack;
  *
  */
 
-public class Player extends Token {
+public class Player implements Token {
 	private String name = "";
 	private int originalCount = 0;
 	private int setterCount = 0;
-	private BoardPiece[][] tokens = new BoardPiece[6][4];
-	private BoardPiece[][] graveYard = new BoardPiece[3][8];
-	private Stack<BoardPiece[][]> undoStack = new Stack<BoardPiece[][]>();
-	private List<String> movesSoFar = new ArrayList<String>(); // contains both rotated and moved pieces
-	private List<BoardPiece> everyMovement = new ArrayList<BoardPiece>();
-	private List<BoardPiece> listOfTokens = new ArrayList<BoardPiece>();
-	List<BoardPiece> differences = new ArrayList<BoardPiece>(); 
+	private BoardPiece[][] tokens = new BoardPiece[6][4]; // players set of 24 board pieces
+	private BoardPiece[][] graveYard = new BoardPiece[3][8]; // players grave yard
+	private Stack<BoardPiece[][]> undoStack = new Stack<BoardPiece[][]>(); // stack to undo
+	private List<String> movesSoFar = new ArrayList<String>(); // contains names of the moved pieces
+	private List<BoardPiece> everyMovement = new ArrayList<BoardPiece>(); // contains each moved piece and rotated pieces
+	private List<BoardPiece> listOfTokens = new ArrayList<BoardPiece>(); // list of the players 24 tokens
+	private List<BoardPiece> differences = new ArrayList<BoardPiece>(); // holds the grave yard board pieces
 
 	/**
 	 * Constructor which takes the player name, (yellow/green).
@@ -51,7 +51,7 @@ public class Player extends Token {
 			return false;
 		}
 		BoardPiece tokenToAdd = null;
-		tokenToAdd = find(player, letter);
+		tokenToAdd = find(letter);
 		if (tokenToAdd != null) {
 			if (player.name.equals("green")) { // Add it to the correct creation spot
 				board.getBoard()[2][2] = tokenToAdd;
@@ -63,12 +63,13 @@ public class Player extends Token {
 		return false;
 	}
 
+	//TODO - remove this lol
 	public boolean Hax(Player player, Board board) {
-		BoardPiece one = find(player, "e");
-		BoardPiece two = find(player, "t");
-		BoardPiece three = find(player, "c");
-		BoardPiece four = find(player, "g");
-		BoardPiece five = find(player, "i");
+		BoardPiece one = find("e");
+		BoardPiece two = find("t");
+		BoardPiece three = find("c");
+		BoardPiece four = find("g");
+		BoardPiece five = find("i");
 		board.getBoard()[3][9] = one;
 		board.getBoard()[4][9] = two;
 		board.getBoard()[5][9] = three;
@@ -87,8 +88,7 @@ public class Player extends Token {
 	 * @param letter
 	 * @return
 	 */
-	// TODO --- make private and remove player??
-	public BoardPiece find(Player player, String letter) {
+	public BoardPiece find(String letter) {
 		BoardPiece returnToken = null;
 		for (int r = 0; r < tokens.length; r++) {
 			for (int c = 0; c < tokens[0].length; c++) {
@@ -145,111 +145,182 @@ public class Player extends Token {
 		}
 	}
 
-	// TODO - split into 4 methods
+	/**
+	 * Method tries moving tokens in the specified direction.
+	 * @param player --- player trying to move token
+	 * @param token --- token moving
+	 * @param dir --- direction token is moving
+	 * @param board -- current board
+	 */
 	public void tryMoveToken(Player player, BoardPiece token, String dir, Board board) {
+		if (dir.equals("up")) {
+			moveUp(player, token, board);
+		} else if (dir.equals("down")) {
+			moveDown(player, token, board);
+		} else if (dir.equals("left")) {
+			moveLeft(player, token, board);
+		} else if (dir.equals("right")) {
+			moveRight(player, token, board);
+		} else {
+			System.out.println("Cant move token");
+		}
+	}
+
+	/**
+	 * This method moves the token up. If there is a token where it is trying to move to,
+	 * it will push it up. It finds the number of adjacent tiles of the tile that is being pushed,
+	 * by the moving tile. With this number it can loop through backwards, so from the
+	 * row - number of adjacent tiles, off setting each tile by - 1 row. If it tries moving out of
+	 * bounds the token will die.
+	 * @param player --- player trying to move token
+	 * @param token --- token being moved
+	 * @param board --- current board
+	 */
+	private void moveUp(Player player, BoardPiece token, Board board) {
 		int c = board.getX(token.getName());
 		int r = board.getY(token.getName());
 		int count = 0;
-		if (dir.equals("up")) {
-			if (r - 1 < 0) {
-				board.getBoard()[r][c] = null;
-			} else if (!(board.getBoard()[r - 1][c] instanceof BoardPiece) && !(r - 1 < 0)) {
-				board.getBoard()[r][c] = null;
-				r--;
-				board.getBoard()[r][c] = token;
-			} else { // requires shifting
-				for (int i = r - 1, j = 0; i >= 0; i--, j++) {
-					if (board.getBoard()[i][c] instanceof BoardPiece && count == j) {
-						count++;
-					}
-				}
-				if (count != 0) {
-					for (int i = r - count; i <= r; i++) {
-						if (i - 1 < 0) {
-							board.getBoard()[i][c] = null;
-						} else {
-							board.getBoard()[i - 1][c] = board.getBoard()[i][c];
-						}
-					}
-					board.getBoard()[r][c] = null;
+		if (r - 1 < 0) {
+			board.getBoard()[r][c] = null;
+		} else if (!(board.getBoard()[r - 1][c] instanceof BoardPiece) && !(r - 1 < 0)) {
+			board.getBoard()[r][c] = null;
+			r--;
+			board.getBoard()[r][c] = token;
+		} else { // requires shifting
+			for (int i = r - 1, j = 0; i >= 0; i--, j++) {
+				if (board.getBoard()[i][c] instanceof BoardPiece && count == j) { //calculate number of adjacent tiles going from the the tile being pushed
+					count++;
 				}
 			}
-		} else if (dir.equals("down")) {
-			if (r + 1 > 9) {
-				board.getBoard()[r][c] = null;
-			} else if (!(board.getBoard()[r + 1][c] instanceof BoardPiece) && !(r + 1 > 9)) {
-				board.getBoard()[r][c] = null;
-				r++;
-				board.getBoard()[r][c] = token;
-			} else {
-				for (int i = r + 1, j = 0; i < board.getBoard().length; i++, j++) {
-					if (board.getBoard()[i][c] instanceof BoardPiece && count == j) {
-						count++;
+			if (count != 0) {
+				for (int i = r - count; i <= r; i++) {// go back the number the of adjacent of tiles, and shift everything up 1 working backwards
+					if (i - 1 < 0) {
+						board.getBoard()[i][c] = null;
+					} else {
+						board.getBoard()[i - 1][c] = board.getBoard()[i][c];
 					}
 				}
-				if (count != 0) {
-					for (int i = r + count; i >= r; i--) {
-						if (i + 1 > 9) {
-							board.getBoard()[i][c] = null;
-						} else {
-							board.getBoard()[i + 1][c] = board.getBoard()[i][c];
-						}
-					}
-					board.getBoard()[r][c] = null;
-				}
+				board.getBoard()[r][c] = null; // set the tile originally moving to null
 			}
-		} else if (dir.equals("left")) {
-			if (c - 1 < 0) {
-				board.getBoard()[r][c] = null;
-			} else if (!(board.getBoard()[r][c - 1] instanceof BoardPiece) && !(c - 1 < 0)) {
-				board.getBoard()[r][c] = null;
-				c--;
-				board.getBoard()[r][c] = token;
-			} else {
-				for (int i = c - 1, j = 0; i >= 0; i--, j++) {
-					if (board.getBoard()[r][i] instanceof BoardPiece && count == j) {
-						count++;
-					}
-				}
-				if (count != 0) {
-					for (int i = c - count; i <= c; i++) {
-						if (i - 1 < 0) {
-							board.getBoard()[r][i] = null;
-						} else {
-							board.getBoard()[r][i - 1] = board.getBoard()[r][i];
-						}
-					}
-					board.getBoard()[r][c] = null;
-				}
-			}
-		} else if (dir.equals("right")) {
-			if (c + 1 > 9) {
-				board.getBoard()[r][c] = null;
-			} else if (!(board.getBoard()[r][c + 1] instanceof BoardPiece) && !(c + 1 > 9)) {
-				board.getBoard()[r][c] = null;
-				c++;
-				board.getBoard()[r][c] = token;
-			} else {
-				for (int i = c + 1, j = 0; i < board.getBoard().length; i++, j++) {
-					if (board.getBoard()[r][i] instanceof BoardPiece && count == j) {
-						count++;
-					}
-				}
-				if (count != 0) {
-					for (int i = c + count; i >= c; i--) {
-						if (i + 1 > 9) {
-							board.getBoard()[r][i] = null;
-						} else {
-							board.getBoard()[r][i + 1] = board.getBoard()[r][i];
-						}
-					}
-					board.getBoard()[r][c] = null;
-				}
-			}
-		} else {
-			System.out.println("error");
 		}
 	}
+	/**
+	 * This method moves the token down. If there is a token where it is trying to move to,
+	 * it will push it down. It finds the number of adjacent tiles of the tile that is being pushed,
+	 * by the moving tile. With this number it can loop through backwards, so from the
+	 * row + number of adjacent tiles, off setting each tile by + 1 row. If it tries moving out of
+	 * bounds the token will die.
+	 * @param player --- player trying to move token
+	 * @param token --- token being moved
+	 * @param board --- current board
+	 */
+	private void moveDown(Player player, BoardPiece token, Board board) {
+		int c = board.getX(token.getName());
+		int r = board.getY(token.getName());
+		int count = 0;
+		if (r + 1 > 9) {
+			board.getBoard()[r][c] = null;
+		} else if (!(board.getBoard()[r + 1][c] instanceof BoardPiece) && !(r + 1 > 9)) {
+			board.getBoard()[r][c] = null;
+			r++;
+			board.getBoard()[r][c] = token;
+		} else {
+			for (int i = r + 1, j = 0; i < board.getBoard().length; i++, j++) {
+				if (board.getBoard()[i][c] instanceof BoardPiece && count == j) {// calculate number of adjacent tiles to the tile being pushed
+					count++;
+				}
+			}
+			if (count != 0) {
+				for (int i = r + count; i >= r; i--) {// go down the number of adjacent tiles and shift everything down by 1 working backwards
+					if (i + 1 > 9) {
+						board.getBoard()[i][c] = null;
+					} else {
+						board.getBoard()[i + 1][c] = board.getBoard()[i][c];
+					}
+				}
+				board.getBoard()[r][c] = null;// set the tile originally moving to null
+			}
+		}
+	}
+
+	/**
+	 * This method moves the token right. If there is a token where it is trying to move to,
+	 * it will push it right. It finds the number of adjacent tiles of the tile that is being pushed,
+	 * by the moving tile. With this number it can loop through backwards, so from the
+	 * col + number of adjacent tiles, off setting each tile by + 1 col. If it tries moving out of
+	 * bounds the token will die.
+	 * @param player --- player trying to move token
+	 * @param token --- token being moved
+	 * @param board --- current board
+	 */
+	private void moveRight(Player player, BoardPiece token, Board board) {
+		int c = board.getX(token.getName());
+		int r = board.getY(token.getName());
+		int count = 0;
+		if (c + 1 > 9) {
+			board.getBoard()[r][c] = null;
+		} else if (!(board.getBoard()[r][c + 1] instanceof BoardPiece) && !(c + 1 > 9)) {
+			board.getBoard()[r][c] = null;
+			c++;
+			board.getBoard()[r][c] = token;
+		} else {
+			for (int i = c + 1, j = 0; i < board.getBoard().length; i++, j++) {
+				if (board.getBoard()[r][i] instanceof BoardPiece && count == j) {// calculate number of adjacent tiles to the tile being pushed
+					count++;
+				}
+			}
+			if (count != 0) {
+				for (int i = c + count; i >= c; i--) {// go right the number of adjacent tiles and shift everything down by 1 working backwards
+					if (i + 1 > 9) {
+						board.getBoard()[r][i] = null;
+					} else {
+						board.getBoard()[r][i + 1] = board.getBoard()[r][i];
+					}
+				}
+				board.getBoard()[r][c] = null;// set the tile originally moving to null
+			}
+		}
+	}
+
+	/**
+	 * This method moves the token left. If there is a token where it is trying to move to,
+	 * it will push it left. It finds the number of adjacent tiles of the tile that is being pushed,
+	 * by the moving tile. With this number it can loop through backwards, so from the
+	 * col - number of adjacent tiles, off setting each tile by - 1 col. If it tries moving out of
+	 * bounds the token will die.
+	 * @param player --- player trying to move token
+	 * @param token --- token being moved
+	 * @param board --- current board
+	 */
+	private void moveLeft(Player player, BoardPiece token, Board board) {
+		int c = board.getX(token.getName());
+		int r = board.getY(token.getName());
+		int count = 0;
+		if (c - 1 < 0) {
+			board.getBoard()[r][c] = null;
+		} else if (!(board.getBoard()[r][c - 1] instanceof BoardPiece) && !(c - 1 < 0)) {
+			board.getBoard()[r][c] = null;
+			c--;
+			board.getBoard()[r][c] = token;
+		} else {
+			for (int i = c - 1, j = 0; i >= 0; i--, j++) {
+				if (board.getBoard()[r][i] instanceof BoardPiece && count == j) {// calculate number of adjacent tiles to the tile being pushed
+					count++;
+				}
+			}
+			if (count != 0) {
+				for (int i = c - count; i <= c; i++) {// go left the number of adjacent tiles and shift everything down by 1 working backwards
+					if (i - 1 < 0) {
+						board.getBoard()[r][i] = null;
+					} else {
+						board.getBoard()[r][i - 1] = board.getBoard()[r][i];
+					}
+				}
+				board.getBoard()[r][c] = null;// set the tile originally moving to null
+			}
+		}
+	}
+
 
 	/**
 	 * Creates a copy of the players tokens, and pushes it in the stack. This stack
@@ -351,12 +422,10 @@ public class Player extends Token {
 	}
 
 	public int getOriginalCount() {
-		System.out.println("Original Count is : " + originalCount);
 		return originalCount;
 	}
 
 	public int getSetterCount() {
-		System.out.println("Setter Count is : " + setterCount);
 		return setterCount;
 	}
 
@@ -387,4 +456,10 @@ public class Player extends Token {
 	public void setListOfTokens(List<BoardPiece> listOfTokens) {
 		this.listOfTokens = listOfTokens;
 	}
+
+	public List<BoardPiece> getDifferences() {
+		return differences;
+	}
+
+
 }

@@ -1,14 +1,5 @@
 import org.junit.*;
-import org.omg.CORBA.portable.InputStream;
-
 import static org.junit.Assert.*;
-
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Scanner;
-
-
 
 public class SwordAndShieldTests {
 
@@ -52,10 +43,10 @@ public class SwordAndShieldTests {
 	public void testValidYellowTokenMoveAllDirections() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
 		Player player = game.getYellow();
-		BoardPiece one = player.find(player, "e");
-		BoardPiece two = player.find(player, "s");
-		BoardPiece three = player.find(player, "c");
-		BoardPiece four = player.find(player, "x");
+		BoardPiece one = player.find("e");
+		BoardPiece two = player.find("s");
+		BoardPiece three = player.find("c");
+		BoardPiece four = player.find("x");
 		game.getBoard().getBoard()[4][4] = one;
 		assertEquals(one, game.getBoard().getBoard()[4][4]);
 		game.getBoard().getBoard()[5][5] = two;
@@ -132,14 +123,14 @@ public class SwordAndShieldTests {
 		SwordAndShieldGame game = new SwordAndShieldGame();
 		Player yellow = game.getYellow();
 		Player green = game.getGreen();
-		BoardPiece one = yellow.find(yellow, "l");
-		BoardPiece two = yellow.find(yellow, "s");
-		BoardPiece three = yellow.find(yellow, "c");
-		BoardPiece four = yellow.find(yellow, "g");
-		BoardPiece five = green.find(green, "E");
-		BoardPiece six = green.find(green, "S");
-		BoardPiece seven = green.find(green, "T");
-		BoardPiece eight = green.find(green, "G");
+		BoardPiece one = yellow.find("l");
+		BoardPiece two = yellow.find("s");
+		BoardPiece three = yellow.find("c");
+		BoardPiece four = yellow.find("g");
+		BoardPiece five = green.find("E");
+		BoardPiece six = green.find("S");
+		BoardPiece seven = green.find("T");
+		BoardPiece eight = green.find("G");
 		game.getBoard().getBoard()[6][7] = one;
 		game.getBoard().getBoard()[6][6] = two;
 		game.getBoard().getBoard()[6][2] = three;
@@ -209,8 +200,8 @@ public class SwordAndShieldTests {
 	public void testValidReaction_2() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
 		Player yellow = game.getYellow();
-		BoardPiece one = yellow.find(yellow, "c");
-		BoardPiece two = yellow.find(yellow, "t");
+		BoardPiece one = yellow.find("c");
+		BoardPiece two = yellow.find("t");
 		game.getBoard().getBoard()[4][4] = one;
 		game.getBoard().getBoard()[5][4] = two;
 		game.getBoard().checkForReaction();
@@ -225,8 +216,8 @@ public class SwordAndShieldTests {
 	public void testValidReaction_3() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
 		Player yellow = game.getYellow();
-		BoardPiece one = yellow.find(yellow, "e");
-		BoardPiece two = yellow.find(yellow, "t");
+		BoardPiece one = yellow.find("e");
+		BoardPiece two = yellow.find("t");
 		game.getBoard().getBoard()[4][4] = one;
 		game.getBoard().getBoard()[5][4] = two;
 		game.getBoard().checkForReaction();
@@ -241,8 +232,8 @@ public class SwordAndShieldTests {
 	public void testValidReaction_4() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
 		Player yellow = game.getYellow();
-		BoardPiece one = yellow.find(yellow, "e");
-		BoardPiece two = yellow.find(yellow, "g");
+		BoardPiece one = yellow.find("e");
+		BoardPiece two = yellow.find("g");
 		game.getBoard().getBoard()[4][4] = one;
 		game.getBoard().getBoard()[4][5] = two;
 		assertTrue(game.getBoard().getBoard()[4][4].equals(one));
@@ -257,8 +248,8 @@ public class SwordAndShieldTests {
 	public void testValidReaction_5() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
 		Player yellow = game.getYellow();
-		BoardPiece one = yellow.find(yellow, "c");
-		BoardPiece two = yellow.find(yellow, "g");
+		BoardPiece one = yellow.find("c");
+		BoardPiece two = yellow.find("g");
 		game.getBoard().getBoard()[4][4] = one;
 		game.getBoard().getBoard()[4][5] = two;
 		game.getBoard().checkForReaction();
@@ -273,8 +264,8 @@ public class SwordAndShieldTests {
 	public void testValidReaction_6() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
 		Player yellow = game.getYellow();
-		BoardPiece one = yellow.find(yellow, "g");
-		BoardPiece two = yellow.find(yellow, "k");
+		BoardPiece one = yellow.find("g");
+		BoardPiece two = yellow.find("k");
 		game.getBoard().getBoard()[4][4] = one;
 		game.getBoard().getBoard()[4][5] = two;
 		assertTrue(game.getBoard().getBoard()[4][4].equals(one));
@@ -290,7 +281,7 @@ public class SwordAndShieldTests {
 	public void testValidReaction_7() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
 		Player yellow = game.getYellow();
-		BoardPiece one = yellow.find(yellow, "t");
+		BoardPiece one = yellow.find("t");
 		game.getBoard().getBoard()[2][1] = one;
 		assertTrue(game.getBoard().getBoard()[2][1].equals(one));
 		game.getBoard().checkForReaction();
@@ -304,7 +295,7 @@ public class SwordAndShieldTests {
 	public void testValidReaction_8() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
 		Player yellow = game.getYellow();
-		BoardPiece one = yellow.find(yellow, "t");
+		BoardPiece one = yellow.find("t");
 		game.getBoard().getBoard()[7][8] = one;
 		assertTrue(game.getBoard().getBoard()[7][8].equals(one));
 		game.getBoard().checkForReaction();
@@ -318,7 +309,7 @@ public class SwordAndShieldTests {
 	public void testValidReaction_9() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
 		Player green = game.getGreen();
-		BoardPiece one = green.find(green, "U");
+		BoardPiece one = green.find("U");
 		game.getBoard().getBoard()[1][2] = one;
 		assertTrue(game.getBoard().getBoard()[1][2].equals(one));
 		game.getBoard().checkForReaction();
@@ -332,7 +323,7 @@ public class SwordAndShieldTests {
 	public void testValidReaction_10() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
 		Player green = game.getGreen();
-		BoardPiece one = green.find(green, "G");
+		BoardPiece one = green.find("G");
 		game.getBoard().getBoard()[7][8] = one;
 		assertTrue(game.getBoard().getBoard()[7][8].equals(one));
 		game.getBoard().checkForReaction();
@@ -346,8 +337,8 @@ public class SwordAndShieldTests {
 	public void testValidReaction_11() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
 		Player yellow = game.getYellow();
-		BoardPiece one = yellow.find(yellow, "t");
-		BoardPiece two = yellow.find(yellow, "c");
+		BoardPiece one = yellow.find("t");
+		BoardPiece two = yellow.find("c");
 		game.getBoard().getBoard()[4][4] = one;
 		game.getBoard().getBoard()[5][4] = two;
 		game.getBoard().checkForReaction();
@@ -361,8 +352,8 @@ public class SwordAndShieldTests {
 	public void testValidReaction_12() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
 		Player yellow = game.getYellow();
-		BoardPiece one = yellow.find(yellow, "g");
-		BoardPiece two = yellow.find(yellow, "c");
+		BoardPiece one = yellow.find("g");
+		BoardPiece two = yellow.find("c");
 		game.getBoard().getBoard()[4][4] = one;
 		game.getBoard().getBoard()[4][5] = two;
 		game.getBoard().checkForReaction();
@@ -376,7 +367,7 @@ public class SwordAndShieldTests {
 	public void testValidReaction_13() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
 		Player green = game.getGreen();
-		BoardPiece one = green.find(green, "G");
+		BoardPiece one = green.find("G");
 		game.getBoard().getBoard()[8][7] = one;
 		assertTrue(game.getBoard().getBoard()[8][7].equals(one));
 		game.getBoard().checkForReaction();
@@ -389,10 +380,10 @@ public class SwordAndShieldTests {
 	public void testValidGreenTellowTokenMoveAllDirections() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
 		Player player = game.getGreen();
-		BoardPiece one = player.find(player, "E");
-		BoardPiece two = player.find(player, "S");
-		BoardPiece three = player.find(player, "C");
-		BoardPiece four = player.find(player, "X");
+		BoardPiece one = player.find("E");
+		BoardPiece two = player.find("S");
+		BoardPiece three = player.find("C");
+		BoardPiece four = player.find("X");
 		game.getBoard().getBoard()[4][4] = one;
 		assertEquals(one, game.getBoard().getBoard()[4][4]);
 		game.getBoard().getBoard()[5][5] = two;
@@ -415,11 +406,11 @@ public class SwordAndShieldTests {
 	public void testValidPushing_Vertical() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
 		Player yellow = game.getYellow();
-		BoardPiece one = yellow.find(yellow, "e");
-		BoardPiece two = yellow.find(yellow, "s");
-		BoardPiece three = yellow.find(yellow, "c");
-		BoardPiece four = yellow.find(yellow, "x");
-		BoardPiece five = yellow.find(yellow, "i");
+		BoardPiece one = yellow.find("e");
+		BoardPiece two = yellow.find("s");
+		BoardPiece three = yellow.find("c");
+		BoardPiece four = yellow.find("x");
+		BoardPiece five = yellow.find("i");
 		game.getBoard().getBoard()[3][9] = one;
 		game.getBoard().getBoard()[4][9] = two;
 		game.getBoard().getBoard()[5][9] = three;
@@ -446,11 +437,11 @@ public class SwordAndShieldTests {
 	public void testValidPushingBoundaries_Vertical() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
 		Player yellow = game.getYellow();
-		BoardPiece one = yellow.find(yellow, "e");
-		BoardPiece two = yellow.find(yellow, "s");
-		BoardPiece three = yellow.find(yellow, "c");
-		BoardPiece four = yellow.find(yellow, "x");
-		BoardPiece five = yellow.find(yellow, "i");
+		BoardPiece one = yellow.find("e");
+		BoardPiece two = yellow.find("s");
+		BoardPiece three = yellow.find("c");
+		BoardPiece four = yellow.find("x");
+		BoardPiece five = yellow.find("i");
 		game.getBoard().getBoard()[0][5] = one;
 		game.getBoard().getBoard()[1][5] = two;
 		game.getBoard().getBoard()[2][5] = three;
@@ -468,11 +459,11 @@ public class SwordAndShieldTests {
 	public void testValidPushing_Horizontal() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
 		Player yellow = game.getYellow();
-		BoardPiece one = yellow.find(yellow, "e");
-		BoardPiece two = yellow.find(yellow, "s");
-		BoardPiece three = yellow.find(yellow, "c");
-		BoardPiece four = yellow.find(yellow, "x");
-		BoardPiece five = yellow.find(yellow, "i");
+		BoardPiece one = yellow.find("e");
+		BoardPiece two = yellow.find("s");
+		BoardPiece three = yellow.find("c");
+		BoardPiece four = yellow.find("x");
+		BoardPiece five = yellow.find("i");
 		game.getBoard().getBoard()[4][3] = one;
 		game.getBoard().getBoard()[4][4] = two;
 		game.getBoard().getBoard()[4][5] = three;
@@ -512,9 +503,9 @@ public class SwordAndShieldTests {
 	public void testGraveyard() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
 		Player yellow = game.getYellow();
-		BoardPiece one = yellow.find(yellow, "a");
-		BoardPiece two = yellow.find(yellow, "b");
-		BoardPiece three = yellow.find(yellow, "c");
+		BoardPiece one = yellow.find("a");
+		BoardPiece two = yellow.find("b");
+		BoardPiece three = yellow.find("c");
 		game.getBoard().getBoard()[0][5] = one;
 		game.getBoard().getBoard()[1][5] = two;
 		game.getBoard().getBoard()[2][5] = three;
@@ -522,12 +513,6 @@ public class SwordAndShieldTests {
 		game.getBoard().getBoard()[1][5] = null;
 		game.getBoard().getBoard()[2][5] = null;
 		yellow.updateGraveyard(game.getBoard().getBoard());
-		assertTrue(yellow.differences.contains(one) && yellow.differences.contains(two) && yellow.differences.contains(three));
+		assertTrue(yellow.getDifferences().contains(one) && yellow.getDifferences().contains(two) && yellow.getDifferences().contains(three));
 	}
-
-	@Test
-	public void testValidPushingBoundaries() {
-
-	}
-
 }

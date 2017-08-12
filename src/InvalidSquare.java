@@ -4,6 +4,6 @@
  * @author patelchin1
  *
  */
-public class InvalidSquare extends Token{
+public class InvalidSquare implements Token{
 
 }
