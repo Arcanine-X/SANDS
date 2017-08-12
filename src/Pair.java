@@ -63,7 +63,7 @@ public class Pair {
 			} else if (one.getEast() == 2 && two.getWest() == 1) { // shield v sword
 				returnString = two.getName() + " got pushed back from " + one.getName() + "'s shield";
 			} else { // shouldn't ever happen
-				System.out.println("Something went wrong");
+				System.out.println("Invalid Reaction");
 			}
 		} else if (dir.equals("vert")) {
 			if (one.getSouth() == 1 && two.getNorth() == 0) { // sword v nothing
@@ -77,10 +77,10 @@ public class Pair {
 			} else if (one.getSouth() == 2 && two.getNorth() == 1) { // shield v sword
 				returnString = two.getName() + " got pushed back from " + one.getName() + "'s shield";
 			} else { // shouldn't ever happen
-				System.out.println("Something went wrong");
+				System.out.println("Invalid Reaction");
 			}
 		} else { // shouldn't ever happen
-			System.out.println("Something went wrong");
+			System.out.println("Invalid Reaction");
 		}
 		return returnString;
 	}

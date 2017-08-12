@@ -7,7 +7,9 @@ public class TextClient {
 	private static SwordAndShieldGame game;
 
 	/**
-	 * Get string from System.in
+	 * Get a input from system in
+	 * @param msg
+	 * @return
 	 */
 	private static String inputString(String msg) {
 		System.out.print(msg + " ");
@@ -21,9 +23,14 @@ public class TextClient {
 		}
 	}
 
-	public static void playerOptions(Player player) {
+	/**
+	 * Method takes asks the user for a input, and accordingly passes the input to other functions. If the
+	 * the stack size is 1, then it means that its the start of the turn, and the user can create or pass. Otherwise if the stack size is greater than
+	 * 1 then the user must have created or passed, and so the user can only move, rotate or pass. Any invalid in
+	 * @param player
+	 */
+	private static void playerOptions(Player player) {
 		while (true) {
-			System.out.println("Stack size is " + game.getBoard().getUndoStack().size());
 			try {
 				if (game.isGameEnd()) {
 					return;
@@ -53,7 +60,6 @@ public class TextClient {
 				if (game.isGameEnd()) {
 					return;
 				}
-				System.out.println("Stack size is " + game.getBoard().getUndoStack().size());
 				options = "";
 				if (game.getBoard().getUndoStack().size() > 1) {
 					options = inputString(
@@ -67,7 +73,6 @@ public class TextClient {
 						game.reset(player, board);
 						return;
 					} else if (options.startsWith("undo")) {
-						System.out.println("in undo");
 						game.undo(player);
 					} else {
 						System.out.println("Invalid option....");
@@ -82,7 +87,6 @@ public class TextClient {
 	private static void fight(Player player) {
 		while (!board.getReactions().isEmpty()) {
 			if (game.isGameEnd()) {
-				System.out.println("in here");
 				return;
 			}
 			board.redraw();
@@ -100,7 +104,7 @@ public class TextClient {
 				String options = "";
 				if (board.getReactions().size() > 1) {
 					options = inputString(
-							"There are multiple reactions. Enter the two letters of which the interactions should occur between first (or undo) : ");
+							"There are multiple reactions.\n Enter the two letters of which the interactions should occur between first eg (a b) or undo : ");
 					String[] tokens = options.split(" ");
 					if (options.startsWith("undo")) {
 						game.undo(player);
@@ -115,14 +119,11 @@ public class TextClient {
 							for (Pair p : board.getReactions()) {
 								if (p.getPlayer() != null) {
 									System.out.println(p.getPlayer().getName());
-									// TODO - implement other way round
 									if ((p.getPlayer().getName().equals(b) && p.getOne().getName().equals(a)) ||(
 											p.getPlayer().getName().equals(a) && p.getOne().getName().equals(b))){
 										pair = p;
 										break;
 									}
-								} else {
-									System.out.println("oka");
 								}
 							}
 						} else {
@@ -149,21 +150,18 @@ public class TextClient {
 						}
 					}
 				} else {
-					System.out.println("in here i supppose");
 					options = inputString("Would you like to continue with the reaction? Yes/Undo");
 					options = options.toLowerCase();
 					options = options.trim();
 					if (options.equals("undo")) {
-						// then undo
 						game.undo(player);
 					} else if (options.equals("yes") || options.equals("y")) {
-						// do the reaction
 						if (board.getReactions().get(0).getDir().equals("hori")) {
 							game.horizontalReaction(player, board.getReactions().get(0));
 						} else if (board.getReactions().get(0).getDir().equals("vert")) {
 							game.verticalReaction(player, board.getReactions().get(0));
 						} else {
-							System.out.println("error");
+							System.out.println("Invalid reaction");
 						}
 					} else {
 						System.out.println("Not a valid input, try again");

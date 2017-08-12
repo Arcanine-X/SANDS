@@ -11,8 +11,8 @@ public class SwordAndShieldGame {
 	private Board board;
 	private List<BoardPiece> yelList = new ArrayList<>();
 	private List<BoardPiece> greList = new ArrayList<>();
-	private Set<String> movement = new HashSet<String>(Arrays.asList("up", "down", "left", "right"));
-	private Set<Integer> rotations = new HashSet<Integer>(Arrays.asList(0, 90, 180, 270));
+	private static final Set<String> movement = new HashSet<String>(Arrays.asList("up", "down", "left", "right"));
+	private static final Set<Integer> rotations = new HashSet<Integer>(Arrays.asList(0, 90, 180, 270));
 	private boolean firstCreation = true;
 	private boolean gameEnd = false;
 
@@ -33,7 +33,6 @@ public class SwordAndShieldGame {
 		green.setListOfTokens(greList);
 		yellow.setListOfTokens(yelList);
 		board.initialise();
-		board.addPlayers(green, yellow);
 		board.createRecord();
 		yellow.populateTokens(yellow, yelList);
 		green.populateTokens(green, greList);
@@ -44,34 +43,6 @@ public class SwordAndShieldGame {
 		board.redraw();
 	}
 
-	public void updateGraveyard(Player player) {
-		//check differences between board and players tokens and add them to graveyard
-		List<BoardPiece> boardTokens = new ArrayList<BoardPiece>();
-		List<BoardPiece> playerTokens = new ArrayList<BoardPiece>();
-		List<BoardPiece> differences = new ArrayList<BoardPiece>();
-		for(int r = 0; r < 10; r++) {
-			for(int c = 0; c < 10; c++) {
-				if(board.getBoard()[r][c] instanceof BoardPiece) {
-					boardTokens.add((BoardPiece) board.getBoard()[r][c]);
-				}
-			}
-		}
-
-		for(int r = 0; r < player.getTokens().length; r++) {
-			for(int c = 0; c < player.getTokens()[0].length; c++) {
-				if(player.getTokens()[r][c] instanceof BoardPiece) {
-					playerTokens.add((BoardPiece)board.getBoard()[r][c]);
-				}
-			}
-		}
-
-		for(BoardPiece bp : yelList) {
-			if(!boardTokens.contains(bp) && !playerTokens.contains(bp)) {
-				differences.add(bp);
-			}
-		}
-
-	}
 
 	public boolean checkIfAllowedToMove(Player player, String letter) {
 		if (!player.getMovesSoFar().contains(letter)) {
@@ -117,8 +88,7 @@ public class SwordAndShieldGame {
 			return;
 		}
 		// Find the piece to move
-
-		player.checkForSpace(player, tokenToMove, direction, board);
+		player.tryMoveToken(player, tokenToMove, direction, board);
 		player.getEveryMovement().add(tokenToMove);
 		success();
 	}
@@ -157,9 +127,7 @@ public class SwordAndShieldGame {
 			return;
 		}
 		player.getEveryMovement().add(itemToRotate);
-		// Have to add have this to for to ensure that you cannot move after undoing a
-		// rotation.
-		player.getMovesSoFar().add("" + rotation);
+		player.getMovesSoFar().add("" + rotation);	// Have to add have this to for to ensure that you cannot move after undoing a rotation.
 		success();
 		System.out.println("Successful rotation");
 	}
@@ -203,8 +171,6 @@ public class SwordAndShieldGame {
 		success();
 	}
 
-
-
 	public void undo(Player player) {
 		System.out.println("Undoing");
 		board.setBoard(); // undo board
@@ -213,8 +179,8 @@ public class SwordAndShieldGame {
 		green.createRecord();
 		yellow.createRecord();
 		board.createRecord(); // create new record
-		green.clearRipList();
-		yellow.clearRipList();
+		green.clearGraveYards();
+		yellow.clearGraveYards();
 		if (!player.getMovesSoFar().isEmpty()) {
 			player.getMovesSoFar().remove(player.getMovesSoFar().size() - 1);
 		}
@@ -259,6 +225,7 @@ public class SwordAndShieldGame {
 		green.getEveryMovement().clear();
 		yellow.getMovesSoFar().clear();
 		green.getMovesSoFar().clear();
+		//TODO --- Whats the difference between those two ^^
 		firstCreation = true;
 		yellow.getUndoStack().clear();
 		green.getUndoStack().clear();
@@ -409,8 +376,6 @@ public class SwordAndShieldGame {
 		}
 	}
 
-
-
 	public Player getGreen() {
 		return green;
 	}
@@ -433,6 +398,5 @@ public class SwordAndShieldGame {
 	public boolean isGameEnd() {
 		return gameEnd;
 	}
-
-
 }
+

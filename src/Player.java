@@ -2,6 +2,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+/**
+ * This class represents the player, and is a type of a token. The player class
+ * holds it own collection of tokens, and their own grave yard.
+ *
+ * @author Chin Patel
+ *
+ */
+
 public class Player extends Token {
 	private String name = "";
 	private int originalCount = 0;
@@ -12,57 +20,74 @@ public class Player extends Token {
 	private List<String> movesSoFar = new ArrayList<String>(); // contains both rotated and moved pieces
 	private List<BoardPiece> everyMovement = new ArrayList<BoardPiece>();
 	private List<BoardPiece> listOfTokens = new ArrayList<BoardPiece>();
-	List<BoardPiece> diffs = new ArrayList<BoardPiece>();
+	List<BoardPiece> differences = new ArrayList<BoardPiece>(); 
 
-
+	/**
+	 * Constructor which takes the player name, (yellow/green).
+	 *
+	 * @param name
+	 */
 	public Player(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * Adds the a token on the board
+	 * This method adds the token to the board. It checks if the creation spot is
+	 * not already taken. If it is it will return false, otherwise try to find the
+	 * token in the players set of token, if it exists it will add the token to the
+	 * board, and return true. Otherwise it will return false.
 	 *
-	 * @param token
-	 * @param color
+	 * @param letter
+	 *            --- letter of the token which is intended to be added
+	 * @param player
+	 *            --- the player in whose token we are adding
 	 * @param board
+	 *            --- the current board
 	 * @return
 	 */
 	public boolean addToken(String letter, Player player, Board board) {
-		if (checkValidCreationSpot(board, player.name) == false) {
+		if (checkValidCreationSpot(board, player.name) == false) { // Check if the creation spot is already taken or not
 			System.out.println("Invalid Move\nCreation Spot is already taken");
 			return false;
 		}
 		BoardPiece tokenToAdd = null;
 		tokenToAdd = find(player, letter);
 		if (tokenToAdd != null) {
-			if (player.name.equals("green")) {
+			if (player.name.equals("green")) { // Add it to the correct creation spot
 				board.getBoard()[2][2] = tokenToAdd;
 			} else {
 				board.getBoard()[7][7] = tokenToAdd;
 			}
-			System.out.println("token added");
 			return true;
 		}
-		System.out.println("returning falseeeeeeeeeeeeee");
 		return false;
 	}
 
 	public boolean Hax(Player player, Board board) {
 		BoardPiece one = find(player, "e");
-		BoardPiece two = find(player, "s");
+		BoardPiece two = find(player, "t");
 		BoardPiece three = find(player, "c");
-		BoardPiece four = find(player, "x");
+		BoardPiece four = find(player, "g");
 		BoardPiece five = find(player, "i");
 		board.getBoard()[3][9] = one;
 		board.getBoard()[4][9] = two;
-	    board.getBoard()[5][9] = three;
-		board.getBoard()[6][9] = four;
+		board.getBoard()[5][9] = three;
+		board.getBoard()[7][8] = four;
 		board.getBoard()[7][9] = five;
 		System.out.println("token added");
 		return true;
 
 	}
 
+	/**
+	 * This method goes through the players set of tokens and tries to find the
+	 * letter, which corresponds to the token which it returns.
+	 *
+	 * @param player
+	 * @param letter
+	 * @return
+	 */
+	// TODO --- make private and remove player??
 	public BoardPiece find(Player player, String letter) {
 		BoardPiece returnToken = null;
 		for (int r = 0; r < tokens.length; r++) {
@@ -73,87 +98,76 @@ public class Player extends Token {
 				if (tokens[r][c].getName().equals(letter)) {
 					returnToken = tokens[r][c];
 					tokens[r][c] = null;
-					System.out.println("All good in find returned token to add");
 					return returnToken;
 				}
 			}
 		}
-		System.out.println("returning null");
 		return null;
 	}
 
 	/**
-	 * Method that checks that the creation spot is avaliable or not to create more
-	 * tokens for the given player
+	 * Helper method that checks if the creation spot is available to create more
+	 * tokens or not for the given player. Returns true/false accordingly.
 	 *
 	 * @param board
 	 * @param color
+	 *            --- color representing the player (i.e yellow/green)
 	 * @return
 	 */
 	public boolean checkValidCreationSpot(Board board, String color) {
-		if (color.equals("green")) {
+		if (color.equals("green")) { // greens creation spot
 			if (board.getBoard()[2][2] instanceof BoardPiece) {
 				return false;
 			}
 		}
-		if (color.equals("yellow")) {
+		if (color.equals("yellow")) { // yellows creation spot
 			if (board.getBoard()[7][7] instanceof BoardPiece) {
 				return false;
 			}
 		}
-		System.out.println("all good in creation spot");
 		return true;
 	}
 
-	public void populateTokens(Player player, List<BoardPiece> t) {
-		int i = 0;
+	/**
+	 * Method which fills up each players tokens from the hard coded list of tokens.
+	 *
+	 * @param player
+	 * @param toks
+	 *            --- hard coded tokens
+	 */
+	public void populateTokens(Player player, List<BoardPiece> toks) {
+		int i = 0; // index for the tokens list
 		for (int r = 0; r < tokens.length; r++) {
 			for (int c = 0; c < tokens[0].length; c++) {
-				tokens[r][c] = t.get(i++);
+				tokens[r][c] = toks.get(i++);
 				tokens[r][c].setCol(name);
 			}
 		}
 	}
 
-	public void pupulateGraveyard(List<BoardPiece> deathList) {
-		int size = deathList.size();
-		for(int i = size; i < 24; i++) {
-			deathList.add(null);
-		}
-		int i = 0;
-		for (int r = 0; r < graveYard.length; r++) {
-			for (int c = 0; c < graveYard[0].length; c++) {
-				graveYard[r][c] = deathList.get(i++);
-			}
-		}
-
-	}
-
-	public void checkForSpace(Player player, BoardPiece token, String dir, Board board) {
-		System.out.println("CheckForSpace");
+	// TODO - split into 4 methods
+	public void tryMoveToken(Player player, BoardPiece token, String dir, Board board) {
 		int c = board.getX(token.getName());
 		int r = board.getY(token.getName());
 		int count = 0;
 		if (dir.equals("up")) {
-			if(r - 1 < 0) {
+			if (r - 1 < 0) {
 				board.getBoard()[r][c] = null;
-			}
-			else if (!(board.getBoard()[r - 1][c] instanceof BoardPiece) && !(r - 1 < 0)) {
+			} else if (!(board.getBoard()[r - 1][c] instanceof BoardPiece) && !(r - 1 < 0)) {
 				board.getBoard()[r][c] = null;
 				r--;
 				board.getBoard()[r][c] = token;
 			} else { // requires shifting
-				for (int i = r -1, j = 0; i >= 0; i--, j++) {
+				for (int i = r - 1, j = 0; i >= 0; i--, j++) {
 					if (board.getBoard()[i][c] instanceof BoardPiece && count == j) {
 						count++;
 					}
 				}
 				if (count != 0) {
 					for (int i = r - count; i <= r; i++) {
-						if(i - 1 < 0) {
+						if (i - 1 < 0) {
 							board.getBoard()[i][c] = null;
-						}
-						else {
+						} else {
 							board.getBoard()[i - 1][c] = board.getBoard()[i][c];
 						}
 					}
@@ -237,8 +251,10 @@ public class Player extends Token {
 		}
 	}
 
-
-
+	/**
+	 * Creates a copy of the players tokens, and pushes it in the stack. This stack
+	 * is popped when the user wants to undo.
+	 */
 	public void createRecord() {
 		BoardPiece[][] record = new BoardPiece[6][4];
 		for (int r = 0; r < record.length; r++) {
@@ -249,9 +265,14 @@ public class Player extends Token {
 		undoStack.push(record);
 	}
 
+	/**
+	 * Sets the board to the previous version of the players tokens. This method is
+	 * called every time after the user wants to undo, to copy over the old contents
+	 * to the latest player tokens.
+	 */
 	public void setBoard() {
 		BoardPiece[][] original = undoStack.pop(); // get rid of original
-		BoardPiece[][] setter = undoStack.pop();
+		BoardPiece[][] setter = undoStack.pop(); // this is the old copy we want to use
 		counter(original, setter);
 		for (int r = 0; r < setter.length; r++) {
 			for (int c = 0; c < setter[0].length; c++) {
@@ -280,35 +301,50 @@ public class Player extends Token {
 			}
 		}
 	}
-	//TODO check for names specifically maybe? not sure
+
+	/**
+	 * This method figures out what should be in the grave yard. This is done by
+	 * going through the players tokens, and through the boards to figure out which
+	 * tokens are missing from the original list of 24 tokens. These missing tokens
+	 * are then added to the differences list.
+	 *
+	 * @param board
+	 */
 	public void updateGraveyard(Token[][] board) {
-		//check differences between board and players tokens and add them to graveyard
+		// TODO check for names specifically maybe? not sure
+		// check differences between board and players tokens and add them to graveyard
 		List<BoardPiece> boardTokens = new ArrayList<BoardPiece>();
 		List<BoardPiece> playerTokens = new ArrayList<BoardPiece>();
-		for(int r = 0; r < 10; r++) {
-			for(int c = 0; c < 10; c++) {
-				if(board[r][c] instanceof BoardPiece) {
+		// get all the tokens that are on the board
+		for (int r = 0; r < 10; r++) {
+			for (int c = 0; c < 10; c++) {
+				if (board[r][c] instanceof BoardPiece) {
 					boardTokens.add((BoardPiece) board[r][c]);
 				}
 			}
 		}
-		for(int r = 0; r < tokens.length; r++) {
-			for(int c = 0; c < tokens[0].length; c++) {
-				if(tokens[r][c] instanceof BoardPiece) {
-					playerTokens.add((BoardPiece)tokens[r][c]);
+		// get all the tokens that are in the players 2D array of tokens
+		for (int r = 0; r < tokens.length; r++) {
+			for (int c = 0; c < tokens[0].length; c++) {
+				if (tokens[r][c] instanceof BoardPiece) {
+					playerTokens.add((BoardPiece) tokens[r][c]);
 				}
 			}
 		}
-		for(BoardPiece bp : listOfTokens) {
-			if(!boardTokens.contains(bp) && !playerTokens.contains(bp)) {
-				diffs.add(bp);
+		// find what's missing from the board and players tokens
+		for (BoardPiece bp : listOfTokens) {
+			if (!boardTokens.contains(bp) && !playerTokens.contains(bp)) {
+				differences.add(bp);
 			}
 		}
 	}
 
-	public void clearRipList() {
-		for(int r = 0; r < graveYard.length; r++) {
-			for(int c = 0; c < graveYard[0].length; c++) {
+	/**
+	 * Clears the grave yards by setting everything in it to null.
+	 */
+	public void clearGraveYards() {
+		for (int r = 0; r < graveYard.length; r++) {
+			for (int c = 0; c < graveYard[0].length; c++) {
 				graveYard[r][c] = null;
 			}
 		}
@@ -348,18 +384,7 @@ public class Player extends Token {
 		return graveYard;
 	}
 
-
 	public void setListOfTokens(List<BoardPiece> listOfTokens) {
 		this.listOfTokens = listOfTokens;
-	}
-
-
-	public List<BoardPiece> getListOfTokens() {
-		return listOfTokens;
-	}
-
-
-	public void setGraveYard(BoardPiece[][] graveYard) {
-		this.graveYard = graveYard;
 	}
 }
