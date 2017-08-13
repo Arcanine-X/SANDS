@@ -24,12 +24,12 @@ public class Player implements Token {
 
 	/**
 	 * Constructor which takes the player name, (yellow/green).
-	 *
 	 * @param name
 	 */
 	public Player(String name) {
 		this.name = name;
 	}
+
 
 	/**
 	 * This method adds the token to the board. It checks if the creation spot is
@@ -61,23 +61,6 @@ public class Player implements Token {
 			return true;
 		}
 		return false;
-	}
-
-	//TODO - remove this lol
-	public boolean Hax(Player player, Board board) {
-		BoardPiece one = find("e");
-		BoardPiece two = find("t");
-		BoardPiece three = find("c");
-		BoardPiece four = find("g");
-		BoardPiece five = find("i");
-		board.getBoard()[3][9] = one;
-		board.getBoard()[4][9] = two;
-		board.getBoard()[5][9] = three;
-		board.getBoard()[7][8] = four;
-		board.getBoard()[7][9] = five;
-		System.out.println("token added");
-		return true;
-
 	}
 
 	/**
@@ -382,15 +365,15 @@ public class Player implements Token {
 	 * @param board
 	 */
 	public void updateGraveyard(Token[][] board) {
-		// TODO check for names specifically maybe? not sure
-		// check differences between board and players tokens and add them to graveyard
-		List<BoardPiece> boardTokens = new ArrayList<BoardPiece>();
-		List<BoardPiece> playerTokens = new ArrayList<BoardPiece>();
+		// check differences between board and players tokens and add them to grave yard
+		List<String> boardTokens = new ArrayList<String>();
+		List<String> playerTokens = new ArrayList<String>();
 		// get all the tokens that are on the board
 		for (int r = 0; r < 10; r++) {
 			for (int c = 0; c < 10; c++) {
 				if (board[r][c] instanceof BoardPiece) {
-					boardTokens.add((BoardPiece) board[r][c]);
+					BoardPiece temp = (BoardPiece) board[r][c];
+					boardTokens.add(temp.getName());
 				}
 			}
 		}
@@ -398,13 +381,14 @@ public class Player implements Token {
 		for (int r = 0; r < tokens.length; r++) {
 			for (int c = 0; c < tokens[0].length; c++) {
 				if (tokens[r][c] instanceof BoardPiece) {
-					playerTokens.add((BoardPiece) tokens[r][c]);
+					BoardPiece temp = (BoardPiece) tokens[r][c];
+					playerTokens.add(temp.getName());
 				}
 			}
 		}
 		// find what's missing from the board and players tokens
 		for (BoardPiece bp : listOfTokens) {
-			if (!boardTokens.contains(bp) && !playerTokens.contains(bp)) {
+			if (!boardTokens.contains(bp.getName()) && !playerTokens.contains(bp.getName())) {
 				differences.add(bp);
 			}
 		}

@@ -1,6 +1,6 @@
 /**
- * This class is an interface which represents are piece on the board.
- * @author patelchin1
+ * This class is an interface which represents the pieces on the board.
+ * @author Chin Patel
  *
  */
 public interface Token {

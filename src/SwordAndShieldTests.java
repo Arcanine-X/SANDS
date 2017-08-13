@@ -49,7 +49,6 @@ public class SwordAndShieldTests {
 		assertTrue(temp == null);
 	}
 
-
 	// Test yellow token move
 	@Test
 	public void testValidYellowTokenMove() {
@@ -129,7 +128,6 @@ public class SwordAndShieldTests {
 		assertEquals(three, game.getBoard().getBoard()[6][4]);
 		assertEquals(four, game.getBoard().getBoard()[4][4]);
 	}
-
 
 	// Test valid yellow rotate 90 degrees
 	@Test
@@ -280,8 +278,7 @@ public class SwordAndShieldTests {
 		String rotate = "rotate Q 360";
 		game.createToken(yellow, create);
 		game.rotateToken(yellow, rotate);
-		BoardPiece testPiece = (BoardPiece) game.getBoard().getBoard()[2][
-		                                                                  2];
+		BoardPiece testPiece = (BoardPiece) game.getBoard().getBoard()[2][2];
 		BoardPiece newPiece = new BoardPiece("Q", 1, 0, 0, 2, "green");
 		assertTrue(testPiece.equals(newPiece));
 	}
@@ -313,6 +310,7 @@ public class SwordAndShieldTests {
 		BoardPiece newPiece = new BoardPiece("l", 1, 0, 0, 0, "yellow");
 		assertTrue(testPiece.equals(newPiece));
 	}
+
 	// Test 0 degree rotation on creation
 	@Test
 	public void testRotationOnCreateYellow_1() {
@@ -398,7 +396,6 @@ public class SwordAndShieldTests {
 	@Test
 	public void testValidUndo_2() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
-		Board board = game.getBoard();
 		Player yellow = game.getYellow();
 		Player green = game.getGreen();
 		BoardPiece one = yellow.find("l");
@@ -627,6 +624,7 @@ public class SwordAndShieldTests {
 		assertTrue(game.getBoard().getBoard()[5][4].equals(two));
 	}
 
+	// Test horizontal reaction with sword v shield
 	@Test
 	public void testValidReaction_12() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
@@ -642,6 +640,7 @@ public class SwordAndShieldTests {
 		assertTrue(game.getBoard().getBoard()[4][5].equals(two));
 	}
 
+	// Test reaction with player
 	@Test
 	public void testValidReaction_13() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
@@ -655,6 +654,7 @@ public class SwordAndShieldTests {
 		assertTrue(game.isGameEnd() == true);
 	}
 
+	// Test horizontal reaction
 	@Test
 	public void testValidReaction_14() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
@@ -670,6 +670,7 @@ public class SwordAndShieldTests {
 		assertTrue(game.getBoard().getBoard()[5][5].equals(one));
 	}
 
+	// Test sword vs shield horizontal reaction
 	@Test
 	public void testValidReaction_15() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
@@ -686,6 +687,7 @@ public class SwordAndShieldTests {
 		assertTrue(one.toString().equals(game.getBoard().getBoard()[5][5].toString()));
 	}
 
+	// Test moving in all directions
 	@Test
 	public void testValidGreenTellowTokenMoveAllDirections() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
@@ -712,6 +714,7 @@ public class SwordAndShieldTests {
 		assertEquals(four, game.getBoard().getBoard()[4][4]);
 	}
 
+	// Test undo and pushing vertical
 	@Test
 	public void testValidPushing_Vertical() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
@@ -743,6 +746,7 @@ public class SwordAndShieldTests {
 		assertTrue(game.getBoard().getBoard()[7][9] == null);
 	}
 
+	// Test pushing something off the board
 	@Test
 	public void testValidPushingBoundaries_Vertical() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
@@ -765,6 +769,7 @@ public class SwordAndShieldTests {
 		assertTrue(game.getBoard().getBoard()[3][5].equals(five));
 	}
 
+	// Test pushing horizontal
 	@Test
 	public void testValidPushing_Horizontal() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
@@ -795,6 +800,7 @@ public class SwordAndShieldTests {
 		assertTrue(game.getBoard().getBoard()[4][6].equals(five));
 	}
 
+	// Test random methods to check their return types
 	@Test
 	public void generalTests() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
@@ -817,10 +823,10 @@ public class SwordAndShieldTests {
 		assertTrue(board.getBoard()[5][7] == null);
 	}
 
+	// Other random tests
 	@Test
 	public void generalTests2() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
-		Board board = game.getBoard();
 		Player yellow = game.getYellow();
 		BoardPiece one = yellow.find("a");
 		game.getBoard().getBoard()[0][5] = one;
@@ -829,16 +835,11 @@ public class SwordAndShieldTests {
 		game.rotateToken(yellow, "rotate a 90");
 		game.moveToken(yellow, "move a 90");
 		game.setFirstCreation(false);
-		game.getFirstCreation();
-
-
-
-
-//			game.createToken(yellow, "create a 90");
-
-
+		assertTrue(game.getFirstCreation() == false);
+		assertTrue(game.getBoard().getBoard()[0][5].equals(one));
 	}
 
+	// Test that the graveyard works
 	@Test
 	public void testGraveyard() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
@@ -856,6 +857,5 @@ public class SwordAndShieldTests {
 		assertTrue(yellow.getDifferences().contains(one) && yellow.getDifferences().contains(two)
 				&& yellow.getDifferences().contains(three));
 	}
-
 
 }

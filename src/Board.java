@@ -3,7 +3,8 @@ import java.util.List;
 import java.util.Stack;
 
 /**
- * This class holds the main board, and deals with most of the drawing.
+ * This class holds the main board, and deals with most of the drawing. This class is responsible
+ * for what the user can see
  * @author Chin Patel
  */
 
@@ -67,8 +68,7 @@ public class Board {
 	 */
 	public boolean checkForReaction() {
 		reactions.clear();
-		// Checks for horizontal reactions between two board pieces (if a sword is
-		// involved)
+		// Checks for horizontal reactions between two board pieces (if a sword is involved)
 		for (int r = 0; r < board.length; r++) {
 			for (int c = 0; c < board[0].length - 1; c++) {
 				if (board[r][c] instanceof BoardPiece && board[r][c + 1] instanceof BoardPiece) {
@@ -80,8 +80,7 @@ public class Board {
 				}
 			}
 		}
-		// Checks for vertical reactions between two board pieces (if a sword is
-		// involved)
+		// Checks for vertical reactions between two board pieces (if a sword is involved)
 		for (int r = 0; r < board.length - 1; r++) {
 			for (int c = 0; c < board[0].length; c++) {
 				if (board[r][c] instanceof BoardPiece && board[r + 1][c] instanceof BoardPiece) {
@@ -93,8 +92,7 @@ public class Board {
 				}
 			}
 		}
-		// Checks for horizontal reaction between the green player and a board piece (if
-		// a sword is involved)
+		// Checks for horizontal reaction between the green player and a board piece (if a sword is involved)
 		if (board[1][1] instanceof Player && board[1][2] instanceof BoardPiece) {
 			BoardPiece temp1 = (BoardPiece) board[1][2];
 			Player temp2 = (Player) board[1][1];
@@ -102,8 +100,7 @@ public class Board {
 				reactions.add(new Pair(temp1, temp2, "hori"));
 			}
 		}
-		// Checks for a vertical reaction between a green player and a board piece (if a
-		// sword is involved)
+		// Checks for a vertical reaction between a green player and a board piece (if a sword is involved)
 		if (board[1][1] instanceof Player && board[2][1] instanceof BoardPiece) {
 			BoardPiece temp1 = (BoardPiece) board[2][1];
 			Player temp2 = (Player) board[1][1];
@@ -112,8 +109,7 @@ public class Board {
 
 			}
 		}
-		// Checks for a vertical reaction between a yellow player and a board piece (if
-		// a sword is involved)
+		// Checks for a vertical reaction between a yellow player and a board piece (if a sword is involved)
 		if (board[8][8] instanceof Player && board[7][8] instanceof BoardPiece) {
 			BoardPiece temp1 = (BoardPiece) board[7][8];
 			Player temp2 = (Player) board[8][8];
@@ -121,8 +117,7 @@ public class Board {
 				reactions.add(new Pair(temp1, temp2, "vert"));
 			}
 		}
-		// Checks for a horizontal reaction between a yellow player and a board piece
-		// (if a sword is involved)
+		// Checks for a horizontal reaction between a yellow player and a board piece (if a sword is involved)
 		if (board[8][8] instanceof Player && board[8][7] instanceof BoardPiece) {
 			BoardPiece temp1 = (BoardPiece) board[8][7];
 			Player temp2 = (Player) board[8][8];
@@ -517,7 +512,6 @@ public class Board {
 	 * @return --- returns the boardPeice or null
 	 */
 	public BoardPiece findMoveToken(Player player, String letter) {
-		System.out.println("in findmoveToken");
 		BoardPiece returnToken = null;
 		for (int r = 0; r < board.length; r++) {
 			for (int c = 0; c < board[0].length; c++) {

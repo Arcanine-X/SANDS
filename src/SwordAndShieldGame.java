@@ -21,7 +21,6 @@ public class SwordAndShieldGame {
 	private static final Set<Integer> rotations = new HashSet<Integer>(Arrays.asList(0, 90, 180, 270)); // Set that contains all possible rotations
 	private boolean firstCreation = true; // Keeps track of only being able to create one token per turn
 	private boolean gameEnd = false; // Keeps track of the game state
-	//TODO - make sure that the user only types something between a - x
 
 	public SwordAndShieldGame() {
 		green = new Player("green");
@@ -56,7 +55,7 @@ public class SwordAndShieldGame {
 	}
 
 	/**
-	 * CHecks if the user is allowed to move the token or not. Method checks if the user has moved the token yet or not
+	 * Checks if the user is allowed to move the token or not. Method checks if the user has moved the token yet or not
 	 * @param player --- player trying to move token
 	 * @param letter --- letter of the token that the player is trying to move
 	 * @return
@@ -83,7 +82,7 @@ public class SwordAndShieldGame {
 		}
 		String[] tokens = options.split(" ");
 		if (tokens.length != 3) { // The input should only be 3 strings as its "move letter direction"
-			System.out.println("Move input error");
+			System.out.println("Input error");
 		}
 		String letter = tokens[1];
 		String direction = tokens[2];
@@ -96,7 +95,7 @@ public class SwordAndShieldGame {
 			return;
 		}
 		if (!movement.contains(direction) || letter.length() != 1) { // Check if input is correct
-			System.out.println("Input error in moveToken");
+			System.out.println("Incorrect input");
 			return;
 		}
 		if (checkIfAllowedToMove(player, letter) == false) { // Check if the user hasn't already the same token yet
@@ -124,7 +123,7 @@ public class SwordAndShieldGame {
 		}
 		String[] tokens = options.split(" ");
 		if (tokens.length != 3) {  // The input should only be 3 strings as its "rotate letter rotation"
-			System.out.println("Rotation input error");
+			System.out.println("Incorrect input");
 		}
 		String letter = tokens[1];
 		if(player.getName().equals("green")){// Just to make it more user friendly, the green player doesn't have to keep writing in caps
@@ -132,7 +131,7 @@ public class SwordAndShieldGame {
 		}
 		int rotation = Integer.parseInt(tokens[2]);
 		if (!rotations.contains(rotation) || letter.length() != 1) {  // Check if input is correct
-			System.out.println("Input error in rotation");
+			System.out.println("Incorrect Input");
 			return;
 		}
 		BoardPiece itemToRotate = board.findMoveToken(player, letter); // find the item on the board
@@ -177,7 +176,7 @@ public class SwordAndShieldGame {
 		String letter = tokens[1];
 		int rotation = Integer.parseInt(tokens[2]);
 		if (!rotations.contains(rotation) || letter.length() != 1) { //Check that the input is a valid length, and valid rotation
-			System.out.println("Input error");
+			System.out.println("Incorrect Inout");
 			return;
 		}
 		if(player.getName().equals("green")){ // Just to make it more user friendly, the green player doesn't have to keep writing in caps
@@ -194,7 +193,6 @@ public class SwordAndShieldGame {
 			num--;
 		}
 		firstCreation = false;
-		player.Hax(player, board);
 		success(); // Create a record of the game state for undo
 	}
 
@@ -204,7 +202,6 @@ public class SwordAndShieldGame {
 	 * @param player
 	 */
 	public void undo(Player player) {
-		System.out.println("Undoing");
 		board.setBoard(); // undo board
 		yellow.setBoard();
 		green.setBoard();
@@ -223,6 +220,7 @@ public class SwordAndShieldGame {
 			player.getEveryMovement().remove(player.getEveryMovement().size() - 1);
 		}
 		if (board.checkForReaction()) {
+			board.redraw();
 			return;
 		}
 		board.redraw();
@@ -245,7 +243,6 @@ public class SwordAndShieldGame {
 		yellow.createRecord();
 		green.createRecord();
 		if (board.checkForReaction()) {
-			//board.redraw(); TODO - Check if this is required or not
 			return;
 		}
 	}

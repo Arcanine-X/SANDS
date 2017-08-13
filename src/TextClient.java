@@ -12,7 +12,6 @@ import java.io.InputStreamReader;
 public class TextClient {
 	private static Board board;
 	private static SwordAndShieldGame game;
-
 	/**
 	 * Get a input from system in
 	 * @param msg
@@ -33,7 +32,7 @@ public class TextClient {
 
 
 	/**
-	 * Method takes asks the user for a input, and accordingly passes the input to other functions. If the
+	 * Method takes a user input, and accordingly passes the input to other functions. If the
 	 * the stack size is 1, then it means that its the start of the turn, and the user can create or pass. Otherwise if the stack size is greater than
 	 * 1 then the user must have created or passed, and so the user can only move, rotate or pass. Any invalid in
 	 * @param player
@@ -106,7 +105,6 @@ public class TextClient {
 			if (game.isGameEnd()) { // If a player has died, then end the game
 				return;
 			}
-
 			try {
 				System.out.println("Here are the possiable reactions:");
 				for (Pair p : board.getReactions()) {
@@ -121,13 +119,13 @@ public class TextClient {
 				String options = "";
 				if (board.getReactions().size() > 1) { //in this case the user has to pick the pair of reactions
 					options = inputString(
-							"There are multiple reactions.\n Enter the two letters of which the interactions should occur between first eg (a b) or undo : ");
+							"There are multiple reactions.\n Please Note : Capital letters matter \nEnter the two letters of which the interactions should occur between first eg (a b) or undo : ");
 					String[] tokens = options.split(" ");
 					if (tokens[0].equals("undo")) {
 						game.undo(player);
 						board.redraw();
 					} else {
-						if (tokens.length != 2) {
+						if (tokens.length != 2) { // input should contain at least 2 characters
 							System.out.println("Incorrect input");
 							continue;
 						}
@@ -193,26 +191,39 @@ public class TextClient {
 		Player yellow = game.getYellow();
 		Player green = game.getGreen();
 		board = game.getBoard();
-		int turn = 0;
-		System.out.println("~*~*~ Sword & Shield ~*~*~");
+		System.out.println("~*~*~ Sword & Shield Game~*~*~");
+		System.out.println("Welcome to the Sword and Shield Game");
+		System.out.println("The game is simple");
+		System.out.println("One player will be green, and the other player will be incorectlly spelt yellow");
+		System.out.println("Your aim is to kill the other player, by putting a sword to his head");
+		System.out.println("Swords are indicated with a '|' or '-'");
+		System.out.println("Shields are indicated with a +");
+		System.out.println("Reactions will occur when two pieces are adjacent to each other and one has sword");
+		System.out.println("In the affair of honor, swords v swords, both tokens will die");
+		System.out.println("If one is reluctant to die, swords v shields, the token with the sword will be pushed back one");
+		System.out.println("If one poor soul is having a unfortunate day, sword v nothing, the token with nothing will be eliminated");
+		System.out.println("At the start of your turn you can either create or pass, and then you can move rotate or pass again");
+		System.out.println("Have fun :)");
+		int turn = 1;
 		while (!game.isGameEnd()) {// loop until game is ended
 			System.out.println("\n********************");
 			System.out.println("***** TURN " + turn + " *******");
 			System.out.println("********************\n");
-			if (turn % 2 == 0) { //TODO - Change this aswell
-				System.out.println("It is yellows turn!");
-				playerOptions(yellow);
-				board.redraw();
-			} else {
+			if (turn % 2 == 0) {
 				System.out.println("It is greens turn!");
 				playerOptions(green);
 				board.redraw();
+			} else {
+				System.out.println("It is yellows turn!");
+				playerOptions(yellow);
+				board.redraw();
+
 			}
 			turn++;
 		}
 		board.setGameEnded(true); // doesn't redraw the players
 		String winner = board.getBoard()[1][1] == null ? "Yellow" : "Green"; // get the winner
-		System.out.println("The winner is " + winner + "!");
+		System.out.println("After a long battle " + winner + " has taken victory");
 		System.out.println("Thanks for playing");
 		System.out.println("=========================================================================\n\n\n\n");
 	}
