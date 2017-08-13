@@ -184,7 +184,7 @@ public class SwordAndShieldGame {
 			letter = letter.toUpperCase();
 		}
 		if (player.addToken(letter, player, board) == false) { //Add the token
-			System.out.println("Something went wrong in create token");
+			System.out.println("Invalid input");
 			return;
 		}
 		BoardPiece item = board.findMoveToken(player, letter);
@@ -301,7 +301,7 @@ public class SwordAndShieldGame {
 		list.add(new BoardPiece("a", 1, 2, 1, 1, ""));
 		list.add(new BoardPiece("b", 1, 0, 1, 1, ""));
 		list.add(new BoardPiece("c", 2, 2, 2, 2, ""));
-		list.add(new BoardPiece("d", 1, 0, 0, 0, ""));
+		list.add(new BoardPiece("d", 1, 0, 2, 0, ""));
 		list.add(new BoardPiece("e", 0, 0, 0, 0, ""));
 		list.add(new BoardPiece("f", 1, 0, 0, 1, ""));
 		list.add(new BoardPiece("g", 1, 1, 1, 1, ""));
@@ -470,23 +470,23 @@ public class SwordAndShieldGame {
 			if (one.getEast() == 1 && two.getWest() == 1) { // sword - sword
 				board.killToken(one.getName());
 				board.killToken(two.getName());
-				System.out.println("1 " + one.getName() + " and " + two.getName() + " died, due to Sword vs Sword. ");
+				System.out.println(one.getName() + " and " + two.getName() + " died, due to Sword vs Sword. ");
 				reactionCompleted(player,p);
 			} else if (one.getEast() == 1 && two.getWest() == 0) { // sword - nothing
 				board.killToken(two.getName());
-				System.out.println("2 " + two.getName() + " died, due to " + one.getName() + "'s Sword, vs Nothing. ");
+				System.out.println(two.getName() + " died, due to " + one.getName() + "'s Sword, vs Nothing. ");
 				reactionCompleted(player,p);
 			} else if (one.getEast() == 1 && two.getWest() == 2) { // sword - shield
 				tryPushLeft(two.getName());
-				System.out.println("3 " + one.getName() + " got pushed back from " + two.getName() + "'s shield");
+				System.out.println(one.getName() + " got pushed back from " + two.getName() + "'s shield");
 				reactionCompleted(player,p);
 			} else if (one.getEast() == 0 && two.getWest() == 1) { // nothing - sword
 				board.killToken(one.getName());
-				System.out.println("4 " + one.getName() + " died from " + two.getWest() + "'s sword");
+				System.out.println(one.getName() + " died from " + two.getWest() + "'s sword");
 				reactionCompleted(player,p);
 			} else if (one.getEast() == 2 && two.getWest() == 1) { // shield - sword
 				tryPushRight(one.getName());
-				System.out.println("5 " + two.getName() + " got pushed back from " + one.getName() + "'s shield");
+				System.out.println(two.getName() + " got pushed back from " + one.getName() + "'s shield");
 				reactionCompleted(player,p);
 			} else {
 				System.out.println("Invalid Pair");

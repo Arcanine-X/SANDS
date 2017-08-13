@@ -25,6 +25,31 @@ public class SwordAndShieldTests {
 		assertEquals("C", testPiece.getName());
 	}
 
+	// Trying to create something when creation spot it taken
+	@Test
+	public void testInvalidCreation() {
+		SwordAndShieldGame game = new SwordAndShieldGame();
+		Player yellow = game.getYellow();
+		game.createToken(yellow, "create c 90");
+		BoardPiece temp = (BoardPiece) game.getBoard().getBoard()[7][7];
+		game.reset(yellow, game.getBoard());
+		game.reset(yellow, game.getBoard());
+		game.createToken(yellow, "create d 90");
+		assertTrue(temp.getName().equals("c"));
+		assertFalse(temp.getName().equals("d"));
+	}
+
+	// Trying to create other players token
+	@Test
+	public void testInvalidCreation_2() {
+		SwordAndShieldGame game = new SwordAndShieldGame();
+		Player yellow = game.getYellow();
+		game.createToken(yellow, "create C 90");
+		BoardPiece temp = (BoardPiece) game.getBoard().getBoard()[7][7];
+		assertTrue(temp == null);
+	}
+
+
 	// Test yellow token move
 	@Test
 	public void testValidYellowTokenMove() {
@@ -36,6 +61,19 @@ public class SwordAndShieldTests {
 		game.moveToken(yellow, move);
 		BoardPiece testPiece = (BoardPiece) game.getBoard().getBoard()[6][7];
 		assertEquals("c", testPiece.getName());
+	}
+
+	// Test green move token
+	@Test
+	public void testValidGreenMove() {
+		SwordAndShieldGame game = new SwordAndShieldGame();
+		Player green = game.getGreen();
+		String create = "create C 90";
+		String move = "move C up";
+		game.createToken(green, create);
+		game.moveToken(green, move);
+		BoardPiece testPiece = (BoardPiece) game.getBoard().getBoard()[1][2];
+		assertEquals("C", testPiece.getName());
 	}
 
 	// Test yellow token move in each direction
@@ -65,22 +103,37 @@ public class SwordAndShieldTests {
 		assertEquals(four, game.getBoard().getBoard()[4][4]);
 	}
 
-	// Test green move token
+	// Test green token move in each direction
 	@Test
-	public void testValidGreenMove() {
+	public void testValidGreenTokenMoveAllDirections() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
-		Player green = game.getGreen();
-		String create = "create C 90";
-		String move = "move C up";
-		game.createToken(green, create);
-		game.moveToken(green, move);
-		BoardPiece testPiece = (BoardPiece) game.getBoard().getBoard()[1][2];
-		assertEquals("C", testPiece.getName());
+		Player player = game.getGreen();
+		BoardPiece one = player.find("E");
+		BoardPiece two = player.find("S");
+		BoardPiece three = player.find("C");
+		BoardPiece four = player.find("X");
+		game.getBoard().getBoard()[4][4] = one;
+		assertEquals(one, game.getBoard().getBoard()[4][4]);
+		game.getBoard().getBoard()[5][5] = two;
+		assertEquals(two, game.getBoard().getBoard()[5][5]);
+		game.getBoard().getBoard()[5][4] = three;
+		assertEquals(three, game.getBoard().getBoard()[5][4]);
+		game.getBoard().getBoard()[4][5] = four;
+		assertEquals(four, game.getBoard().getBoard()[4][5]);
+		game.moveToken(player, "move e up");
+		game.moveToken(player, "move s right");
+		game.moveToken(player, "move c down");
+		game.moveToken(player, "move x left");
+		assertEquals(one, game.getBoard().getBoard()[3][4]);
+		assertEquals(two, game.getBoard().getBoard()[5][6]);
+		assertEquals(three, game.getBoard().getBoard()[6][4]);
+		assertEquals(four, game.getBoard().getBoard()[4][4]);
 	}
 
-	// Test valid yellow rotate
+
+	// Test valid yellow rotate 90 degrees
 	@Test
-	public void testValidYellowRotate() {
+	public void testValidYellowRotate_1() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
 		Player yellow = game.getYellow();
 		String create = "create l 0";
@@ -106,6 +159,230 @@ public class SwordAndShieldTests {
 		assertTrue(testPiece.equals(newPiece));
 	}
 
+	// Test valid yellow rotate 180 degrees
+	@Test
+	public void testValidYellowRotate_2() {
+		SwordAndShieldGame game = new SwordAndShieldGame();
+		Player yellow = game.getYellow();
+		String create = "create l 0";
+		String rotate = "rotate l 180";
+		game.createToken(yellow, create);
+		game.rotateToken(yellow, rotate);
+		BoardPiece testPiece = (BoardPiece) game.getBoard().getBoard()[7][7];
+		BoardPiece newPiece = new BoardPiece("l", 0, 0, 1, 0, "yellow");
+		assertTrue(testPiece.equals(newPiece));
+	}
+
+	// Test valid yellow rotate 270 degrees
+	@Test
+	public void testValidYellowRotate_3() {
+		SwordAndShieldGame game = new SwordAndShieldGame();
+		Player yellow = game.getYellow();
+		String create = "create l 0";
+		String rotate = "rotate l 270";
+		game.createToken(yellow, create);
+		game.rotateToken(yellow, rotate);
+		BoardPiece testPiece = (BoardPiece) game.getBoard().getBoard()[7][7];
+		BoardPiece newPiece = new BoardPiece("l", 0, 0, 0, 1, "yellow");
+		assertTrue(testPiece.equals(newPiece));
+	}
+
+	// Test valid yellow rotate 0 degrees
+	@Test
+	public void testValidYellowRotate_4() {
+		SwordAndShieldGame game = new SwordAndShieldGame();
+		Player yellow = game.getYellow();
+		String create = "create l 0";
+		String rotate = "rotate l 0";
+		game.createToken(yellow, create);
+		game.rotateToken(yellow, rotate);
+		BoardPiece testPiece = (BoardPiece) game.getBoard().getBoard()[7][7];
+		BoardPiece newPiece = new BoardPiece("l", 1, 0, 0, 0, "yellow");
+		assertTrue(testPiece.equals(newPiece));
+	}
+
+	// Test valid green rotate 90 degrees
+	@Test
+	public void testValidGreenRotate_1() {
+		SwordAndShieldGame game = new SwordAndShieldGame();
+		Player yellow = game.getGreen();
+		String create = "create V 0";
+		String rotate = "rotate V 90";
+		game.createToken(yellow, create);
+		game.rotateToken(yellow, rotate);
+		BoardPiece testPiece = (BoardPiece) game.getBoard().getBoard()[2][2];
+		BoardPiece newPiece = new BoardPiece("V", 0, 1, 2, 0, "green");
+		assertTrue(testPiece.equals(newPiece));
+	}
+
+	// Test valid green rotate 180 degrees
+	@Test
+	public void testValidGreenRotate_2() {
+		SwordAndShieldGame game = new SwordAndShieldGame();
+		Player yellow = game.getGreen();
+		String create = "create V 0";
+		String rotate = "rotate V 180";
+		game.createToken(yellow, create);
+		game.rotateToken(yellow, rotate);
+		BoardPiece testPiece = (BoardPiece) game.getBoard().getBoard()[2][2];
+		BoardPiece newPiece = new BoardPiece("V", 0, 0, 1, 2, "green");
+		assertTrue(testPiece.equals(newPiece));
+	}
+
+	// Test valid green rotate 270 degrees
+	@Test
+	public void testValidGreenRotate_3() {
+		SwordAndShieldGame game = new SwordAndShieldGame();
+		Player yellow = game.getGreen();
+		String create = "create V 0";
+		String rotate = "rotate V 270";
+		game.createToken(yellow, create);
+		game.rotateToken(yellow, rotate);
+		BoardPiece testPiece = (BoardPiece) game.getBoard().getBoard()[2][2];
+		BoardPiece newPiece = new BoardPiece("V", 2, 0, 0, 1, "green");
+		assertTrue(testPiece.equals(newPiece));
+	}
+
+	// Test valid green rotate 0 degrees
+	@Test
+	public void testValidGreenRotate_4() {
+		SwordAndShieldGame game = new SwordAndShieldGame();
+		Player yellow = game.getGreen();
+		String create = "create V 0";
+		String rotate = "rotate V 0";
+		game.createToken(yellow, create);
+		game.rotateToken(yellow, rotate);
+		BoardPiece testPiece = (BoardPiece) game.getBoard().getBoard()[2][2];
+		BoardPiece newPiece = new BoardPiece("V", 1, 2, 0, 0, "green");
+		assertTrue(testPiece.equals(newPiece));
+	}
+
+	// Test invalid yellow rotate 360 degrees
+	@Test
+	public void testInValidGreenRotate_1() {
+		SwordAndShieldGame game = new SwordAndShieldGame();
+		Player yellow = game.getGreen();
+		String create = "create Q 0";
+		String rotate = "rotate Q 360";
+		game.createToken(yellow, create);
+		game.rotateToken(yellow, rotate);
+		BoardPiece testPiece = (BoardPiece) game.getBoard().getBoard()[2][2];
+		BoardPiece newPiece = new BoardPiece("Q", 1, 0, 0, 2, "green");
+		assertTrue(testPiece.equals(newPiece));
+	}
+
+	// Test invalid yellow rotate 27 degrees
+	@Test
+	public void testInValidGreenRotate_2() {
+		SwordAndShieldGame game = new SwordAndShieldGame();
+		Player yellow = game.getGreen();
+		String create = "create Q 0";
+		String rotate = "rotate Q 360";
+		game.createToken(yellow, create);
+		game.rotateToken(yellow, rotate);
+		BoardPiece testPiece = (BoardPiece) game.getBoard().getBoard()[2][
+		                                                                  2];
+		BoardPiece newPiece = new BoardPiece("Q", 1, 0, 0, 2, "green");
+		assertTrue(testPiece.equals(newPiece));
+	}
+
+	// Test invalid yellow rotate 360 degrees
+	@Test
+	public void testInValidYellowRotate_1() {
+		SwordAndShieldGame game = new SwordAndShieldGame();
+		Player yellow = game.getYellow();
+		String create = "create l 0";
+		String rotate = "rotate l 360";
+		game.createToken(yellow, create);
+		game.rotateToken(yellow, rotate);
+		BoardPiece testPiece = (BoardPiece) game.getBoard().getBoard()[7][7];
+		BoardPiece newPiece = new BoardPiece("l", 1, 0, 0, 0, "yellow");
+		assertTrue(testPiece.equals(newPiece));
+	}
+
+	// Test invalid yellow rotate 7 degrees
+	@Test
+	public void testInValidYellowRotate_2() {
+		SwordAndShieldGame game = new SwordAndShieldGame();
+		Player yellow = game.getYellow();
+		String create = "create l 0";
+		String rotate = "rotate l 7";
+		game.createToken(yellow, create);
+		game.rotateToken(yellow, rotate);
+		BoardPiece testPiece = (BoardPiece) game.getBoard().getBoard()[7][7];
+		BoardPiece newPiece = new BoardPiece("l", 1, 0, 0, 0, "yellow");
+		assertTrue(testPiece.equals(newPiece));
+	}
+	// Test 0 degree rotation on creation
+	@Test
+	public void testRotationOnCreateYellow_1() {
+		SwordAndShieldGame game = new SwordAndShieldGame();
+		Player yellow = game.getYellow();
+		String create = "create d 0";
+		game.createToken(yellow, create);
+		BoardPiece testPiece = (BoardPiece) game.getBoard().getBoard()[7][7];
+		BoardPiece newPiece = new BoardPiece("d", 1, 0, 2, 0, "yellow");
+		assertTrue(testPiece.equals(newPiece));
+	}
+
+	// Test 90 degree rotation on creation
+	@Test
+	public void testRotationOnCreateYellow_2() {
+		SwordAndShieldGame game = new SwordAndShieldGame();
+		Player yellow = game.getYellow();
+		String create = "create d 90";
+		game.createToken(yellow, create);
+		BoardPiece testPiece = (BoardPiece) game.getBoard().getBoard()[7][7];
+		BoardPiece newPiece = new BoardPiece("d", 0, 1, 0, 2, "yellow");
+		assertTrue(testPiece.equals(newPiece));
+	}
+
+	// Test 180 degree rotation on creation
+	@Test
+	public void testRotationOnCreateYellow_3() {
+		SwordAndShieldGame game = new SwordAndShieldGame();
+		Player yellow = game.getYellow();
+		String create = "create d 180";
+		game.createToken(yellow, create);
+		BoardPiece testPiece = (BoardPiece) game.getBoard().getBoard()[7][7];
+		BoardPiece newPiece = new BoardPiece("d", 2, 0, 1, 0, "yellow");
+		assertTrue(testPiece.equals(newPiece));
+	}
+
+	// Test 270 degree rotation on creation
+	@Test
+	public void testRotationOnCreateYellow_4() {
+		SwordAndShieldGame game = new SwordAndShieldGame();
+		Player yellow = game.getYellow();
+		String create = "create d 270";
+		game.createToken(yellow, create);
+		BoardPiece testPiece = (BoardPiece) game.getBoard().getBoard()[7][7];
+		BoardPiece newPiece = new BoardPiece("d", 0, 2, 0, 1, "yellow");
+		assertTrue(testPiece.equals(newPiece));
+	}
+
+	// Test 77 degree rotation on creation
+	@Test
+	public void testInvalidRotationOnCreateYellow_1() {
+		SwordAndShieldGame game = new SwordAndShieldGame();
+		Player yellow = game.getYellow();
+		String create = "create d 77";
+		game.createToken(yellow, create);
+		BoardPiece testPiece = (BoardPiece) game.getBoard().getBoard()[7][7];
+		assertTrue(testPiece == null);
+	}
+
+	// Test 360 degree rotation on creation
+	@Test
+	public void testInvalidRotationOnCreateYellow_2() {
+		SwordAndShieldGame game = new SwordAndShieldGame();
+		Player yellow = game.getYellow();
+		String create = "create a 360";
+		game.createToken(yellow, create);
+		BoardPiece testPiece = (BoardPiece) game.getBoard().getBoard()[7][7];
+		assertTrue(testPiece == null);
+	}
+
 	// Test undo
 	@Test
 	public void testValidUndo() {
@@ -121,6 +398,7 @@ public class SwordAndShieldTests {
 	@Test
 	public void testValidUndo_2() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
+		Board board = game.getBoard();
 		Player yellow = game.getYellow();
 		Player green = game.getGreen();
 		BoardPiece one = yellow.find("l");
@@ -156,6 +434,7 @@ public class SwordAndShieldTests {
 		game.getBoard().checkForReaction();
 		game.verticalReaction(green, game.getBoard().getReactions().get(0));
 		game.verticalReaction(green, game.getBoard().getReactions().get(0));
+		assertTrue(!yellow.getDifferences().isEmpty());
 		game.undo(green);
 		game.undo(green);
 		for (int r = 0; r < record.length; r++) {
@@ -377,6 +656,37 @@ public class SwordAndShieldTests {
 	}
 
 	@Test
+	public void testValidReaction_14() {
+		SwordAndShieldGame game = new SwordAndShieldGame();
+		Player yellow = game.getYellow();
+		Player green = game.getGreen();
+		BoardPiece one = green.find("X");
+		BoardPiece two = yellow.find("g");
+		game.getBoard().getBoard()[5][5] = one;
+		game.getBoard().getBoard()[5][6] = two;
+		game.getBoard().checkForReaction();
+		game.horizontalReaction(green, game.getBoard().getReactions().get(0));
+		assertTrue(game.getBoard().getBoard()[5][7].equals(two));
+		assertTrue(game.getBoard().getBoard()[5][5].equals(one));
+	}
+
+	@Test
+	public void testValidReaction_15() {
+		SwordAndShieldGame game = new SwordAndShieldGame();
+		Player yellow = game.getYellow();
+		Player green = game.getGreen();
+		BoardPiece one = green.find("X");
+		BoardPiece two = yellow.find("g");
+		game.getBoard().getBoard()[5][5] = one;
+		game.getBoard().getBoard()[5][4] = two;
+		game.getBoard().checkForReaction();
+		game.horizontalReaction(green, game.getBoard().getReactions().get(0));
+		assertTrue(game.getBoard().getBoard()[5][3].equals(two));
+		assertTrue(game.getBoard().getBoard()[5][5].equals(one));
+		assertTrue(one.toString().equals(game.getBoard().getBoard()[5][5].toString()));
+	}
+
+	@Test
 	public void testValidGreenTellowTokenMoveAllDirections() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
 		Player player = game.getGreen();
@@ -485,18 +795,48 @@ public class SwordAndShieldTests {
 		assertTrue(game.getBoard().getBoard()[4][6].equals(five));
 	}
 
-	// Trying to create something when creation spot it taken
 	@Test
-	public void testInvalidCreation() {
+	public void generalTests() {
 		SwordAndShieldGame game = new SwordAndShieldGame();
+		Board board = game.getBoard();
 		Player yellow = game.getYellow();
-		game.createToken(yellow, "create c 90");
-		BoardPiece temp = (BoardPiece) game.getBoard().getBoard()[7][7];
-		game.reset(yellow, game.getBoard());
-		game.reset(yellow, game.getBoard());
-		game.createToken(yellow, "create d 90");
-		assertTrue(temp.getName().equals("c"));
-		assertFalse(temp.getName().equals("d"));
+		board.setGameEnded(false);
+		Integer x = board.getX("a");
+		Integer y = board.getY("a");
+		assertTrue(x == -1 && y == -1);
+		BoardPiece moveToken = board.findMoveToken(yellow, "a");
+		assertTrue(moveToken == null);
+		String create = "create a 90";
+		String move = "move a up";
+		game.createToken(yellow, create);
+		game.moveToken(yellow, move);
+		BoardPiece one = board.findToken("a");
+		assertTrue(board.getBoard()[6][7].equals(one));
+		game.moveToken(yellow, move);
+		assertTrue(board.getBoard()[6][7].equals(one));
+		assertTrue(board.getBoard()[5][7] == null);
+	}
+
+	@Test
+	public void generalTests2() {
+		SwordAndShieldGame game = new SwordAndShieldGame();
+		Board board = game.getBoard();
+		Player yellow = game.getYellow();
+		BoardPiece one = yellow.find("a");
+		game.getBoard().getBoard()[0][5] = one;
+		game.moveToken(yellow, "move b right");
+		game.moveToken(yellow, "move a diagonal");
+		game.rotateToken(yellow, "rotate a 90");
+		game.moveToken(yellow, "move a 90");
+		game.setFirstCreation(false);
+		game.getFirstCreation();
+
+
+
+
+//			game.createToken(yellow, "create a 90");
+
+
 	}
 
 	@Test
@@ -513,6 +853,9 @@ public class SwordAndShieldTests {
 		game.getBoard().getBoard()[1][5] = null;
 		game.getBoard().getBoard()[2][5] = null;
 		yellow.updateGraveyard(game.getBoard().getBoard());
-		assertTrue(yellow.getDifferences().contains(one) && yellow.getDifferences().contains(two) && yellow.getDifferences().contains(three));
+		assertTrue(yellow.getDifferences().contains(one) && yellow.getDifferences().contains(two)
+				&& yellow.getDifferences().contains(three));
 	}
+
+
 }

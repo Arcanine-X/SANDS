@@ -5,7 +5,6 @@ import java.util.Stack;
 /**
  * This class holds the main board, and deals with most of the drawing.
  * @author Chin Patel
- *
  */
 
 public class Board {

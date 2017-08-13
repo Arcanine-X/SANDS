@@ -31,6 +31,7 @@ public class TextClient {
 		}
 	}
 
+
 	/**
 	 * Method takes asks the user for a input, and accordingly passes the input to other functions. If the
 	 * the stack size is 1, then it means that its the start of the turn, and the user can create or pass. Otherwise if the stack size is greater than
@@ -52,10 +53,10 @@ public class TextClient {
 				String options = "";
 				if (game.getBoard().getUndoStack().size() == 1) {// If stack size is = 1, then they haven't created or passed yet
 					game.setFirstCreation(true);
-					options = inputString("[create <letter> <0/90/180/270>  / pass");
-					if (options.startsWith("create")) {
+					options = inputString("[create <letter> <0/90/180/270>  / pass").toLowerCase().trim();
+					if (options.split(" ")[0].equals("create")) {
 						game.createToken(player, options);
-					} else if (options.startsWith("pass")) {
+					} else if (options.split(" ")[0].equals("pass")) {
 						game.setFirstCreation(false);
 						game.success(); // Create record so the user can undo back to the create phase
 					} else {
@@ -71,16 +72,16 @@ public class TextClient {
 				options = "";
 				if (game.getBoard().getUndoStack().size() > 1) { // If stack size is greater then 1, then they have either created or passed already
 					options = inputString(
-							"[rotate <letter> <0/90/180/270> / move <letter> <up/right/down/left> / pass");
-					if (options.startsWith("rotate")) {
+							"[rotate <letter> <0/90/180/270> / move <letter> <up/right/down/left> / pass").toLowerCase().trim();
+					if (options.split(" ")[0].equals("rotate")) {
 						game.rotateToken(player, options);
-					} else if (options.startsWith("move")) {
+					} else if (options.split(" ")[0].equals("move")) {
 						game.moveToken(player, options);
-					} else if (options.startsWith("pass")) {
+					} else if (options.split(" ")[0].equals("pass")) {
 						System.out.println("Next persons turn");
 						game.reset(player, board);
 						return;
-					} else if (options.startsWith("undo")) {
+					} else if (options.split(" ")[0].equals("undo")) {
 						game.undo(player);
 					} else {
 						System.out.println("Invalid option....");
@@ -105,7 +106,7 @@ public class TextClient {
 			if (game.isGameEnd()) { // If a player has died, then end the game
 				return;
 			}
-			board.redraw();
+
 			try {
 				System.out.println("Here are the possiable reactions:");
 				for (Pair p : board.getReactions()) {
@@ -122,8 +123,9 @@ public class TextClient {
 					options = inputString(
 							"There are multiple reactions.\n Enter the two letters of which the interactions should occur between first eg (a b) or undo : ");
 					String[] tokens = options.split(" ");
-					if (options.startsWith("undo")) {
+					if (tokens[0].equals("undo")) {
 						game.undo(player);
+						board.redraw();
 					} else {
 						if (tokens.length != 2) {
 							System.out.println("Incorrect input");
@@ -163,11 +165,10 @@ public class TextClient {
 						}
 					}
 				} else { // in this case there is only one reaction so the user can only continue or undo
-					options = inputString("Would you like to continue with the reaction? Yes/Undo");
-					options = options.toLowerCase();
-					options = options.trim();
+					options = inputString("Would you like to continue with the reaction? Yes/Undo").toLowerCase().trim();
 					if (options.equals("undo")) {
 						game.undo(player);
+						board.redraw();
 					} else if (options.equals("yes") || options.equals("y")) {
 						if (board.getReactions().get(0).getDir().equals("hori")) { // horizontal reaction
 							game.horizontalReaction(player, board.getReactions().get(0));

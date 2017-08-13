@@ -460,6 +460,4 @@ public class Player implements Token {
 	public List<BoardPiece> getDifferences() {
 		return differences;
 	}
-
-
 }
