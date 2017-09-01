@@ -2,7 +2,7 @@
 
 ### Blurb
 
-This is a text based game create for Swen 222 Assignment 1. It is a strategy based game, where your goal is to defeat the other player.
+This is a text based game created for Swen 222 Assignment 1. It is a strategy based game, where your goal is to defeat the other player.
 
 ### How to run it
 
